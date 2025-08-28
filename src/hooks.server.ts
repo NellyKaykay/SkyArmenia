@@ -1,25 +1,32 @@
 // src/hooks.server.ts
 import type { Handle } from '@sveltejs/kit';
 import { createServerClient } from '@supabase/ssr';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { env as PUBLIC } from '$env/dynamic/public';
 
 export const handle: Handle = async ({ event, resolve }) => {
-  // En local no marcamos secure para que la cookie se guarde
+  const url = PUBLIC.PUBLIC_SUPABASE_URL;
+  const key = PUBLIC.PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !key) {
+    console.error('Faltan PUBLIC_SUPABASE_URL o PUBLIC_SUPABASE_ANON_KEY.');
+    throw new Error('Config de Supabase faltante: revisa tu .env');
+  }
+
   const secure = event.url.hostname !== 'localhost' && event.url.hostname !== '127.0.0.1';
 
-  event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+  event.locals.supabase = createServerClient(url, key, {
     cookies: {
-      get: (key) => event.cookies.get(key),
-      set: (key, value, options) =>
-        event.cookies.set(key, value, {
+      get: (k) => event.cookies.get(k),
+      set: (k, v, options) =>
+        event.cookies.set(k, v, {
           ...options,
           path: '/',
           httpOnly: true,
           sameSite: 'lax',
           secure
         }),
-      remove: (key, options) =>
-        event.cookies.delete(key, {
+      remove: (k, options) =>
+        event.cookies.delete(k, {
           ...options,
           path: '/'
         })

@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
 
   type Trip = 'oneway' | 'round';
 
@@ -17,8 +19,8 @@
   let error = '';
   let data: any = null;
 
-  function readParamsFromUrl() {
-    const p = new URLSearchParams(location.search);
+  function readParams() {
+    const p = $page.url.searchParams;
     origin = p.get('origin') || origin;
     destination = p.get('destination') || destination;
     depart = p.get('depart') || '';
@@ -41,21 +43,6 @@
     return q.toString();
   }
 
-  function fmtMoney(m: any) {
-    if (!m) return '—';
-    try {
-      return new Intl.NumberFormat('es-ES', { style: 'currency', currency: m.currency || 'EUR' }).format(m.amount);
-    } catch {
-      return `${m.amount} ${m.currency || ''}`.trim();
-    }
-  }
-
-  function hhmm(iso: string) {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toISOString().slice(11, 16);
-  }
-
   async function fetchResults() {
     loading = true;
     error = '';
@@ -63,9 +50,6 @@
 
     try {
       const qs = buildQuery();
-      // Actualiza la URL sin recargar (para poder compartir la búsqueda)
-      history.replaceState(null, '', `/?${qs}`);
-
       const res = await fetch(`/api/search?${qs}`);
       const json = await res.json();
       if (!json.ok) {
@@ -80,13 +64,17 @@
     }
   }
 
-  // Botón Buscar: NO navega, solo pide /api/search y pinta debajo
   async function goSearch() {
+    const qs = buildQuery();
+    await goto(`/search?${qs}`);
+    // Después de navegar, el $page cambia → volvemos a leer y buscar
+    readParams();
     await fetchResults();
   }
 
+  // Al cargar la página, si hay parámetros, busca
   onMount(() => {
-    readParamsFromUrl();
+    readParams();
     if (origin && destination && depart) {
       fetchResults();
     }
@@ -95,24 +83,22 @@
 
 <style>
   .wrap { max-width: 960px; margin: 1rem auto; padding: 1rem; }
-  .card { border: 1px solid var(--border, #e5e7eb); border-radius: 1rem; padding: 1rem; background: #fff; }
+  .card { border: 1px solid var(--border, #e5e7eb); border-radius: 1rem; padding: 1rem; }
   .row { display: grid; grid-template-columns: repeat(6, 1fr); gap: .75rem; }
   .row > * { width: 100%; }
-  .actions { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+  .actions { display: flex; gap: .5rem; align-items: center; }
   .btn { padding: .6rem 1rem; border-radius: .75rem; border: 1px solid var(--accent, #38b6ff); background: #fff; cursor: pointer; }
   .btn.primary { background: var(--accent, #38b6ff); color: #fff; border-color: transparent; }
   @media (max-width: 720px) {
     .row { grid-template-columns: 1fr 1fr; }
   }
   .list { display: grid; gap: .75rem; margin-top: 1rem; }
-  .offer { border: 1px dashed var(--border, #e5e7eb); padding: .75rem; border-radius: .75rem; background: #fafafa; }
+  .offer { border: 1px dashed var(--border, #e5e7eb); padding: .75rem; border-radius: .75rem; }
   .muted { color: #666; font-size: .9rem; }
-  .pill { display:inline-block; padding:.15rem .5rem; border-radius:999px; border:1px solid #e5e7eb; font-size:.8rem; }
-  h1 { margin: 0 0 .75rem 0; }
 </style>
 
 <div class="wrap">
-  <h1>SkyArmenia — Buscador</h1>
+  <h1>Buscar vuelos</h1>
 
   <div class="card">
     <div class="actions" style="margin-bottom:.5rem">
@@ -144,45 +130,12 @@
       <div class="muted">
         {data.totalOffers} ofertas · tardó {data.tookMs} ms
       </div>
-
       <div class="list">
         {#each data.results as r}
           <div class="offer">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <strong>Proveedor: {r.provider}</strong>
-              <span class="pill">{r.offers.length} ofertas</span>
-            </div>
-
+            <strong>Proveedor:</strong> {r.provider} — {r.offers.length} ofertas
             {#if r.error}
-              <div style="color:#b00020; margin-top:.25rem;">Error: {r.error}</div>
-            {/if}
-
-            {#if r.offers.length > 0}
-              <div class="list" style="margin-top:.5rem;">
-                {#each r.offers as of}
-                  <div class="card" style="padding:.6rem">
-                    <div class="muted">
-                      {of.cabin || 'economy'} · {of.fareClass || '—'}
-                      {#if of.deeplink} · <a href={of.deeplink} target="_blank" rel="noopener">Comprar</a>{/if}
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:.35rem;">
-                      <div>
-                        {#if of.itinerary?.segments?.length}
-                          {#each of.itinerary.segments as s, i}
-                            <div>
-                              {s.origin} {hhmm(s.departure)} → {s.destination} {hhmm(s.arrival)}
-                              <span class="muted">({s.flightNumber})</span>
-                            </div>
-                          {/each}
-                        {/if}
-                      </div>
-                      <div style="font-weight:600; font-size:1.1rem;">
-                        {fmtMoney(of.price?.total)}
-                      </div>
-                    </div>
-                  </div>
-                {/each}
-              </div>
+              <div style="color:#b00020">Error: {r.error}</div>
             {/if}
           </div>
         {/each}

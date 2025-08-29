@@ -11,6 +11,7 @@
     return v === k ? (fallback ?? k) : v;
   };
 
+  // ======= Estado del formulario (tu UI original) =======
   let trip: 'oneway' | 'round' = 'round';
   let origin = 'BCN';
   let destination = 'EVN';
@@ -19,25 +20,77 @@
   let adults: number = 1;
   let bags: number = 0;
 
-  function goSearch() {
-    const params = new URLSearchParams({
-      origin,
-      destination,
-      depart,
-      ...(trip === 'round' && ret ? { return: ret } : {}),
-      adults: String(adults),
-      bags: String(bags)
-    });
-    // Solo cliente (no SSR)
-    window.location.href = `/flights?${params.toString()}`;
-  }
+  // ======= Nuevo: estado de resultados inline =======
+  let loading = false;
+  let error = '';
+  let data: any = null;
 
-  // "4 horas · directo · desde 400 €" con i18n
+  // (Temporal) Modo debug para ver ofertas simuladas hasta implementar scraping/API real
+  const USE_DEBUG = true; // TODO: poner en false cuando FlyOne/Blackstone estén integrados
+
+  // "4 horas · directo · desde 400 €" con i18n (sección Ofertas)
   function offerLine(hours: number, direct = true, price = 400, currency = '€') {
     const h = `${hours} ${t('unit.hours', 'hours')}`;
     const d = direct ? t('flight.direct', 'direct') : t('flight.stops', 'with stops');
     const from = t('price.from', 'from');
     return `${h} · ${d} · ${from} ${price} ${currency}`;
+  }
+
+  // ======= Helpers resultados =======
+  function buildQuery() {
+    const q = new URLSearchParams({
+      origin,
+      destination,
+      depart,
+      trip,
+      adults: String(adults),
+      bags: String(bags)
+    });
+    if (trip === 'round' && ret) q.set('return', ret);
+    return q.toString();
+  }
+
+  function fmtMoney(m: any) {
+    if (!m) return '—';
+    try {
+      return new Intl.NumberFormat('es-ES', { style: 'currency', currency: m.currency || 'EUR' }).format(m.amount);
+    } catch {
+      return `${m.amount} ${m.currency || ''}`.trim();
+    }
+  }
+
+  function hhmm(iso: string) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toISOString().slice(11, 16);
+  }
+
+  async function fetchResultsInline() {
+    loading = true;
+    error = '';
+    data = null;
+    try {
+      const qs = buildQuery();
+      // Mantén la búsqueda en la URL sin recargar (compartible)
+      history.replaceState(null, '', `/?${qs}`);
+      const url = `/api/search?${qs}${USE_DEBUG ? '&debug=1' : ''}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      if (!json.ok) {
+        error = json.error || 'Error en la búsqueda';
+      } else {
+        data = json;
+      }
+    } catch (e: any) {
+      error = e?.message || 'Fallo de red';
+    } finally {
+      loading = false;
+    }
+  }
+
+  // ⛳ Acción del botón lupa — ahora INLINE (NO navega)
+  async function goSearch() {
+    await fetchResultsInline();
   }
 </script>
 
@@ -69,7 +122,7 @@
     </div>
   </div>
 
-  <!-- Barra de búsqueda -->
+  <!-- Barra de búsqueda (tu diseño) -->
   <div class="search-bar">
     <!-- Origen -->
     <div>
@@ -135,9 +188,62 @@
       {t('form.promo', 'Promotion')}
     </a>
   </div>
+
+  <!-- ===== Resultados inline debajo del buscador ===== -->
+  {#if loading}
+    <p style="margin-top:12px;color:#666;">{t('status.searching','Searching…')}</p>
+  {:else if error}
+    <p style="margin-top:12px;color:#b00020;">⚠️ {error}</p>
+  {:else if data}
+    <div class="results" style="margin-top:12px;">
+      <div style="color:#666; margin-bottom:8px;">
+        {data.totalOffers} {t('results.offers','offers')} · {t('results.took','took')} {data.tookMs} ms
+      </div>
+
+      <!-- Lista por proveedor -->
+      <div style="display:grid; gap:10px;">
+        {#each data.results as r}
+          <div style="border:1px solid var(--border); border-radius:10px; padding:10px; background:#fff;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong>{t('provider','Provider')}: {r.provider}</strong>
+              <span style="font-size:.85rem;color:#666;">{r.offers.length} {t('results.offers','offers')}</span>
+            </div>
+
+            {#if r.error}
+              <div style="color:#b00020; margin-top:6px;">{r.error}</div>
+            {/if}
+
+            {#if r.offers.length > 0}
+              <div style="display:grid; gap:8px; margin-top:8px;">
+                {#each r.offers as of}
+                  <div style="border:1px dashed var(--border); border-radius:8px; padding:8px;">
+                    <div style="color:#666; font-size:.9rem;">
+                      {(of.cabin || 'economy')} · {(of.fareClass || '—')}
+                      {#if of.deeplink} · <a href={of.deeplink}>{t('cta.buy','Buy')}</a>{/if}
+                    </div>
+                    {#if of.itinerary?.segments?.length}
+                      {#each of.itinerary.segments as s}
+                        <div>
+                          {s.origin} {hhmm(s.departure)} → {s.destination} {hhmm(s.arrival)}
+                          <span style="color:#888;">({s.flightNumber})</span>
+                        </div>
+                      {/each}
+                    {/if}
+                    <div style="font-weight:600; margin-top:4px;">
+                      {of.price?.total ? fmtMoney(of.price.total) : '—'}
+                    </div>
+                  </div>
+                {/each}
+              </div>
+            {/if}
+          </div>
+        {/each}
+      </div>
+    </div>
+  {/if}
 </section>
 
-<!-- Sección de ofertas -->
+<!-- Sección de ofertas (sin cambios en tu diseño) -->
 <section class="offers">
   <h2 class="offers-title">{t('offers.title', 'Travel deals with promotion')}</h2>
 
@@ -225,7 +331,6 @@
     padding: 16px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    /* Desktop: 3 columnas amplias + 2 medianas + botón + promo */
     grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) minmax(160px, 1fr)
                            minmax(160px, 1fr) minmax(140px, 1fr)
                            auto minmax(140px, 1fr);
@@ -308,3 +413,5 @@
     .trip-group label + label { margin-left: 8px; }
   }
 </style>
+
+   

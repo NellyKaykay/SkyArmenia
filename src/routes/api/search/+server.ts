@@ -1,69 +1,84 @@
 // src/routes/api/search/+server.ts
-import type { RequestHandler } from './$types';
+import { json, type RequestHandler } from '@sveltejs/kit';
+import type { SearchRequest, ProviderBatchResult, AggregatedSearchResponse, TripType, Cabin } from '$lib/providers/types';
+import flyone from '$lib/providers/flyone';
+import blackstone from '$lib/providers/blackstone';
 
-type TripKind = 'oneway' | 'round';
-
-function toInt(v: string | null, def = 0) {
-  const n = v ? parseInt(v, 10) : NaN;
-  return Number.isFinite(n) && n >= 0 ? n : def;
+function asTripType(v: string | null): TripType {
+  return v === 'oneway' ? 'oneway' : 'round';
+}
+function asCabin(v: string | null): Cabin | undefined {
+  if (!v) return undefined;
+  if (v === 'economy' || v === 'premium_economy' || v === 'business') return v;
+  return undefined;
+}
+function asInt(v: string | null, d = 0) {
+  const n = Number(v);
+  return Number.isFinite(n) ? Math.max(0, Math.floor(n)) : d;
 }
 
 export const GET: RequestHandler = async ({ url }) => {
-  const origin = (url.searchParams.get('origin') || 'BCN').toUpperCase();
-  const destination = (url.searchParams.get('destination') || 'EVN').toUpperCase();
-  const depart = url.searchParams.get('depart') || '';      // YYYY-MM-DD
-  const ret = url.searchParams.get('return') || '';         // YYYY-MM-DD (solo round)
-  const trip = (url.searchParams.get('trip') as TripKind) || 'round';
-  const adults = toInt(url.searchParams.get('adults'), 1);
-  const bags = toInt(url.searchParams.get('bags'), 0);
+  const origin = (url.searchParams.get('origin') || '').toUpperCase().trim();
+  const destination = (url.searchParams.get('destination') || '').toUpperCase().trim();
+  const depart = (url.searchParams.get('depart') || '').trim();
+  const ret = (url.searchParams.get('return') || '').trim();
+  const trip = asTripType(url.searchParams.get('trip'));
+  const adults = asInt(url.searchParams.get('adults'), 1) || 1;
+  const children = asInt(url.searchParams.get('children'), 0);
+  const infants = asInt(url.searchParams.get('infants'), 0);
+  const bags = asInt(url.searchParams.get('bags'), 0);
+  const cabin = asCabin(url.searchParams.get('cabin'));
 
   // Validación mínima
-  if (!/^[A-Z]{3}$/.test(origin) || !/^[A-Z]{3}$/.test(destination)) {
-    return new Response(JSON.stringify({ ok: false, error: 'Invalid IATA code(s)' }), { status: 400 });
-  }
-  if (!depart) {
-    return new Response(JSON.stringify({ ok: false, error: 'Missing depart date (YYYY-MM-DD)' }), { status: 400 });
+  if (!origin || !destination || !depart) {
+    return json({ ok: false, error: 'origin, destination y depart son obligatorios' }, { status: 400 });
   }
   if (trip === 'round' && !ret) {
-    return new Response(JSON.stringify({ ok: false, error: 'Missing return date for round trip' }), { status: 400 });
+    return json({ ok: false, error: "return es obligatorio cuando trip='round'" }, { status: 400 });
   }
 
-  // 🔧 Stub de resultados (mientras conectamos FlyOne/Blackstone)
-  const sample = [
-    {
-      id: 'stub-flyone-1',
-      airline: 'FlyOne',
-      from: origin,
-      to: destination,
-      depart: `${depart}T10:25:00`,
-      arrive: `${depart}T16:05:00`,
-      duration: '5h 40m',
-      bags_included: 0,
-      price: { amount: 17900, currency: 'EUR' } // en céntimos
-    },
-    ...(trip === 'round'
-      ? [{
-          id: 'stub-flyone-2',
-          airline: 'FlyOne',
-          from: destination,
-          to: origin,
-          depart: `${ret}T12:10:00`,
-          arrive: `${ret}T17:40:00`,
-          duration: '5h 30m',
-          bags_included: 0,
-          price: { amount: 16500, currency: 'EUR' }
-        }]
-      : [])
-  ];
-
-  const payload = {
-    ok: true,
-    query: { origin, destination, depart, return: ret, trip, adults, bags },
-    meta: { currency: 'EUR', count: sample.length },
-    results: sample
+  const req: SearchRequest = {
+    origin,
+    destination,
+    depart,
+    return: trip === 'round' ? ret : undefined,
+    trip,
+    cabin,
+    passengers: { adults, children, infants },
+    bags
   };
 
-  return new Response(JSON.stringify(payload), {
-    headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }
+  const providers = [flyone, blackstone];
+  const started = Date.now();
+
+  const promises = providers.map(async (p): Promise<ProviderBatchResult> => {
+    const t0 = Date.now();
+    try {
+      const offers = await p.search(req);
+      return {
+        provider: p.id,
+        durationMs: Date.now() - t0,
+        offers
+      };
+    } catch (err) {
+      return {
+        provider: p.id,
+        durationMs: Date.now() - t0,
+        offers: [],
+        error: (err as Error)?.message || 'provider error'
+      };
+    }
   });
+
+  const results = await Promise.all(promises);
+  const totalOffers = results.reduce((sum, r) => sum + r.offers.length, 0);
+  const resp: AggregatedSearchResponse = {
+    ok: true,
+    query: req,
+    results,
+    totalOffers,
+    tookMs: Date.now() - started
+  };
+
+  return json(resp);
 };

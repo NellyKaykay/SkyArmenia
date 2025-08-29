@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: skyarmenia
+    env: node
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: node build
+    autoDeploy: true
+    healthCheckPath: /api/ping
+    envVars:
+      - key: PUBLIC_SUPABASE_URL
+        sync: false
+      - key: PUBLIC_SUPABASE_ANON_KEY
+        sync: false

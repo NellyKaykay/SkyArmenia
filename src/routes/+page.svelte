@@ -1,6 +1,7 @@
-<script lang="ts">
+<script lang="ts"> 
   // ✅ i18n stores para usar $lang y $i18n
   import { i18n, lang } from '$lib/i18n';
+  import { onMount } from 'svelte';
 
   // Forzar reactividad general (opcional si ya usas $i18n en el template)
   $: _ = $lang;
@@ -20,13 +21,13 @@
   let adults: number = 1;
   let bags: number = 0;
 
-  // ======= Nuevo: estado de resultados inline =======
+  // ======= Estado de resultados inline =======
   let loading = false;
   let error = '';
   let data: any = null;
 
-  // (Temporal) Modo debug para ver ofertas simuladas hasta implementar scraping/API real
-  const USE_DEBUG = true; // TODO: poner en false cuando FlyOne/Blackstone estén integrados
+  // (Temporal) Modo debug para ver ofertas simuladas
+  const USE_DEBUG = true; // TODO: false cuando FlyOne/Blackstone estén integrados
 
   // "4 horas · directo · desde 400 €" con i18n (sección Ofertas)
   function offerLine(hours: number, direct = true, price = 400, currency = '€') {
@@ -36,7 +37,7 @@
     return `${h} · ${d} · ${from} ${price} ${currency}`;
   }
 
-  // ======= Helpers resultados =======
+  // ======= Helpers de búsqueda =======
   function buildQuery() {
     const q = new URLSearchParams({
       origin,
@@ -50,19 +51,36 @@
     return q.toString();
   }
 
+  // 💶 Formato dinero (price.amountCents)
   function fmtMoney(m: any) {
     if (!m) return '—';
     try {
-      return new Intl.NumberFormat('es-ES', { style: 'currency', currency: m.currency || 'EUR' }).format(m.amount);
+      const cents = (typeof m.amountCents === 'number')
+        ? m.amountCents
+        : (typeof m.amount === 'number' ? Math.round(m.amount * 100) : null);
+      const currency = m.currency || 'EUR';
+      if (cents == null) return '—';
+      return new Intl.NumberFormat('es-ES', { style: 'currency', currency }).format(cents / 100);
     } catch {
-      return `${m.amount} ${m.currency || ''}`.trim();
+      if (typeof m === 'number') {
+        return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(m);
+      }
+      return `${m.amount ?? m.amountCents ?? ''} ${m.currency || ''}`.trim();
     }
   }
 
-  function hhmm(iso: string) {
+  // 🕒 Horas/fecha
+  function hhmm(iso?: string) {
     if (!iso) return '—';
     const d = new Date(iso);
-    return d.toISOString().slice(11, 16);
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  }
+  function dshort(iso?: string) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }); // dd/mm
   }
 
   async function fetchResultsInline() {
@@ -71,16 +89,12 @@
     data = null;
     try {
       const qs = buildQuery();
-      // Mantén la búsqueda en la URL sin recargar (compartible)
-      history.replaceState(null, '', `/?${qs}`);
+      history.replaceState(null, '', `/?${qs}`); // mantener query en URL
       const url = `/api/search?${qs}${USE_DEBUG ? '&debug=1' : ''}`;
       const res = await fetch(url);
       const json = await res.json();
-      if (!json.ok) {
-        error = json.error || 'Error en la búsqueda';
-      } else {
-        data = json;
-      }
+      if (!json.ok) error = json.error || 'Error en la búsqueda';
+      else data = json;
     } catch (e: any) {
       error = e?.message || 'Fallo de red';
     } finally {
@@ -88,13 +102,57 @@
     }
   }
 
-  // ⛳ Acción del botón lupa — ahora INLINE (NO navega)
+  // ⛳ Acción del botón lupa — INLINE
   async function goSearch() {
     await fetchResultsInline();
   }
+
+  // ======= Helpers UI resultados (dos columnas + expandible) =======
+  // a) Aplanar ofertas (de todos los proveedores)
+  $: flatOffers = data
+    ? data.results.flatMap((r: any) =>
+        (r.offers || []).map((of: any) => ({ ...of, _provider: r.provider }))
+      )
+    : [];
+
+  // b) Mapa de expandido por id
+  let expanded: Record<string, boolean> = {};
+  function toggle(id: string) {
+    expanded[id] = !expanded[id];
+  }
+  function providerName(p?: string) {
+    if (p === 'flyone') return 'FlyOne';
+    if (p === 'blackstone') return 'Blackstone';
+    return p || '—';
+  }
+
+  // c) Segmentos principales para resumen
+  function firstOut(of: any) { return of?.out?.segments?.[0]; }
+  function firstRet(of: any) { return of?.ret?.segments?.[0]; }
+
+  // ======= 🎠 Carrusel de fondo del HERO (barcelona1..12.jpg) =======
+  const HERO_IMAGES = Array.from({ length: 12 }, (_, i) => `/barcelona${i + 1}.jpg`);
+  const HERO_INTERVAL_MS = 5000; // cambia cada 5s
+  let heroIdx = 0;
+
+  // valor encadenado con el style del hero (propiedad background-image)
+  let heroBg = `linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25)), url('${HERO_IMAGES[0]}')`;
+
+  onMount(() => {
+    // Precarga para evitar parpadeos
+    HERO_IMAGES.forEach(src => { const im = new Image(); im.src = src; });
+
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const interval = setInterval(() => {
+      heroIdx = (heroIdx + 1) % HERO_IMAGES.length;
+      heroBg = `linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25)), url('${HERO_IMAGES[heroIdx]}')`;
+    }, reduce ? HERO_INTERVAL_MS * 3 : HERO_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  });
 </script>
 
-<section class="hero">
+<section class="hero" style:background-image={heroBg}>
   <h1 class="hero-title">{t('hero.title', 'Find the best flights')}</h1>
   <p class="hero-subtitle">{t('hero.subtitle', 'Compare on Skyarmenia and book in minutes.')}</p>
 
@@ -182,11 +240,6 @@
           stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
-
-    <!-- Promoción (igual que Login: fondo blanco, borde accent, texto celeste) -->
-    <a href="/deals" class="promo-btn" aria-label={t('form.promo', 'Promotion')}>
-      {t('form.promo', 'Promotion')}
-    </a>
   </div>
 
   <!-- ===== Resultados inline debajo del buscador ===== -->
@@ -200,45 +253,81 @@
         {data.totalOffers} {t('results.offers','offers')} · {t('results.took','took')} {data.tookMs} ms
       </div>
 
-      <!-- Lista por proveedor -->
-      <div style="display:grid; gap:10px;">
-        {#each data.results as r}
-          <div style="border:1px solid var(--border); border-radius:10px; padding:10px; background:#fff;">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <strong>{t('provider','Provider')}: {r.provider}</strong>
-              <span style="font-size:.85rem;color:#666;">{r.offers.length} {t('results.offers','offers')}</span>
-            </div>
+      <!-- ✅ Dos columnas, resumen en una línea y detalle expandible -->
+      {#if flatOffers.length === 0}
+        <p>{t('results.empty','No offers for your search.')}</p>
+      {:else}
+        <div class="results-grid">
+          {#each flatOffers as of}
+            <div class="offer">
+              <!-- Resumen de una línea: proveedor · rutas + fechas · precio -->
+              <button class="offer-row" on:click={() => toggle(of.id)} aria-expanded={!!expanded[of.id]}>
+                <div class="row-main">
+                  <span class="provider">{providerName(of._provider ?? of.provider)}</span>
+                  <span class="route">
+                    {#if of.out?.segments?.length}
+                      {of.out.segments[0].origin} → {of.out.segments[0].destination}
+                      · {dshort(of.out.segments[0].departTime)}
+                    {/if}
+                    {#if of.ret?.segments?.length}
+                      · {of.ret.segments[0].origin} → {of.ret.segments[0].destination}
+                      · {dshort(of.ret.segments[0].departTime)}
+                    {/if}
+                  </span>
+                </div>
+                <div class="row-price">{fmtMoney(of.price)}</div>
+              </button>
 
-            {#if r.error}
-              <div style="color:#b00020; margin-top:6px;">{r.error}</div>
-            {/if}
+              <!-- Detalle al hacer click -->
+              {#if expanded[of.id]}
+                <div class="offer-detail">
+                  <div class="meta">
+                    {of.cabin || 'economy'} · {t('opts.bags','Bags')}: {of.bagsIncluded ?? 0}
+                  </div>
 
-            {#if r.offers.length > 0}
-              <div style="display:grid; gap:8px; margin-top:8px;">
-                {#each r.offers as of}
-                  <div style="border:1px dashed var(--border); border-radius:8px; padding:8px;">
-                    <div style="color:#666; font-size:.9rem;">
-                      {(of.cabin || 'economy')} · {(of.fareClass || '—')}
-                      {#if of.deeplink} · <a href={of.deeplink}>{t('cta.buy','Buy')}</a>{/if}
-                    </div>
-                    {#if of.itinerary?.segments?.length}
-                      {#each of.itinerary.segments as s}
-                        <div>
-                          {s.origin} {hhmm(s.departure)} → {s.destination} {hhmm(s.arrival)}
-                          <span style="color:#888;">({s.flightNumber})</span>
+                  {#if of.out}
+                    <div class="leg">
+                      <strong>{t('results.out','Outbound')}:</strong>
+                      {#each of.out.segments as s}
+                        <div class="seg">
+                          {s.origin} {hhmm(s.departTime)} → {s.destination} {hhmm(s.arriveTime)}
+                          {#if s.flightNumber}<span class="fn">({s.flightNumber})</span>{/if}
                         </div>
                       {/each}
-                    {/if}
-                    <div style="font-weight:600; margin-top:4px;">
-                      {of.price?.total ? fmtMoney(of.price.total) : '—'}
+                      {#if of.out.durationMin}
+                        <div class="dur">{t('results.duration','Duration')}: {of.out.durationMin} min</div>
+                      {/if}
                     </div>
-                  </div>
-                {/each}
-              </div>
-            {/if}
-          </div>
-        {/each}
-      </div>
+                  {/if}
+
+                  {#if of.ret}
+                    <div class="leg">
+                      <strong>{t('results.ret','Return')}:</strong>
+                      {#each of.ret.segments as s}
+                        <div class="seg">
+                          {s.origin} {hhmm(s.departTime)} → {s.destination} {hhmm(s.arriveTime)}
+                          {#if s.flightNumber}<span class="fn">({s.flightNumber})</span>{/if}
+                        </div>
+                      {/each}
+                      {#if of.ret.durationMin}
+                        <div class="dur">{t('results.duration','Duration')}: {of.ret.durationMin} min</div>
+                      {/if}
+                    </div>
+                  {/if}
+
+                  <div class="total">{fmtMoney(of.price)}</div>
+
+                  {#if of.deepLink}
+                    <a class="deeplink" href={of.deepLink} target="_blank" rel="noopener">
+                      {t('cta.buy','Buy')} → {providerName(of._provider ?? of.provider)}
+                    </a>
+                  {/if}
+                </div>
+              {/if}
+            </div>
+          {/each}
+        </div>
+      {/if}
     </div>
   {/if}
 </section>
@@ -282,7 +371,7 @@
         loading="lazy"
       />
       <div class="offer-body">
-        <h3>Alicante ({t('status.soon', 'Soon...')})</h3>
+        <h3>Transfers from the airport ({t('status.soon', 'Soon...')})</h3>
         <p>{offerLine(4, true, 400, '€')}</p>
       </div>
     </div>
@@ -292,22 +381,34 @@
 <style>
   /* ===== HERO ===== */
   .hero {
-    background: linear-gradient(200deg, #e6f6f9 0%, #fbfcfc 100%);
+    /* Fallback inicial por si tarda en montar el script */
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25)),
+      url('/barcelona1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     padding: 48px 24px;
     border-bottom: 1px solid #2a2b31;
-    box-shadow: inset 0 1px 4px rgba(188, 197, 223, 0.05);
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
     border-radius: 8px;
+
+    color: #fff;
+    min-height: 580px;
   }
   .hero-title {
     font-weight: 400;
     font-size: 32px;
     margin: 0 0 80px;
-    color: #000;
+    color: #fff; /* sobre foto */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
   }
   .hero-subtitle {
     margin: 0 0 24px;
-    color: #38b6ff;
+    color: #eaf6ff; /* más legible sobre imagen */
     font-size: 16px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
   }
   .hero-options {
     display: flex;
@@ -315,7 +416,7 @@
     margin-bottom: 12px;
     font-size: 14px;
     font-weight: 600;
-    color: var(--muted);
+    color: #f0f4f8; /* labels claros sobre imagen */
     flex-wrap: wrap;
   }
   .trip-group label + label { margin-left: 12px; }
@@ -325,12 +426,14 @@
   /* ===== Buscador ===== */
   .search-bar {
     display: grid;
-    gap: 12px;
+    gap: 50px;
     align-items: end;
-    background: #fff;
+
+    background: #ffffff;
     padding: 16px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
     grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) minmax(160px, 1fr)
                            minmax(160px, 1fr) minmax(140px, 1fr)
                            auto minmax(140px, 1fr);
@@ -351,23 +454,66 @@
   }
   .search-icon-btn .ico { width: 20px; height: 20px; }
 
-  /* Botón promoción (igual que Login) */
-  .promo-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 12px;
-    font-size: 14px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    background: #fff;
-    color: #38b6ff;
-    border: 1px solid var(--accent);
-    min-height: 44px;
+  /* ===== Resultados (nuevo layout) ===== */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* ✅ dos columnas */
+    gap: 12px;
+  }
+  @media (max-width: 980px) {
+    .results-grid { grid-template-columns: 1fr; } /* móvil: una columna */
   }
 
-  /* ===== Ofertas ===== */
+  .offer {
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    overflow: hidden;
+  }
+  .offer-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto; /* resumen + precio */
+    gap: 8px;
+    align-items: center;
+    padding: 10px 12px;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+  }
+  .offer-row:hover { background: #fafafa; }
+  .row-main { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .provider { font-weight: 700; color: #111; }
+  .route { color: #333; }
+  .row-price { font-weight: 800; font-size: 1.05rem; }
+
+  .offer-detail {
+    border-top: 1px dashed var(--border, #e5e7eb);
+    padding: 10px 12px 12px;
+    display: grid;
+    gap: 8px;
+  }
+  .meta { color: #555; }
+  .leg { display: grid; gap: 4px; }
+  .seg { color: #222; }
+  .fn { color: #888; margin-left: 4px; }
+  .dur { color: #666; }
+  .total { font-weight: 800; margin-top: 4px; }
+  .deeplink {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 6px 10px;
+    border: 1px solid var(--accent, #38bdf8);
+    border-radius: 10px;
+    background: #fff;
+    color: #06b6d4;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  /* ===== Ofertas (homepage) ===== */
   .offers { padding: 36px 0; }
   .offers-title { font-weight: 300; font-size: 20px; margin-bottom: 20px; }
   .offers-grid {
@@ -397,7 +543,7 @@
 
     /* buscador a 2 columnas */
     .search-bar { grid-template-columns: 1fr 1fr; gap: 10px; }
-    .search-icon-btn, .promo-btn { width: 100%; height: 44px; }
+    .search-icon-btn { width: 100%; height: 44px; }
   }
 
   @media (max-width: 640px) {
@@ -407,11 +553,9 @@
 
     /* buscador en 1 columna */
     .search-bar { grid-template-columns: 1fr; gap: 8px; }
-    .search-icon-btn, .promo-btn { width: 100%; height: 44px; }
+    .search-icon-btn { width: 100%; height: 44px; }
 
     .hero-options { gap: 12px; }
     .trip-group label + label { margin-left: 8px; }
   }
 </style>
-
-   

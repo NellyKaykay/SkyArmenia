@@ -2,29 +2,18 @@
   import '../app.css';
   import { onMount } from 'svelte';
 
-  // ✅ i18n stores y tipos
-  import { lang, setLang, i18n, languages, type Lang } from '$lib/i18n';
-  // (opcional) diagnóstico
-  // import * as I18N from '$lib/i18n';
-  // console.log('i18n module identity:', I18N);
+  import { lang, setLang, i18n, languages } from '$lib/i18n';
+  import type { Lang } from '$lib/i18n';
 
-  // Selector de idioma sincronizado con el store (no bind a $lang)
+  // Sincroniza el <select> con el store
   let current: Lang = 'es';
   $: current = $lang;
 
-  // Helper de traducción con fallback
-  $: t = (k: string, fallback?: string) => {
-    const v = $i18n[k];
-    return v === k ? (fallback ?? k) : v;
-  };
+  // Estado para la sombra del header
+  let scrolled = false;
 
-  // Efecto sticky del header (sombra al hacer scroll)
   onMount(() => {
-    const el = document.querySelector('.header');
-    const onScroll = () => {
-      if (!el) return;
-      el.classList.toggle('is-scrolled', window.scrollY > 4);
-    };
+    const onScroll = () => { scrolled = window.scrollY > 4; };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -41,7 +30,11 @@
     border-bottom: 1px solid var(--border);
     transition: box-shadow .2s ease, backdrop-filter .2s ease;
   }
-  
+  /* ahora Svelte "ve" esta clase gracias a class:is-scrolled */
+  .header.is-scrolled {
+    box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    backdrop-filter: saturate(120%) blur(6px);
+  }
   .header-inner {
     display: flex;
     align-items: center;
@@ -49,7 +42,7 @@
     min-height: 80px;
     gap: 16px;
   }
-  .logo { height: 130px; width: auto; display: block; }
+  .logo { height: 230px; width: auto; display: block; }
   .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
   .ctrls { display: flex; align-items: center; gap: 12px; }
   .lang {
@@ -57,7 +50,6 @@
     background: #fff; color: #000;
     padding: 8px 10px; border-radius: 8px; min-height: 40px;
   }
-  /* ✅ Login negro, borde de acento (igual a tu diseño) */
   .login {
     padding: 6px 12px;
     border: 1px solid var(--accent);
@@ -92,7 +84,6 @@
     justify-content: flex-start;
   }
   .footer .brand-logo { height: 100px; width: auto; display: block; }
-  .footer p { margin: 8px 0 0; color: #444; line-height: 1.5; }
   .footer h4 {
     margin: 0 0 10px;
     font-size: 14px; text-transform: uppercase; letter-spacing: .04em;
@@ -103,11 +94,6 @@
   .footer a { color: inherit; text-decoration: none; }
   .footer a:hover { text-decoration: underline; }
   .social { display: flex; gap: 10px; margin-top: 10px; }
-  .social a {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 8px;
-  }
-  .social svg { width: 18px; height: 18px; }
 
   .footer-bottom {
     border-top: 1px solid var(--border);
@@ -121,7 +107,7 @@
 
   /* ---------- Responsive ---------- */
   @media (max-width: 900px) {
-    .logo { height: 84px; }
+    .logo { height: 64px; }
     .header-inner { min-height: 72px; }
     .footer-top { grid-template-columns: 1.6fr 1fr 1fr; }
   }
@@ -142,10 +128,14 @@
 </style>
 
 <!-- Header -->
-<div class="header">
+<div class="header" class:is-scrolled={scrolled}>
   <div class="container header-inner">
     <a href="/" class="brand" aria-label="SkyArmenia Home">
-      <img src="/logo-skyarmenia.png" alt="SkyArmenia" class="logo" />
+      <img
+        src="/logo-skyarmenia.svg"
+        alt="SkyArmenia"
+        class="logo"
+      />
     </a>
 
     <div class="ctrls">
@@ -153,7 +143,7 @@
         class="lang"
         aria-label={$i18n['footer.language']}
         bind:value={current}
-        on:change={(e)=> setLang((e.target as HTMLSelectElement).value as Lang)}
+        on:change={(e) => setLang((e.target as HTMLSelectElement).value as Lang)}
       >
         {#each languages as l}
           <option value={l}>{l.toUpperCase()}</option>
@@ -176,36 +166,10 @@
     <!-- Brand / About -->
     <div>
       <div class="brand-row">
-        <img src="/logo-skyarmenia.png" alt="SkyArmenia" class="brand-logo" />
+        <img src="/logo-skyarmenia.svg" alt="SkyArmenia" class="brand-logo" />
       </div>
-      <p>{$i18n['footer.about']}</p>
-
       <div class="social" aria-label="Social links">
-        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M14 9h3V6h-3c-1.66 0-3 1.34-3 3v3H8v3h3v6h3v-6h3l1-3h-4V9c0-.55.45-1 1-1Z"
-              stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </a>
-        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.5"/>
-            <circle cx="12" cy="12" r="3.5" stroke="currentColor" stroke-width="1.5"/>
-            <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
-          </svg>
-        </a>
-        <a href="https://x.com" target="_blank" rel="noopener" aria-label="X">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </a>
-        <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M22 12s0-3-1-4c-1-1-5-1-9-1s-8 0-9 1-1 4-1 4 0 3 1 4 5 1 9 1 8 0 9-1 1-4 1-4Z"
-              stroke="currentColor" stroke-width="1.5"/>
-            <path d="M10 9.5v5l4-2.5-4-2.5Z" fill="currentColor"/>
-          </svg>
-        </a>
+        <!-- (opcional) añade iconos/enlaces reales cuando quieras -->
       </div>
     </div>
 
@@ -220,7 +184,7 @@
       </ul>
     </div>
 
-    <!-- Cities (nombres propios) -->
+    <!-- Cities -->
     <div>
       <h4>{$i18n['footer.cities']}</h4>
       <ul>
@@ -252,4 +216,3 @@
     </div>
   </div>
 </footer>
-

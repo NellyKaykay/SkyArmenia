@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400">
+  <!-- Transparent background -->
+
+  <!-- Main brand text -->
+  <g font-family="serif" font-weight="700" letter-spacing="0.5">
+    <text x="230" y="235" font-size="140" fill="#53EAFD">Sky</text>
+    <text x="475" y="235" font-size="140" fill="#53EAFD">Armenia</text>
+  </g>
+
+  <!-- Tagline -->
+  <g font-family="serif">
+    <text x="740" y="285" font-size="44" fill="#53EAFD">fly with us</text>
+  </g>
+</svg>

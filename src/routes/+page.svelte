@@ -1,4 +1,4 @@
-<script lang="ts"> 
+<script lang="ts">
   // ✅ i18n stores para usar $lang y $i18n
   import { i18n, lang } from '$lib/i18n';
   import { onMount } from 'svelte';
@@ -109,11 +109,12 @@
 
   // ======= Helpers UI resultados (dos columnas + expandible) =======
   // a) Aplanar ofertas (de todos los proveedores)
-  $: flatOffers = data
-    ? data.results.flatMap((r: any) =>
-        (r.offers || []).map((of: any) => ({ ...of, _provider: r.provider }))
-      )
-    : [];
+  $: flatOffers =
+    (data?.results && Array.isArray(data.results))
+      ? data.results.flatMap((r: any) =>
+          (r?.offers || []).map((of: any) => ({ ...of, _provider: r.provider }))
+        )
+      : [];
 
   // b) Mapa de expandido por id
   let expanded: Record<string, boolean> = {};
@@ -126,7 +127,7 @@
     return p || '—';
   }
 
-  // c) Segmentos principales para resumen
+  // c) Segmentos principales para resumen (por si los usas más tarde)
   function firstOut(of: any) { return of?.out?.segments?.[0]; }
   function firstRet(of: any) { return of?.ret?.segments?.[0]; }
 
@@ -154,7 +155,7 @@
 
 <section class="hero" style:background-image={heroBg}>
   <h1 class="hero-title">{t('hero.title', 'Find the best flights')}</h1>
-  <p class="hero-subtitle">{t('hero.subtitle', 'Compare on Skyarmenia and book in minutes.')}</p>
+ 
 
   <!-- Opciones superiores -->
   <div class="hero-options">
@@ -171,7 +172,12 @@
 
     <div class="bags-group">
       <label for="bags-select">{t('opts.bags', 'Bags')}:</label>
-      <select id="bags-select" bind:value={bags} aria-label={t('opts.bags', 'Bags')}>
+      <select
+        id="bags-select"
+        bind:value={bags}
+        aria-label={t('opts.bags', 'Bags')}
+        on:change={(e) => bags = Number((e.target as HTMLSelectElement).value)}
+      >
         <option value={0}>0</option>
         <option value={1}>1</option>
         <option value={2}>2</option>
@@ -224,7 +230,13 @@
     <!-- Pasajeros -->
     <div>
       <label for="passengers" class="label">{t('form.passengers', 'Passengers')}</label>
-      <select id="passengers" bind:value={adults} style="width:100%;" aria-label={t('form.passengers', 'Passengers')}>
+      <select
+        id="passengers"
+        bind:value={adults}
+        style="width:100%;"
+        aria-label={t('form.passengers', 'Passengers')}
+        on:change={(e) => adults = Number((e.target as HTMLSelectElement).value)}
+      >
         <option value={1}>1</option>
         <option value={2}>2</option>
         <option value={3}>3</option>
@@ -235,9 +247,11 @@
     <!-- Buscar (lupa SVG, sin fondo de color) -->
     <button type="button" class="search-icon-btn" on:click={goSearch} aria-label={t('form.search', 'Search flights')}>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="ico" aria-hidden="true">
-        <path d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"
+        <path
+          d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"
           fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round"/>
+          stroke-linecap="round" stroke-linejoin="round"
+        />
       </svg>
     </button>
   </div>
@@ -345,7 +359,7 @@
         loading="lazy"
       />
       <div class="offer-body">
-        <h3>Yerevan</h3>
+        <h3>BCN-EVN/EVN-BCN</h3>
         <p>{offerLine(4, true, 400, '€')}</p>
       </div>
     </div>
@@ -358,8 +372,7 @@
         loading="lazy"
       />
       <div class="offer-body">
-        <h3>Barcelona</h3>
-        <p>{offerLine(4, true, 400, '€')}</p>
+        <h3>Visita Barcelona</h3>
       </div>
     </div>
 
@@ -372,7 +385,6 @@
       />
       <div class="offer-body">
         <h3>Transfers from the airport ({t('status.soon', 'Soon...')})</h3>
-        <p>{offerLine(4, true, 400, '€')}</p>
       </div>
     </div>
   </div>
@@ -390,12 +402,13 @@
     background-repeat: no-repeat;
 
     padding: 48px 24px;
-    border-bottom: 1px solid #2a2b31;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
+    border-bottom: 1px solid #0a1f97;
+    /* ✅ corregido: espacio antes de rgba y paréntesis final */
+    box-shadow: inset 0 6px 10px rgba(6, 10, 67, 0.05);
     border-radius: 8px;
 
     color: #fff;
-    min-height: 580px;
+    min-height: 380px;
   }
   .hero-title {
     font-weight: 400;
@@ -404,12 +417,7 @@
     color: #fff; /* sobre foto */
     text-shadow: 0 1px 2px rgba(0,0,0,0.25);
   }
-  .hero-subtitle {
-    margin: 0 0 24px;
-    color: #eaf6ff; /* más legible sobre imagen */
-    font-size: 16px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  }
+ 
   .hero-options {
     display: flex;
     gap: 24px;
@@ -426,17 +434,21 @@
   /* ===== Buscador ===== */
   .search-bar {
     display: grid;
-    gap: 50px;
+    gap: 35px;
     align-items: end;
 
     background: #ffffff;
     padding: 16px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 12px rgba(39, 6, 160, 0.15);
 
-    grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) minmax(160px, 1fr)
-                           minmax(160px, 1fr) minmax(140px, 1fr)
-                           auto minmax(140px, 1fr);
+    grid-template-columns:
+      minmax(180px, 1fr)  /* origin */
+      minmax(180px, 1fr)  /* destination */
+      minmax(160px, 1fr)  /* depart */
+      minmax(160px, 1fr)  /* return */
+      minmax(140px, 1fr)  /* passengers */
+      auto;               /* search button */
   }
 
   /* Botón icono buscar (sin fondo de color) */
@@ -539,7 +551,7 @@
   @media (max-width: 980px) {
     .hero { padding: 40px 16px; }
     .hero-title { font-size: 28px; margin-bottom: 48px; }
-    .hero-subtitle { font-size: 15px; }
+    
 
     /* buscador a 2 columnas */
     .search-bar { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -549,7 +561,7 @@
   @media (max-width: 640px) {
     .hero { padding: 32px 12px; }
     .hero-title { font-size: 24px; margin-bottom: 28px; }
-    .hero-subtitle { font-size: 14px; margin-bottom: 16px; }
+    
 
     /* buscador en 1 columna */
     .search-bar { grid-template-columns: 1fr; gap: 8px; }

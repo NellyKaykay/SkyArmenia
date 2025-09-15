@@ -1,39 +1,140 @@
-import type { Actions } from './$types';
+// src/routes/login/+page.server.ts
+import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
+import { createServerClient } from '@supabase/ssr';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { dev } from '$app/environment';
+
+function makeClient(cookies: any, fetch: typeof globalThis.fetch) {
+  return createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+    cookies: {
+      get: (name) => cookies.get(name),
+      set: (name, value, options) => {
+        cookies.set(name, value, {
+          ...options,
+          path: '/',
+          httpOnly: true,
+          sameSite: 'lax',
+          secure: !dev
+        });
+      },
+      remove: (name, options) => {
+        cookies.delete(name, { ...options, path: '/' });
+      }
+    },
+    fetch
+  });
+}
+
+export const load: PageServerLoad = async ({ cookies, fetch, url }) => {
+  const supabase = makeClient(cookies, fetch);
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // Si ya está logueada, no pintes el login
+  if (session) {
+    const to = url.searchParams.get('redirect') ?? '/';
+    throw redirect(303, to);
+  }
+
+  // Valores iniciales para tu UI (si los usas)
+  return {
+    view: 'choice' as const,
+    values: { email: '', name: '' }
+  };
+};
 
 export const actions: Actions = {
-  // POST /login?action=login
-  login: async ({ request }) => {
+  // POST /login?action=login  → envía magic link
+  login: async ({ request, cookies, fetch, url }) => {
     const data = await request.formData();
     const email = String(data.get('email') ?? '').trim();
-    const password = String(data.get('password') ?? '');
 
-    if (!email || !password) {
-      return fail(400, { view: 'login', error: 'Falta email o contraseña', values: { email } });
+    if (!email) {
+      return fail(400, {
+        view: 'login',
+        error: 'Introduce tu email para recibir el enlace.',
+        values: { email }
+      });
     }
 
-    // TODO: integrar Supabase signIn aquí
-    // Simulación: OK → redirige al home
-    throw redirect(303, '/');
+    const supabase = makeClient(cookies, fetch);
+
+    // Redirección de retorno del correo → /auth/callback?redirect=<destino>
+    const redirectTo =
+      url.searchParams.get('redirect') ??
+      '/'; // permitirá volver a donde estaba si lo pasas en la URL del login
+
+    const emailRedirectTo = new URL('/auth/callback', url.origin);
+    emailRedirectTo.searchParams.set('redirect', redirectTo);
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: emailRedirectTo.toString()
+      }
+    });
+
+    if (error) {
+      return fail(400, {
+        view: 'login',
+        error: error.message || 'No se pudo enviar el enlace.',
+        values: { email }
+      });
+    }
+
+    // Mensaje para tu UI: "Revisa tu correo"
+    return {
+      ok: true,
+      view: 'login',
+      message: 'Te hemos enviado un enlace de acceso. Revisa tu correo.',
+      values: { email }
+    };
   },
 
-  // POST /login?action=signup
-  signup: async ({ request }) => {
+  // POST /login?action=signup  → también envía magic link (Supabase creará la cuenta al verificar)
+  signup: async ({ request, cookies, fetch, url }) => {
     const data = await request.formData();
     const name = String(data.get('name') ?? '').trim();
     const email = String(data.get('email') ?? '').trim();
-    const password = String(data.get('password') ?? '');
-    const confirm = String(data.get('confirm') ?? '');
 
-    if (!name || !email || !password || !confirm) {
-      return fail(400, { view: 'signup', error: 'Completa todos los campos', values: { name, email } });
-    }
-    if (password !== confirm) {
-      return fail(400, { view: 'signup', error: 'Las contraseñas no coinciden', values: { name, email } });
+    if (!name || !email) {
+      return fail(400, {
+        view: 'signup',
+        error: 'Introduce nombre y email.',
+        values: { name, email }
+      });
     }
 
-    // TODO: integrar Supabase signUp aquí
-    // Simulación: OK → vuelve a /login con flag
-    throw redirect(303, '/login?created=1');
+    const supabase = makeClient(cookies, fetch);
+
+    const redirectTo =
+      url.searchParams.get('redirect') ??
+      '/';
+    const emailRedirectTo = new URL('/auth/callback', url.origin);
+    emailRedirectTo.searchParams.set('redirect', redirectTo);
+
+    // Para magic link en “signup”, usamos signInWithOtp y guardamos el nombre como metadata después del login si quieres.
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: emailRedirectTo.toString(),
+        data: { name } // quedará asociado cuando se confirme
+      }
+    });
+
+    if (error) {
+      return fail(400, {
+        view: 'signup',
+        error: error.message || 'No se pudo enviar el enlace de registro.',
+        values: { name, email }
+      });
+    }
+
+    return {
+      ok: true,
+      view: 'login',
+      message: 'Te enviamos un enlace para confirmar tu email. Luego podrás iniciar sesión.',
+      values: { email }
+    };
   }
 };

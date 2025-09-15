@@ -1,6 +1,7 @@
-<script lang="ts"> 
+<script lang="ts">  
   import { fade } from 'svelte/transition';
   import type { ActionData } from './$types';
+  import BgCarousel from '$lib/components/BgCarousel.svelte'; // (solo importado, sin usar)
   export let form: ActionData | undefined;
 
   let email = (form as any)?.values?.email ?? '';
@@ -59,6 +60,12 @@
           <!-- Botón estilo “Iniciar sesión” del header -->
           <button class="btn-login wide" type="submit">Entrar</button>
         </form>
+
+        <!-- Nuevo enlace de registro -->
+        <p class="legal small centertext">
+          ¿No tienes cuenta? <a class="link-register" href="/login">Regístrate</a>
+        </p>
+
         <p class="legal small centertext">
           Al continuar, aceptas nuestras <a href="/terms">Condiciones del servicio</a> y nuestra
           <a href="/privacy">Política de privacidad</a>.
@@ -159,6 +166,13 @@
   }
   .legal.small{ font-size:.86rem; }
   .centertext { text-align: center; }
+
+  .link-register{
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .link-register:hover{ text-decoration: none; }
 
   .alert{
     border:1px solid #fecaca; background: rgba(254,226,226,.85); color:#991b1b;

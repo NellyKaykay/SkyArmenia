@@ -92,7 +92,7 @@ const dict: Record<Lang, Dict> = {
     'form.promo': 'Promotion',
 
     // Offers / misc
-    'offers.title': 'Travel deals with promotion',
+    'offers.title': 'Direct flights',
     'status.soon': 'Soon...',
     'unit.hours': 'hours',
     'flight.direct': 'direct',
@@ -139,7 +139,7 @@ const dict: Record<Lang, Dict> = {
     'form.search': 'Buscar vuelos',
     'form.promo': 'Promoción',
 
-    'offers.title': 'Ofertas de viaje con promoción',
+    'offers.title': 'Vuelos directos',
     'status.soon': 'Pronto...',
     'unit.hours': 'horas',
     'flight.direct': 'directo',
@@ -185,7 +185,7 @@ const dict: Record<Lang, Dict> = {
     'form.search': 'Найти рейсы',
     'form.promo': 'Акции',
 
-    'offers.title': 'Выгодные предложения на путешествия',
+    'offers.title': 'Прямые рейсы',
     'status.soon': 'Скоро...',
     'unit.hours': 'часов',
     'flight.direct': 'прямой',
@@ -228,10 +228,10 @@ const dict: Record<Lang, Dict> = {
     'form.destination': 'Նպատակակետ',
     'form.depart': 'Մեկնում',
     'form.return': 'Վերադարձ',
-    'form.search': 'Փնտրել թռիչքներ',
+    'form.search': 'Փնտրել չվերթներ',
     'form.promo': 'Ակցիա',
 
-    'offers.title': 'Ճանապարհորդության առաջարկներ',
+    'offers.title': 'Ուղիղ չվերթներ',
     'status.soon': 'Շուտով...',
     'unit.hours': 'ժամ',
     'flight.direct': 'ուղիղ',

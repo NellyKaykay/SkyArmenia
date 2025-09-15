@@ -348,7 +348,7 @@
 
 <!-- Sección de ofertas (sin cambios en tu diseño) -->
 <section class="offers">
-  <h2 class="offers-title">{t('offers.title', 'Travel deals with promotion')}</h2>
+  <h2 class="offers-title">{t('offers.title', 'Destinations')}</h2>
 
   <div class="offers-grid">
     <!-- Card 1: Yerevan -->
@@ -359,7 +359,7 @@
         loading="lazy"
       />
       <div class="offer-body">
-        <h3>BCN-EVN/EVN-BCN</h3>
+        <h3>Erevan</h3>
         <p>{offerLine(4, true, 400, '€')}</p>
       </div>
     </div>
@@ -372,22 +372,14 @@
         loading="lazy"
       />
       <div class="offer-body">
-        <h3>Visita Barcelona</h3>
+        <h3>Barcelona</h3>
+        <p>{offerLine(4, true, 400, '€')}</p>
       </div>
     </div>
 
-    <!-- Card 3: Alicante -->
-    <div class="offer-card">
-      <img
-        src="https://alicanteturismo.com/wp-content/uploads/2024/06/Explanada-de-espana.jpg"
-        alt="Alicante"
-        loading="lazy"
-      />
-      <div class="offer-body">
-        <h3>Transfers from the airport ({t('status.soon', 'Soon...')})</h3>
-      </div>
-    </div>
-  </div>
+   </div>
+    
+ 
 </section>
 
 <style>

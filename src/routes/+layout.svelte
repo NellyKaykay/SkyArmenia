@@ -1,9 +1,12 @@
-<script lang="ts">
+<script lang="ts"> 
   import '../app.css';
   import { onMount } from 'svelte';
 
   import { lang, setLang, i18n, languages } from '$lib/i18n';
   import type { Lang } from '$lib/i18n';
+
+  // ⬇️ Recibe la sesión desde +layout.server.ts
+  export let data: { session: any };
 
   // Sincroniza el <select> con el store
   let current: Lang = 'es';
@@ -42,7 +45,7 @@
     min-height: 80px;
     gap: 16px;
   }
-  .logo { height: 230px; width: auto; display: block; }
+  .logo { height: 130px; width: auto; display: block; }
   .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
   .ctrls { display: flex; align-items: center; gap: 12px; }
   .lang {
@@ -60,8 +63,10 @@
     text-decoration: none;
     min-height: 40px;
     display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
   }
   .login:hover { background: #f7f7f7; }
+  .logout-form { display: inline; }
 
   .page { padding-top: 0; }
 
@@ -150,7 +155,14 @@
         {/each}
       </select>
 
-      <a href="/login" class="login">{$i18n['nav.login']}</a>
+      {#if data?.session}
+        <!-- Cerrar sesión (igual estilo que "Login") -->
+        <form method="POST" action="/logout" class="logout-form">
+          <button type="submit" class="login">{$i18n['nav.logout'] ?? 'Cerrar sesión'}</button>
+        </form>
+      {:else}
+        <a href="/login" class="login">{$i18n['nav.login']}</a>
+      {/if}
     </div>
   </div>
 </div>

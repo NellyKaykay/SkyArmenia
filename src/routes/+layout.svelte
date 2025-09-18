@@ -57,9 +57,7 @@
     .footer-top { grid-template-columns: 1.6fr 1fr 1fr; }
   }
   @media (max-width: 600px) {
-    .header-inner {
-      /* (Nota) estilos del header están dentro del componente */
-    }
+    /* (Nota) estilos del header están dentro del componente */
     .page { padding-top: 0; }
     .footer-top { grid-template-columns: 1fr; padding: 24px 0; }
     .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }

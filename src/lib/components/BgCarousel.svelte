@@ -46,21 +46,15 @@
     color: #fff;
     min-height: 380px;
   }
-  .hero-title {
-    font-weight: 400;
-    font-size: 32px;
-    margin: 0 0 80px;
-    color: #fff; /* sobre foto */
-    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
-  }
+
 
   @media (max-width: 980px) {
     .hero { padding: 40px 16px; }
-    .hero-title { font-size: 28px; margin-bottom: 48px; }
+
   }
   @media (max-width: 640px) {
     .hero { padding: 32px 12px; }
-    .hero-title { font-size: 24px; margin-bottom: 28px; }
+
   }
 </style>
 

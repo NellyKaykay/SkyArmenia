@@ -209,14 +209,5 @@
   }
   .search-icon-btn .ico { width: 20px; height: 20px; }
 
-  @media (max-width: 980px) {
-    .search-bar { grid-template-columns: 1fr 1fr; gap: 10px; }
-    .search-icon-btn { width: 100%; height: 44px; }
-  }
-  @media (max-width: 640px) {
-    .search-bar { grid-template-columns: 1fr; gap: 8px; }
-    .search-icon-btn { width: 100%; height: 44px; }
-    .hero-options { gap: 12px; }
-    .trip-group label + label { margin-left: 8px; }
-  }
+  /* Se eliminan los estilos responsivos para mantener el diseño de escritorio en todos los tamaños */
 </style>

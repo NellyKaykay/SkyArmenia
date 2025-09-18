@@ -192,13 +192,7 @@
     padding: 16px;
     border-radius: 8px;
     box-shadow: 0 6px 12px rgba(39, 6, 160, 0.15);
-    grid-template-columns:
-      minmax(180px, 1fr)
-      minmax(180px, 1fr)
-      minmax(160px, 1fr)
-      minmax(160px, 1fr)
-      minmax(140px, 1fr)
-      auto;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   }
 
   .search-icon-btn {

@@ -59,7 +59,8 @@
         </Form>
 
         <p class="legal small centertext">
-          ¿No tienes cuenta? <a class="link-register" href="/login">Regístrate</a>
+         ¿No tienes cuenta? <a class="link-register" href="/signup">Regístrate</a>
+
         </p>
 
         <p class="legal small centertext">

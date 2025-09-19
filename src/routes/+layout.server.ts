@@ -5,7 +5,10 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/publi
 import { dev } from '$app/environment';
 
 export const load: LayoutServerLoad = async (event) => {
-  const { cookies, fetch } = event;
+  const { cookies, fetch, depends } = event;
+
+  // Marca dependencia para que SvelteKit revalide si cambia el estado de auth
+  depends('supabase:auth');
 
   const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
     cookies: {
@@ -16,17 +19,27 @@ export const load: LayoutServerLoad = async (event) => {
           path: '/',
           httpOnly: true,
           sameSite: 'lax',
-          secure: !dev // ✅ HTTPS en prod, sin bloquear cookies en local
+          secure: !dev // ✅ HTTPS en prod; sin bloquear en dev
         });
       },
       remove: (name, options) => {
         cookies.delete(name, { ...options, path: '/' });
       }
-    },
-    fetch
+  }
   });
 
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+    error
+  } = await supabase.auth.getSession();
+
+  if (error) {
+    // No rompemos la carga del layout por un fallo de sesión
+    return {
+      session: null,
+      user: null
+    };
+  }
 
   return {
     session,

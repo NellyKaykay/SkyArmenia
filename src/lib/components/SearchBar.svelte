@@ -1,8 +1,7 @@
-<script lang="ts">
+<script lang="ts">  
   import { createEventDispatcher } from 'svelte';
   import { i18n } from '$lib/i18n';
 
-  // ===== Estado controlado por el padre (two-way binding)
   export let trip: 'oneway' | 'round' = 'round';
   export let origin = 'BCN';
   export let destination = 'EVN';
@@ -11,19 +10,16 @@
   export let adults: number = 1;
   export let bags: number = 0;
 
-  // ===== Config
   export let endpoint = '/api/search';
-  export let debug = true;        // activa ?debug=1
-  export let updateUrl = true;    // actualiza la barra del navegador con los params
+  export let debug = true;
+  export let updateUrl = true;
 
-  // ===== Estado interno (opcionalmente bindable desde el padre)
   export let loading = false;
   export let errorText = '';
   export let data: any = null;
 
   const dispatch = createEventDispatcher();
 
-  // i18n helper
   $: t = (k: string, fallback?: string) => {
     const v = $i18n[k];
     return v === k ? (fallback ?? k) : v;
@@ -158,8 +154,8 @@
     </select>
   </div>
 
-  <!-- Buscar -->
-  <button type="submit" class="search-icon-btn" aria-label={t('form.search', 'Search flights')}>
+  <!-- Botón Buscar (desktop/tablet) -->
+  <button type="submit" class="search-icon-btn desktop-only" aria-label={t('form.search', 'Search flights')}>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="ico" aria-hidden="true">
       <path
         d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"
@@ -167,6 +163,11 @@
         stroke-linecap="round" stroke-linejoin="round"
       />
     </svg>
+  </button>
+
+  <!-- Botón Buscar (solo móvil/tablet) -->
+  <button type="submit" class="search-btn mobile-only">
+    Buscar
   </button>
 </form>
 
@@ -192,7 +193,13 @@
     padding: 16px;
     border-radius: 8px;
     box-shadow: 0 6px 12px rgba(39, 6, 160, 0.15);
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns:
+      minmax(180px, 1fr)
+      minmax(180px, 1fr)
+      minmax(160px, 1fr)
+      minmax(160px, 1fr)
+      minmax(140px, 1fr)
+      auto;
   }
 
   .search-icon-btn {
@@ -203,5 +210,76 @@
   }
   .search-icon-btn .ico { width: 20px; height: 20px; }
 
-  /* Se eliminan los estilos responsivos para mantener el diseño de escritorio en todos los tamaños */
+  /* Ocultar/mostrar botones */
+  .desktop-only { display: inline-flex; }
+  .mobile-only { display: none; }
+
+  /* Tablet + Móvil (<1023px): searchbar compacto y botón estilo login */
+  @media (max-width: 1023px) {
+    .search-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 6px;
+      box-shadow: 0 4px 8px rgba(39, 6, 160, 0.1);
+    }
+
+    .search-bar select,
+    .search-bar input[type="date"] {
+      font-size: 14px;
+      padding: 6px 8px;
+    }
+
+    .label {
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .desktop-only { display: none; }
+    .mobile-only {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      grid-column: 1 / -1;
+      width: 100%;
+      height: 40px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 20px; /* estilo login */
+      background-color: #015F78;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      text-align: center;
+    }
+    .mobile-only:hover { background-color: #01495d; }
+  }
+
+  /* Móvil (<640px): 3 líneas */
+  @media (max-width: 640px) {
+    .search-bar {
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    /* 1ª línea */
+    .search-bar > div:nth-child(1),
+    .search-bar > div:nth-child(2) { grid-column: span 1; }
+
+    /* 2ª línea */
+    .search-bar > div:nth-child(3),
+    .search-bar > div:nth-child(4),
+    .search-bar > div:nth-child(5) { grid-column: span 1; }
+
+    /* 3ª línea → botón ancho */
+    .mobile-only {
+      grid-column: 1 / -1;
+      height: 44px;
+      font-size: 15px;
+    }
+  }
 </style>

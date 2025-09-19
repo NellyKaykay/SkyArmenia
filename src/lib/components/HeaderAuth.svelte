@@ -47,10 +47,11 @@
 {#if user}
   <div
     class="ha-container"
+    role="presentation"
     on:mouseleave={closeMenuDelayed}
     on:keydown={onKeydown}
   >
-    <!-- El botón usa las MISMAS clases que tu "Iniciar sesión" -->
+   
     <button
       type="button"
       class={buttonClass}
@@ -67,6 +68,7 @@
       <div
         class="ha-dropdown"
         role="menu"
+        tabindex="0"
         on:mouseenter={openMenu}
       >
         <a href={logoutHref} role="menuitem" class={buttonClass}>

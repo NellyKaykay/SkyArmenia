@@ -48,15 +48,32 @@ export const actions: Actions = {
 
     const supabase = makeSupabaseServerClient(cookies, fetch);
 
-    // Construye un origin robusto (nunca vacío)
+    // 1) PRE-CHECK: ¿el email ya existe en auth.users?
+    //    (Esta RPC la creamos antes: public.email_exists(p_email text) -> boolean)
+    const { data: exists, error: rpcErr } = await supabase.rpc('email_exists', { p_email: email });
+    if (rpcErr) {
+      // Si algo raro pasa con la RPC, no arriesgamos a crear duplicados.
+      return fail(400, {
+        error: 'No se pudo verificar el email. Inténtalo de nuevo en un momento.',
+        values: { name, email }
+      });
+    }
+    if (exists === true) {
+      return fail(400, {
+        error:
+          'Este email ya está registrado. Inicia sesión o usa “¿Olvidaste tu contraseña?” para recuperarla.',
+        values: { name, email }
+      });
+    }
+
+    // 2) Construir redirect robusto (nunca vacío)
     const url = new URL(request.url);
     const derivedOrigin = `${url.protocol}//${url.host}`;
     const origin =
       (typeof PUBLIC_SITE_URL === 'string' && PUBLIC_SITE_URL) || derivedOrigin;
-
     const emailRedirectTo = `${origin}/auth/callback`;
 
-    // Registro
+    // 3) Intentar el alta
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -66,8 +83,7 @@ export const actions: Actions = {
       }
     });
 
-    // 🔎 Caso especial: Supabase no devuelve error,
-    // pero tampoco crea user ni session → ya está registrado.
+    // 4) Caso especial de Supabase: éxito sin user ni session → tratar como duplicado
     if (!error && !data?.user && !data?.session) {
       return fail(400, {
         error:
@@ -76,7 +92,7 @@ export const actions: Actions = {
       });
     }
 
-    // Manejo de errores normales
+    // 5) Errores habituales
     if (error) {
       const msg = (error.message || '').toLowerCase();
       const code = Number(error.status) || 0;
@@ -99,13 +115,11 @@ export const actions: Actions = {
       });
     }
 
-    // Éxito
+    // 6) Éxito
     if (data?.session) {
-      // Confirmaciones desactivadas → loguea directo
-      throw redirect(303, '/');
+      throw redirect(303, '/'); // confirmaciones desactivadas
     }
 
-    // Confirmaciones activadas → se envió correo de confirmación
-    return { sent: true, values: { name, email } };
+    return { sent: true, values: { name, email } }; // confirmaciones activadas
   }
 };

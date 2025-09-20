@@ -1,4 +1,3 @@
-<!-- src/routes/login/+page.svelte -->
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import type { ActionData } from './$types';
@@ -9,7 +8,6 @@
   export let form: ActionData | undefined;
 
   let email = (form as any)?.values?.email ?? '';
-  let sent = !!(form as any)?.sent;
   let error = form?.error ?? '';
 
   const HERO_IMAGES = Array.from({ length: 12 }, (_, i) => `/barcelona${i + 1}.jpg`);
@@ -30,45 +28,44 @@
       <img src="/logo-skyarmenia.svg" alt="SkyArmenia" class="logo" loading="eager" decoding="async" />
     </div>
 
-    {#if sent}
-      <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
-        <h2 class="pane-title">¡Revisa tu correo!</h2>
-        <p class="legal">
-          Te hemos enviado un enlace para acceder.<br />
-          Abre tu email y haz clic en el enlace para continuar.
-        </p>
-      </section>
-    {:else}
-      <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
-        <!-- Usamos Form.svelte -->
-        <Form title="Iniciar sesión" method="POST" action="?/magic" error={error ?? null}>
-          <label>
-            <span class="lbl">Email</span>
-            <input
-              name="email"
-              type="email"
-              placeholder="tucorreo@ejemplo.com"
-              bind:value={email}
-              required
-            />
-          </label>
+    <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
+      <Form title="Iniciar sesión" method="POST" action="?/login" error={error ?? null}>
+        <label>
+          <span class="lbl">Email</span>
+          <input
+            name="email"
+            type="email"
+            placeholder="tucorreo@ejemplo.com"
+            bind:value={email}
+            required
+          />
+        </label>
 
-          <div slot="actions">
-            <Button type="submit" class="btn-login">Entrar</Button>
-          </div>
-        </Form>
+        <label>
+          <span class="lbl">Contraseña</span>
+          <input
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            minlength="6"
+            required
+          />
+        </label>
 
-        <p class="legal small centertext">
-         ¿No tienes cuenta? <a class="link-register" href="/signup">Regístrate</a>
+        <div slot="actions">
+          <Button type="submit" class="btn-login">Entrar</Button>
+        </div>
+      </Form>
 
-        </p>
+      <p class="legal small centertext" style="margin-top:10px">
+        ¿No tienes cuenta? <a class="link-register" href="/signup">Regístrate</a>
+      </p>
 
-        <p class="legal small centertext">
-          Al continuar, aceptas nuestras <a href="/terms">Condiciones del servicio</a> y nuestra
-          <a href="/privacy">Política de privacidad</a>.
-        </p>
-      </section>
-    {/if}
+      <p class="legal small centertext">
+        Al continuar, aceptas nuestras <a href="/terms">Condiciones del servicio</a> y nuestra
+        <a href="/privacy">Política de privacidad</a>.
+      </p>
+    </section>
   </div>
 </div>
 
@@ -109,14 +106,8 @@
   .brand { display: grid; place-items: center; margin-bottom: 10px; text-align: center; }
   .logo { height: 100px; width: auto; margin-bottom: 0; }
   .pane { text-align: center; padding: 6px 0 4px; }
-  .pane-title {
-    margin: 8px 0 16px;
-    font-size: 1.28rem;
-    font-weight: 700;
-    color: var(--text);
-    text-shadow: 0 1px 0 rgba(255,255,255,.35);
-  }
 
+  /* Textos auxiliares (heredados) */
   .legal {
     margin: 10px 0 0;
     color: var(--muted);
@@ -133,16 +124,7 @@
   }
   .link-register:hover { text-decoration: none; }
 
-  .alert {
-    border: 1px solid #fecaca;
-    background: rgba(254,226,226,.85);
-    color: #991b1b;
-    padding: 10px 12px;
-    border-radius: 12px;
-    font-size: .92rem;
-    max-width: 400px;
-    margin: 0 auto 10px;
-  }
+ 
 
   /* === ESTILO SOLO PARA EL BOTÓN "Entrar" EN ESTA PÁGINA === */
   :global(.btn-login) {

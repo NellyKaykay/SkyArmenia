@@ -5,18 +5,54 @@
   import Button from '$lib/components/Button.svelte';
   import Form from '$lib/components/Form.svelte';
 
-  // Si luego añades +page.server.ts, podrás pasar estos valores desde "form"
   export let form:
     | { sent?: boolean; error?: string | null; values?: Record<string, any> }
     | undefined;
 
   let name = (form as any)?.values?.name ?? '';
   let email = (form as any)?.values?.email ?? '';
-  let password = (form as any)?.values?.password ?? '';
+  let password = ''; // por seguridad no repintamos contraseña
   let sent = !!(form as any)?.sent;
   let error = (form as any)?.error ?? null;
 
   const HERO_IMAGES = Array.from({ length: 12 }, (_, i) => `/barcelona${i + 1}.jpg`);
+
+  // --- NUEVO: chequeo de email en tiempo real
+  let emailTaken: boolean | null = null; // null = desconocido, false = libre, true = ya existe
+  let checking = false;
+  let debounceId: any;
+
+  async function doCheckEmail(current: string) {
+    if (!current || !current.includes('@')) {
+      emailTaken = null;
+      return;
+    }
+    checking = true;
+    try {
+      const res = await fetch(`/api/auth/check-email?email=${encodeURIComponent(current)}`, {
+        headers: { 'cache-control': 'no-cache' }
+      });
+      const j = await res.json();
+      emailTaken = !!j.exists;
+    } catch (_) {
+      // si falla la red, no bloqueamos el submit, solo ocultamos el aviso
+      emailTaken = null;
+    } finally {
+      checking = false;
+    }
+  }
+
+  function onEmailInput(e: Event) {
+    email = (e.target as HTMLInputElement).value.trim();
+    emailTaken = null; // resetea el estado mientras escribe
+    clearTimeout(debounceId);
+    debounceId = setTimeout(() => doCheckEmail(email), 350); // debounce suave
+  }
+
+  function onEmailBlur() {
+    // chequeo inmediato al salir del campo
+    doCheckEmail(email);
+  }
 </script>
 
 <svelte:head>
@@ -38,49 +74,76 @@
       <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
         <h2 class="pane-title">¡Revisa tu correo!</h2>
         <p class="legal">
-          Te hemos enviado un enlace para confirmar tu cuenta.<br />
+          Te hemos enviado un enlace para confirmar tu cuenta
+          {#if email}&nbsp;a <strong>{email}</strong>{/if}.<br />
           Abre tu email y sigue las instrucciones para completar el registro.
+        </p>
+        <p class="legal small centertext" style="margin-top:12px">
+          ¿No te llegó? Mira en <em>Spam/Promociones</em> o intenta de nuevo con otro correo.
         </p>
       </section>
     {:else}
       <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
         <Form title="Crear cuenta" method="POST" action="?/signup" error={error}>
-          <label>
+          <label for="name">
             <span class="lbl">Nombre</span>
             <input
+              id="name"
               name="name"
               type="text"
               placeholder="Tu nombre"
               bind:value={name}
+              autocomplete="name"
               required
             />
           </label>
 
-          <label>
+          <label for="email">
             <span class="lbl">Email</span>
             <input
+              id="email"
               name="email"
               type="email"
+              inputmode="email"
+              spellcheck="false"
               placeholder="tucorreo@ejemplo.com"
               bind:value={email}
+              on:input={onEmailInput}
+              on:blur={onEmailBlur}
+              autocomplete="email"
               required
+              aria-invalid={emailTaken === true}
+              aria-describedby="email-help"
             />
+            <p id="email-help" class="hint">
+              {#if checking}
+                Comprobando email…
+              {:else if emailTaken === true}
+                <span class="err">Este email ya está registrado. <a href="/login">Inicia sesión</a> o usa <a href="/login">“¿Olvidaste tu contraseña?”</a>.</span>
+              {:else if emailTaken === false}
+                <span class="ok">Este email está disponible.</span>
+              {/if}
+            </p>
           </label>
 
-          <label>
+          <label for="password">
             <span class="lbl">Contraseña</span>
             <input
+              id="password"
               name="password"
               type="password"
               placeholder="••••••••"
               bind:value={password}
               minlength="6"
+              autocomplete="new-password"
               required
             />
           </label>
 
           <div slot="actions">
-            <Button type="submit" class="btn-signup">Crear cuenta</Button>
+            <Button type="submit" class="btn-signup" disabled={emailTaken === true}>
+              {#if emailTaken === true}No puedes continuar{:else}Crear cuenta{/if}
+            </Button>
           </div>
         </Form>
 
@@ -143,58 +206,34 @@
     text-shadow: 0 1px 0 rgba(255,255,255,.35);
   }
 
-  .legal {
-    margin: 10px 0 0;
-    color: var(--muted);
-    font-size: .92rem;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(255,255,255,.35);
-  }
+  .legal { margin: 10px 0 0; color: var(--muted); font-size: .92rem; text-align: center; text-shadow: 0 1px 0 rgba(255,255,255,.35); }
   .legal.small { font-size: .86rem; }
   .centertext { text-align: center; }
-  .link-register {
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
-  }
+  .link-register { font-weight: 600; text-decoration: underline; cursor: pointer; }
   .link-register:hover { text-decoration: none; }
 
-  /* Botón de registro — mismo look del login (blanco, borde fino, sombra) */
   :global(.btn-signup) {
     display: block;
     height: 45px;
-    width: 200px;                /* centrado en desktop */
+    width: 200px;
     margin: 6px auto 0;
     border-radius: 12px;
-    border: 1px solid var(--accent);   /* línea fina */
+    border: 1px solid var(--accent);
     font-weight: 700;
     font-size: 1rem;
     letter-spacing: .2px;
-    color: #000;                       /* texto negro */
-    background: #fff;                  /* fondo blanco */
+    color: #000;
+    background: #fff;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);  /* sombra ligera */
+    box-shadow: 0 2px 6px rgba(0,0,0,.1);
     transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
   }
-  :global(.btn-signup:hover) {
-    background: #f7f7f7;
-    color: #000;
-    border-color: var(--accent);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0,0,0,.15);
-  }
-  :global(.btn-signup:active) {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0,0,0,.18);
-  }
-  :global(.btn-signup:focus-visible) {
-    outline: none;
-    box-shadow:
-      0 0 0 3px rgba(56,182,255,.35),
-      0 0 0 6px rgba(56,182,255,.25);
-  }
+  :global(.btn-signup[disabled]) { opacity: .6; cursor: not-allowed; }
 
-  /* móvil → ancho completo */
+  .hint { margin: 6px 0 0; font-size: .85rem; min-height: 1.2em; }
+  .hint .err { color: #b91c1c; font-weight: 600; }
+  .hint .ok { color: #047857; font-weight: 600; }
+
   @media (max-width: 520px) {
     .logo { height: 120px; }
     .modal { padding: 22px; }

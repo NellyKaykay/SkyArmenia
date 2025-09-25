@@ -1,3 +1,4 @@
+<!-- src/routes/login/+page.svelte -->
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import type { ActionData } from './$types';
@@ -52,7 +53,8 @@
           />
         </label>
 
-        <div slot="actions">
+        <!-- ⬇️ contenedor de acciones que estira el botón -->
+        <div slot="actions" class="actions-row">
           <Button type="submit" class="btn-login">Entrar</Button>
         </div>
       </Form>
@@ -124,23 +126,30 @@
   }
   .link-register:hover { text-decoration: none; }
 
- 
+  /* ⬇️ hace que el slot de acciones estire su contenido */
+  .actions-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    margin-top: 6px;
+  }
 
   /* === ESTILO SOLO PARA EL BOTÓN "Entrar" EN ESTA PÁGINA === */
   :global(.btn-login) {
     display: block;
     height: 45px;
-    width: 200px;                /* centrado en desktop */
-    margin: 6px auto 0;
+    width: 100%;
+    margin: 0;                          /* alineado con labels */
     border-radius: 12px;
-    border: 1px solid var(--accent);   /* línea fina */
+    border: 1px solid var(--accent);
     font-weight: 700;
     font-size: 1rem;
     letter-spacing: .2px;
-    color: #000;                       /* texto negro */
-    background: #fff;                  /* fondo blanco */
+    color: #000;
+    background: #fff;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);  /* sombra ligera */
+    box-shadow: 0 2px 6px rgba(0,0,0,.1);
     transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
   }
   :global(.btn-login:hover) {
@@ -165,6 +174,5 @@
   @media (max-width: 520px) {
     .logo { height: 120px; }
     .modal { padding: 22px; }
-    :global(.btn-login) { width: 100%; }
   }
 </style>

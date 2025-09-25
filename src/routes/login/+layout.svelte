@@ -1,7 +1,7 @@
 <!-- src/routes/login/+layout.svelte -->
 <script lang="ts">
   // No cargamos nada aquí para no interferir con la navegación SPA.
-  export let data: unknown;
+  export const data: unknown = undefined;
 </script>
 
 <svelte:head>

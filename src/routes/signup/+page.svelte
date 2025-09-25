@@ -4,6 +4,7 @@
   import BgCarousel from '$lib/components/BgCarousel.svelte';
   import Button from '$lib/components/Button.svelte';
   import Form from '$lib/components/Form.svelte';
+  import EyeIcon from '$lib/components/EyeIcon.svelte';
 
   // Valores que puede traer form (cuando usemos +page.server.ts)
   export let form:
@@ -13,6 +14,7 @@
   let name = (form as any)?.values?.name ?? '';
   let email = (form as any)?.values?.email ?? '';
   let password = (form as any)?.values?.password ?? '';
+  let showPassword = false;
   let sent = !!(form as any)?.sent;
   let error = (form as any)?.error ?? null;
 
@@ -58,16 +60,26 @@
           />
         </label>
 
-        <label>
+        <label style="position:relative;display:block;">
           <span class="lbl">Contraseña</span>
           <input
             name="password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="••••••••"
             minlength="6"
             bind:value={password}
             required
+            style="padding-right:40px;height:46px;"
           />
+          <!-- El botón del ojo está centrado respecto al input de contraseña. Si cambias el height del input, ajusta top:26px. -->
+          <button type="button"
+            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            on:click={() => showPassword = !showPassword}
+            style="position:absolute;right:8px;top:26px;bottom:0;margin:auto 0;background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;height:36px;width:36px;pointer-events:auto;"
+            tabindex="0"
+          >
+            <EyeIcon size={22} color={showPassword ? '#38b6ff' : '#888'} />
+          </button>
         </label>
 
         <!-- ⬇️ contenedor de acciones -->

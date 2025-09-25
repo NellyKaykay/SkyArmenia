@@ -82,6 +82,7 @@
           </button>
         </label>
 
+       
         <!-- ⬇️ contenedor de acciones -->
         <div slot="actions" class="actions-row">
           <Button type="submit" class="btn-signup">Registrarse</Button>
@@ -92,10 +93,12 @@
         ¿Ya tienes cuenta? <a class="link-register" href="/login">Inicia sesión</a>
       </p>
 
-      <p class="legal small centertext">
-        Al continuar, aceptas nuestras <a href="/terms">Condiciones del servicio</a> y nuestra
-        <a href="/privacy">Política de privacidad</a>.
-      </p>
+       <div style="display:flex;align-items:flex-start;justify-content:center;gap:8px;margin:18px 0 0 0;">
+          <input id="accept" name="accept" type="checkbox" required style="margin-top:2px;" />
+          <label for="accept" style="text-align:left;font-size:.95em;">
+            Acepto las <a href="/terms" target="_blank" rel="noopener noreferrer">Condiciones del servicio</a> y la <a href="/privacy" target="_blank" rel="noopener noreferrer">Política de privacidad</a>.
+          </label>
+        </div>
     </section>
   </div>
 </div>

@@ -43,6 +43,10 @@
             bind:value={email}
             required
           />
+
+        <div style="text-align:right;margin-top:2px;margin-bottom:10px;">
+          <a href="/forgot" class="link-forgot">¿Has olvidado tu contraseña?</a>
+        </div>
         </label>
 
 
@@ -77,10 +81,7 @@
         ¿No tienes cuenta? <a class="link-register" href="/signup">Regístrate</a>
       </p>
 
-      <p class="legal small centertext">
-        Al continuar, aceptas nuestras <a href="/terms">Condiciones del servicio</a> y nuestra
-        <a href="/privacy">Política de privacidad</a>.
-      </p>
+    
     </section>
   </div>
 </div>

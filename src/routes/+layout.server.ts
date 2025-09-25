@@ -2,47 +2,28 @@
 import type { LayoutServerLoad } from './$types';
 import { createServerClient } from '@supabase/ssr';
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
-import { dev } from '$app/environment';
 
-export const load: LayoutServerLoad = async (event) => {
-  const { cookies, fetch, depends } = event;
-
-  // Marca dependencia para que SvelteKit revalide si cambia el estado de auth
-  depends('supabase:auth');
-
+export const load: LayoutServerLoad = async ({ cookies, fetch }) => {
   const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
     cookies: {
-      get: (name) => cookies.get(name),
-      set: (name, value, options) => {
-        cookies.set(name, value, {
-          ...options,
-          path: '/',
-          httpOnly: true,
-          sameSite: 'lax',
-          secure: !dev // ✅ HTTPS en prod; sin bloquear en dev
-        });
+      get: (key) => cookies.get(key),
+      set: (key, value, options) => {
+        cookies.set(key, value, { ...options, path: '/' });
       },
-      remove: (name, options) => {
-        cookies.delete(name, { ...options, path: '/' });
+      remove: (key, options) => {
+        cookies.delete(key, { ...options, path: '/' });
       }
-  }
+    }
   });
 
-  const {
-    data: { session },
-    error
-  } = await supabase.auth.getSession();
+  // ✅ Usuario autenticado verificado contra el servidor de Auth
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-  if (error) {
-    // No rompemos la carga del layout por un fallo de sesión
-    return {
-      session: null,
-      user: null
-    };
-  }
+  
+  const session = !!user;
 
   return {
-    session,
-    user: session?.user ?? null
+    user,       // objeto user seguro (o null)
+    session     // booleano: true/false para tu {#if session} del Header
   };
 };

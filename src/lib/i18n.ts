@@ -1,5 +1,5 @@
 // src/lib/i18n.ts
-import { writable, derived, type Readable } from 'svelte/store';
+import { writable, derived, type Readable } from 'svelte/store'
 
 /* ---------------------------------------------
    1) Idiomas soportados (tipados) 
@@ -70,6 +70,8 @@ const dict: Record<Lang, Dict> = {
   en: {
     // Nav
     'nav.login': 'Sign in',
+    'nav.logout': 'Sign out',
+    'nav.profile': 'Profile',
     'nav.about': 'About Us',
     'nav.events': 'Events',
     'nav.flights': 'Flights',
@@ -90,6 +92,8 @@ const dict: Record<Lang, Dict> = {
     'form.return': 'Return',
     'form.search': 'Search flights',
     'form.promo': 'Promotion',
+    'form.email': 'Email',
+    'form.password': 'Password',
 
     // Offers / misc
     'offers.title': 'Direct flights',
@@ -120,6 +124,8 @@ const dict: Record<Lang, Dict> = {
 
   es: {
     'nav.login': 'Iniciar sesión',
+    'nav.logout': 'Cerrar sesión',
+    'nav.profile': 'Perfil',
     'nav.about': 'Sobre nosotros',
     'nav.events': 'Eventos',
     'nav.flights': 'Vuelos',
@@ -138,6 +144,8 @@ const dict: Record<Lang, Dict> = {
     'form.return': 'Regreso',
     'form.search': 'Buscar vuelos',
     'form.promo': 'Promoción',
+    'form.email': 'Email',
+    'form.password': 'Contraseña',
 
     'offers.title': 'Vuelos directos',
     'status.soon': 'Pronto...',
@@ -165,6 +173,8 @@ const dict: Record<Lang, Dict> = {
 
   ru: {
     'nav.login': 'Войти',
+    'nav.logout': 'Выйти',
+    'nav.profile': 'Профиль',
     'nav.about': 'О нас',
     'nav.events': 'События',
     'nav.flights': 'Рейсы',
@@ -184,6 +194,8 @@ const dict: Record<Lang, Dict> = {
     'form.return': 'Обратный рейс',
     'form.search': 'Найти рейсы',
     'form.promo': 'Акции',
+    'form.email': 'Email',
+    'form.password': 'Пароль',
 
     'offers.title': 'Прямые рейсы',
     'status.soon': 'Скоро...',
@@ -211,6 +223,8 @@ const dict: Record<Lang, Dict> = {
 
   hy: {
     'nav.login': 'Մուտք գործել',
+    'nav.logout': 'Դուրս գալ',
+    'nav.profile': 'Պրոֆիլ',
     'nav.about': 'Մեր մասին',
     'nav.events': 'Իրադարձություններ',
     'nav.flights': 'Թռիչքներ',
@@ -230,6 +244,8 @@ const dict: Record<Lang, Dict> = {
     'form.return': 'Վերադարձ',
     'form.search': 'Փնտրել չվերթներ',
     'form.promo': 'Ակցիա',
+    'form.email': 'Email',
+    'form.password': 'Գաղտնաբառ',
 
     'offers.title': 'Ուղիղ չվերթներ',
     'status.soon': 'Շուտով...',

@@ -1,13 +1,16 @@
 <!-- src/routes/+layout.svelte -->
-<script lang="ts"> 
+<script lang="ts">
   import '../app.css';
   import Header from '$lib/components/Header.svelte';
 
   // Footer usa $i18n y setLang para los enlaces de idioma
   import { i18n, setLang } from '$lib/i18n';
 
-  // ⬇️ Recibe la sesión desde +layout.server.ts
-  export let data: { session: any };
+  // ⬇️ Recibe { user } desde +layout.server.ts (usando supabase.auth.getUser())
+  export let data: { user?: any };
+
+  // 👇 derivamos session para usarlo en el Header y evitar el warning
+  const session = !!data?.user;
 </script>
 
 <style>
@@ -58,15 +61,14 @@
     .footer-top { grid-template-columns: 1.6fr 1fr 1fr; }
   }
   @media (max-width: 600px) {
-    /* (Nota) estilos del header están dentro del componente */
     .page { padding-top: 0; }
     .footer-top { grid-template-columns: 1fr; padding: 24px 0; }
     .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
   }
 </style>
 
-<!-- Header (componente) -->
-<Header session={data?.session} />
+<!-- Header -->
+<Header session={session} />
 
 <!-- Main -->
 <div class="container page">

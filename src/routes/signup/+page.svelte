@@ -6,7 +6,6 @@
   import Form from '$lib/components/Form.svelte';
   import EyeIcon from '$lib/components/EyeIcon.svelte';
 
-  // Valores que puede traer form (cuando usemos +page.server.ts)
   export let form:
     | { sent?: boolean; error?: string | null; values?: Record<string, any> }
     | undefined;
@@ -25,7 +24,6 @@
   <meta name="robots" content="noindex" />
 </svelte:head>
 
-<!-- Fondo carousel -->
 <div class="carousel-bg">
   <BgCarousel images={HERO_IMAGES} intervalMs={5000} />
 </div>
@@ -71,7 +69,6 @@
             required
             style="padding-right:40px;height:46px;"
           />
-          <!-- El botón del ojo está centrado respecto al input de contraseña. Si cambias el height del input, ajusta top:26px. -->
           <button type="button"
             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             on:click={() => showPassword = !showPassword}
@@ -82,8 +79,15 @@
           </button>
         </label>
 
-       
-        <!-- ⬇️ contenedor de acciones -->
+        <!-- ✅ Bloque aceptar condiciones -->
+        <div class="accept-block">
+          <input id="accept" name="accept" type="checkbox" required />
+          <label for="accept">
+            Acepto las <a href="/terms" target="_blank" rel="noopener noreferrer">Condiciones del servicio</a>
+            y la <a href="/privacy" target="_blank" rel="noopener noreferrer">Política de privacidad</a>.
+          </label>
+        </div>
+
         <div slot="actions" class="actions-row">
           <Button type="submit" class="btn-signup">Registrarse</Button>
         </div>
@@ -92,13 +96,6 @@
       <p class="legal small centertext" style="margin-top:10px">
         ¿Ya tienes cuenta? <a class="link-register" href="/login">Inicia sesión</a>
       </p>
-
-       <div style="display:flex;align-items:flex-start;justify-content:center;gap:8px;margin:18px 0 0 0;">
-          <input id="accept" name="accept" type="checkbox" required style="margin-top:2px;" />
-          <label for="accept" style="text-align:left;font-size:.95em;">
-            Acepto las <a href="/terms" target="_blank" rel="noopener noreferrer">Condiciones del servicio</a> y la <a href="/privacy" target="_blank" rel="noopener noreferrer">Política de privacidad</a>.
-          </label>
-        </div>
     </section>
   </div>
 </div>
@@ -141,7 +138,6 @@
   .logo { height: 100px; width: auto; margin-bottom: 0; }
   .pane { text-align: center; padding: 6px 0 4px; }
 
-  /* Textos auxiliares */
   .legal {
     margin: 10px 0 0;
     color: var(--muted);
@@ -158,7 +154,6 @@
   }
   .link-register:hover { text-decoration: none; }
 
-  /* ⬇️ estira el botón en el slot */
   .actions-row {
     display: flex;
     flex-direction: column;
@@ -167,7 +162,6 @@
     margin-top: 6px;
   }
 
-  /* === ESTILO SOLO PARA EL BOTÓN "Registrarse" EN ESTA PÁGINA === */
   :global(.btn-signup) {
     display: block;
     height: 45px;
@@ -202,7 +196,29 @@
       0 0 0 6px rgba(56,182,255,.25);
   }
 
-  /* móvil → ancho completo */
+  /* ✅ Estilo aceptar condiciones */
+  .accept-block {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    margin: 12px 0 0 0;
+    text-align: left;
+  }
+  .accept-block input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+  .accept-block label {
+    font-size: 0.92rem;
+    line-height: 1.3;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+  }
+
   @media (max-width: 520px) {
     .logo { height: 120px; }
     .modal { padding: 22px; }

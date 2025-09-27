@@ -219,5 +219,5 @@
 <style>
   .legal-page { padding: 24px 0 40px; }
   .legal-body { max-width: 860px; margin: 0 auto; line-height: 1.6; color: #111; }
-  .legal-body h1 { font-size: 1.8rem; margin: 0 0 12px; }
+  .legal-body :global(h1) { font-size: 1.8rem; margin: 0 0 12px; }
 </style>

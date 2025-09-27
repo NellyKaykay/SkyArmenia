@@ -43,14 +43,9 @@
             bind:value={email}
             required
           />
-
-        <div style="text-align:right;margin-top:2px;margin-bottom:10px;">
-          <a href="/forgot" class="link-forgot">¿Has olvidado tu contraseña?</a>
-        </div>
         </label>
 
-
-  <label style="position:relative;display:block;">
+        <label style="position:relative;display:block;">
           <span class="lbl">Contraseña</span>
           <input
             name="password"
@@ -61,14 +56,20 @@
             bind:value={password}
             style="padding-right:40px;height:46px;"
           />
-          <button type="button"
+          <button
+            type="button"
             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-            on:click={() => showPassword = !showPassword}
-            style="position:absolute;right:8px;top:26px;bottom:0;margin:auto 0;background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;height:36px;width:36px;pointer-events:auto;"
+            on:click={() => (showPassword = !showPassword)}
+            style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;height:36px;width:36px;pointer-events:auto;"
             tabindex="0"
           >
             <EyeIcon size={22} color={showPassword ? '#38b6ff' : '#888'} />
           </button>
+
+          <!-- Enlace olvidaste contraseña: mismo tamaño que 'Regístrate' y alineado a la derecha -->
+          <div style="text-align:right;margin-top:8px;">
+            <a href="/forgot" class="link-forgot">¿Has olvidado tu contraseña?</a>
+          </div>
         </label>
 
         <!-- ⬇️ contenedor de acciones que estira el botón -->
@@ -80,8 +81,6 @@
       <p class="legal small centertext" style="margin-top:10px">
         ¿No tienes cuenta? <a class="link-register" href="/signup">Regístrate</a>
       </p>
-
-    
     </section>
   </div>
 </div>
@@ -138,8 +137,20 @@
     font-weight: 600;
     text-decoration: underline;
     cursor: pointer;
+    font-size: 0.92rem; /* referencia de tamaño */
   }
   .link-register:hover { text-decoration: none; }
+
+  /* Olvidaste contraseña: igual tamaño que 'Regístrate' */
+  .link-forgot {
+    font-size: 0.92rem;
+    font-weight: 400;
+    text-decoration: underline;
+    color: var(--text);
+  }
+  .link-forgot:hover {
+    text-decoration: none;
+  }
 
   /* ⬇️ hace que el slot de acciones estire su contenido */
   .actions-row {

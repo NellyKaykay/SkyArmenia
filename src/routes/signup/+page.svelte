@@ -6,6 +6,7 @@
   import Form from '$lib/components/Form.svelte';
   import EyeIcon from '$lib/components/EyeIcon.svelte';
 
+
   export let form:
     | { sent?: boolean; error?: string | null; values?: Record<string, any> }
     | undefined;
@@ -135,7 +136,7 @@
     padding: 26px;
   }
   .brand { display: grid; place-items: center; margin-bottom: 10px; text-align: center; }
-  .logo { height: 100px; width: auto; margin-bottom: 0; }
+  .logo { height: 160px; width: auto; margin-bottom: 0; }
   .pane { text-align: center; padding: 6px 0 4px; }
 
   .legal {
@@ -220,7 +221,7 @@
   }
 
   @media (max-width: 520px) {
-    .logo { height: 120px; }
+    .logo { height: 150px; }
     .modal { padding: 22px; }
   }
 </style>

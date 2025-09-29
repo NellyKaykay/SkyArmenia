@@ -4,6 +4,7 @@
   import SearchBar from '$lib/components/SearchBar.svelte';
   import OffersGrid from '$lib/components/OffersGrid.svelte';
   import ResultsList from '$lib/components/ResultsList.svelte';
+ 
 
   // i18n
   $: _ = $lang;

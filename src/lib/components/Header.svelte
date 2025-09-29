@@ -2,8 +2,8 @@
   import { onMount } from 'svelte';
   import { lang, setLang, i18n, languages } from '$lib/i18n';
   import type { Lang } from '$lib/i18n';
-
   export let session: any;
+
 
   // Sincroniza el <select> con el store
   let current: Lang = 'es';
@@ -41,7 +41,10 @@
     min-height: 80px;
     gap: 16px;
   }
-  .logo { height: 130px; width: auto; display: block; }
+
+  /* Logo más grande */
+  .logo { height: 160px; width: auto; display: block; }
+
   .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
   .ctrls { display: flex; align-items: center; gap: 12px; }
   .lang {
@@ -66,11 +69,11 @@
 
   /* ---------- Responsive (solo header) ---------- */
   @media (max-width: 900px) {
-    .logo { height: 64px; }
-    .header-inner { min-height: 72px; }
+    .logo { height: 180px; } /* antes 64px */
+    .header-inner { min-height: 80px; }
   }
   @media (max-width: 600px) {
-    .logo { height: 50px; }
+    .logo { height: 160px; } /* antes 50px */
     .header-inner {
       flex-direction: column; align-items: stretch;
       padding: 12px 0; gap: 10px; min-height: unset;

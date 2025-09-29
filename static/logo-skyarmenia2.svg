@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <!-- Degradado azul/turquesa -->
+    <linearGradient id="gradBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#40E0D0"/>
+      <stop offset="100%" stop-color="#1E90FF"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Letras S y A -->
+  <text x="130" y="180" font-family="Times New Roman, serif" font-size="140" font-weight="bold" fill="url(#gradBlue)">S</text>
+  <text x="320" y="180" font-family="Times New Roman, serif" font-size="140" font-weight="bold" fill="url(#gradBlue)">A</text>
+  
+  <!-- Línea central -->
+  <rect x="245" y="90" width="6" height="120" rx="3" fill="#222"/>
+  
+  <!-- SKYARMENIA -->
+  <text x="250" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="url(#gradBlue)">SKYARMENIA</text>
+  
+  <!-- FLY WITH US -->
+  <text x="250" y="340" text-anchor="middle" font-family="Georgia, serif" font-size="28" letter-spacing="4" fill="#0A2A55">FLY WITH US</text>
+</svg>

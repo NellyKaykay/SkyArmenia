@@ -1,29 +1,34 @@
 // src/routes/+layout.server.ts
 import type { LayoutServerLoad } from './$types';
-import { createServerClient } from '@supabase/ssr';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
-export const load: LayoutServerLoad = async ({ cookies, fetch }) => {
-  const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-    cookies: {
-      get: (key) => cookies.get(key),
-      set: (key, value, options) => {
-        cookies.set(key, value, { ...options, path: '/' });
-      },
-      remove: (key, options) => {
-        cookies.delete(key, { ...options, path: '/' });
+export const load: LayoutServerLoad = async ({ locals }) => {
+  // 1) Mira si hay sesión (lee cookies y NO contacta con Supabase todavía)
+  const session = await locals.getSession();
+
+  // 2) Si no hay sesión, devolvemos null sin errores
+  if (!session) {
+    return {
+      user: null,
+      session: false
+    };
+  }
+
+  // 3) Con sesión, ahora sí consulta autenticada a Supabase
+  const { data, error } = await locals.supabase.auth.getUser();
+
+  // Si falla por cualquier motivo, tratamos como no logueado (sin spamear logs)
+  const user = error ? null : data.user;
+
+  const safeUser = user
+    ? {
+        id: user.id,
+        email: user.email,
+        name: (user.user_metadata as any)?.name ?? null
       }
-    }
-  });
-
-  // ✅ Usuario autenticado verificado contra el servidor de Auth
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-  
-  const session = !!user;
+    : null;
 
   return {
-    user,       // objeto user seguro (o null)
-    session     // booleano: true/false para tu {#if session} del Header
+    user: safeUser,
+    session: !!user
   };
 };

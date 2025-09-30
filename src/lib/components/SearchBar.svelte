@@ -80,20 +80,7 @@
     </label>
   </div>
 
-  <div class="bags-group">
-    <label for="bags-select">{t('opts.bags', 'Bags')}:</label>
-    <select
-      id="bags-select"
-      bind:value={bags}
-      aria-label={t('opts.bags', 'Bags')}
-      on:change={(e) => bags = Number((e.target as HTMLSelectElement).value)}
-    >
-      <option value={0}>0</option>
-      <option value={1}>1</option>
-      <option value={2}>2</option>
-      <option value={3}>3</option>
-    </select>
-  </div>
+  
 </div>
 
 <!-- Barra de búsqueda -->
@@ -151,6 +138,12 @@
       <option value={2}>2</option>
       <option value={3}>3</option>
       <option value={4}>4</option>
+      <option value={5}>5</option>
+       <option value={6}>6</option>
+      <option value={7}>7</option>
+      <option value={8}>8</option>
+      <option value={9}>9</option>
+      <option value={10}>10</option>
     </select>
   </div>
 

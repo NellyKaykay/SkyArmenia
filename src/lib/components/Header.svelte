@@ -1,54 +1,54 @@
+<!-- src/lib/components/Header.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { lang, setLang, i18n, languages } from '$lib/i18n';
-  import type { Lang } from '$lib/i18n';
+  import { lang, setLang, i18n, languages, type Lang } from '$lib/i18n';
 
-  // Props actuales
+  // Props externas
   export let session: any;
-  // Opcional: nombre a mostrar tras login (user_metadata.name)
   export let userName: string | null = null;
 
-  // Idioma
+  // Idioma actual (reactivo al store)
   let current: Lang = 'es';
   $: current = $lang;
 
-  // Sombra header
-  let scrolled = false;
+  // Hrefs que preservan el ?lang=actual
+  $: homeHref = `/?lang=${current}`;
+  $: loginHref = `/login?lang=${current}`;
 
-  // Dropdown
+  // Estado UI
+  let scrolled = false;
   let open = false;
   let dropdownEl: HTMLElement | null = null;
   let buttonEl: HTMLButtonElement | null = null;
+  const menuId = 'account-menu';
 
-  function toggle() {
-    open = !open;
-  }
-  function close() {
-    open = false;
-  }
+  function toggle() { open = !open; }
+  function close() { open = false; }
 
   function onDocClick(e: MouseEvent) {
     const t = e.target as Node;
     if (!dropdownEl || !buttonEl) return;
-    if (!dropdownEl.contains(t) && !buttonEl.contains(t)) {
-      close();
-    }
+    if (!dropdownEl.contains(t) && !buttonEl.contains(t)) close();
+  }
+  function onDocKey(e: KeyboardEvent) {
+    if (e.key === 'Escape') close();
   }
 
   onMount(() => {
     const onScroll = () => { scrolled = window.scrollY > 4; };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-
     document.addEventListener('click', onDocClick);
+    document.addEventListener('keydown', onDocKey);
     return () => {
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('click', onDocClick);
+      document.removeEventListener('keydown', onDocKey);
     };
   });
 
   // Texto del botón cuando hay sesión
-  $: displayName = (userName && userName.trim()) || 'Mi cuenta';
+  $: displayName = (userName && userName.trim()) || ($i18n['nav.profile'] ?? 'Mi cuenta');
 </script>
 
 <style>
@@ -69,14 +69,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 80px;
+    min-height: 72px;
     gap: 16px;
   }
 
   /* Logo */
-  .logo { height: 160px; width: auto; display: block; }
-
+  .logo { height: 140px; width: auto; display: block; }
   .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+
+  /* Controles derecha */
   .ctrls { display: flex; align-items: center; gap: 12px; }
 
   .lang {
@@ -85,8 +86,8 @@
     padding: 8px 10px; border-radius: 8px; min-height: 40px;
   }
 
-  /* Botón base que ya usas para "Iniciar sesión" */
-  .login {
+  /* Botón base (login y también item de logout) */
+  .btn {
     padding: 6px 12px;
     border: 1px solid var(--accent);
     border-radius: 8px;
@@ -97,21 +98,17 @@
     min-height: 40px;
     display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer;
+    transition: background .2s ease, box-shadow .2s ease;
   }
-  .login:hover { background: #f7f7f7; }
+  .btn:hover { background: #f7f7f7; }
 
-  .logout-form { display: inline; }
-
-  /* ▼ Dropdown minimal */
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
+  /* Dropdown */
+  .dropdown { position: relative; display: inline-block; }
   .menu {
     position: absolute;
     right: 0;
     top: calc(100% + 6px);
-    min-width: 180px;
+    min-width: 200px;
     background: #fff;
     border: 1px solid var(--border, #e5e7eb);
     border-radius: 8px;
@@ -120,22 +117,18 @@
     z-index: 1500;
   }
   .menu form { margin: 0; }
+  .logout-btn { width: 100%; justify-content: flex-start; text-align: left; }
 
-  /* ✅ El botón de "Cerrar sesión" hereda .login (mismo borde/estilo),
-     y le damos ancho 100% y texto a la izquierda */
-  .logout-btn {
-    width: 100%;
-    justify-content: flex-start;
-    text-align: left;
-  }
+  /* A11y helper */
+  .sr-only { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
 
-  /* ---------- Responsive (solo header) ---------- */
+  /* ---------- Responsive ---------- */
   @media (max-width: 900px) {
-    .logo { height: 180px; }
-    .header-inner { min-height: 80px; }
+    .logo { height: 120px; }
+    .header-inner { min-height: 68px; }
   }
   @media (max-width: 600px) {
-    .logo { height: 160px; }
+    .logo { height: 100px; }
     .header-inner {
       flex-direction: column; align-items: stretch;
       padding: 12px 0; gap: 10px; min-height: unset;
@@ -143,25 +136,23 @@
     .brand { justify-content: center; }
     .ctrls { width: 100%; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .lang { flex: 1 1 160px; min-width: 140px; }
-    .login { flex: 1 1 140px; min-width: 120px; }
+    .btn  { flex: 1 1 140px; min-width: 120px; }
   }
 </style>
 
 <!-- Header -->
 <div class="header" class:is-scrolled={scrolled}>
   <div class="container header-inner">
-    <a href="/" class="brand" aria-label="SkyArmenia Home">
-      <img
-        src="/logo-skyarmenia.svg"
-        alt="SkyArmenia"
-        class="logo"
-      />
+    <a href={homeHref} class="brand" aria-label="SkyArmenia Home">
+      <img src="/logo-skyarmenia.svg" alt="SkyArmenia" class="logo" />
     </a>
 
     <div class="ctrls">
+      <label class="sr-only" for="lang-select">{$i18n['footer.language'] ?? 'Language'}</label>
       <select
+        id="lang-select"
         class="lang"
-        aria-label={$i18n['footer.language']}
+        aria-label={$i18n['footer.language'] ?? 'Language'}
         bind:value={current}
         on:change={(e) => setLang((e.target as HTMLSelectElement).value as Lang)}
       >
@@ -174,20 +165,21 @@
         <!-- Botón con nombre + dropdown -->
         <div class="dropdown" bind:this={dropdownEl}>
           <button
-            class="login"
+            type="button"
+            class="btn"
             aria-haspopup="menu"
             aria-expanded={open}
-            on:click|preventDefault={toggle}
+            aria-controls={menuId}
+            on:click={toggle}
             bind:this={buttonEl}
           >
             {displayName}
           </button>
 
           {#if open}
-            <div class="menu" role="menu">
+            <div class="menu" id={menuId} role="menu">
               <form method="POST" action="/logout" class="logout-form">
-                <!-- 👇 Igual estilo que .login gracias a herencia + ajustes de ancho/alineación -->
-                <button type="submit" class="login logout-btn" role="menuitem">
+                <button type="submit" class="btn logout-btn" role="menuitem">
                   {$i18n['nav.logout'] ?? 'Cerrar sesión'}
                 </button>
               </form>
@@ -195,7 +187,7 @@
           {/if}
         </div>
       {:else}
-        <a href="/login" class="login">{$i18n['nav.login']}</a>
+        <a class="btn" href={loginHref}>{$i18n['nav.login'] ?? 'Iniciar sesión'}</a>
       {/if}
     </div>
   </div>

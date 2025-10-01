@@ -1,8 +1,9 @@
 // src/lib/i18n.ts
-import { writable, derived, type Readable } from 'svelte/store'
+import { writable, derived, type Readable } from 'svelte/store';
+import { browser } from '$app/environment';
 
 /* ---------------------------------------------
-   1) Idiomas soportados (tipados) 
+   1) Idiomas soportados (tipados)
 ---------------------------------------------- */
 export const languages = ['en', 'es', 'ru', 'hy'] as const;
 export type Lang = (typeof languages)[number];
@@ -13,13 +14,13 @@ export type Lang = (typeof languages)[number];
 function pickInitial(): Lang {
   try {
     // 1) localStorage
-    const saved =
-      (typeof localStorage !== 'undefined' &&
-        (localStorage.getItem('lang') as Lang | null)) || null;
+    const saved = browser
+      ? (localStorage.getItem('lang') as Lang | null)
+      : null;
     if (saved && languages.includes(saved)) return saved;
 
     // 2) ?lang=xx en la URL
-    if (typeof window !== 'undefined') {
+    if (browser) {
       const urlLang = new URL(window.location.href).searchParams.get('lang') as Lang | null;
       if (urlLang && languages.includes(urlLang)) return urlLang;
 
@@ -36,20 +37,30 @@ function pickInitial(): Lang {
 
 /* ---------------------------------------------
    3) Store base de idioma + setter
-   (¡No hagas bind:value={$lang}! Usa setLang)
+   (✅ Usa setLang(l) para cambiar idioma)
 ---------------------------------------------- */
-export const lang = writable<Lang>('es');
+const initial = browser ? pickInitial() : 'es';
+export const lang = writable<Lang>(initial);
 
-// En cliente, ajusta al idioma detectado
-if (typeof window !== 'undefined') {
+// En cliente, re-sincroniza una vez montado (por si SSR difiere)
+if (browser) {
+  // Asegura que el valor inicial respete URL/localStorage
   lang.set(pickInitial());
+
+  // Si el usuario navega atrás/adelante y cambia ?lang=, sincroniza
+  window.addEventListener('popstate', () => {
+    const urlLang = new URL(window.location.href).searchParams.get('lang') as Lang | null;
+    if (urlLang && languages.includes(urlLang)) {
+      lang.set(urlLang);
+    }
+  });
 }
 
 /** Cambiar idioma (actualiza store, localStorage y ?lang=) */
 export function setLang(l: Lang) {
   if (!languages.includes(l)) return;
   lang.set(l);
-  if (typeof window !== 'undefined') {
+  if (browser) {
     try {
       localStorage.setItem('lang', l);
       const url = new URL(window.location.href);
@@ -71,6 +82,7 @@ const dict: Record<Lang, Dict> = {
     // Nav
     'nav.login': 'Sign in',
     'nav.logout': 'Sign out',
+    'nav.signup': 'Sign up',
     'nav.profile': 'Profile',
     'nav.about': 'About Us',
     'nav.events': 'Events',
@@ -114,7 +126,6 @@ const dict: Record<Lang, Dict> = {
     'footer.terms': 'Terms',
     'footer.cookies': 'Cookies',
 
-    // (opcionales usados en footer.svelte)
     'footer.newsletterTitle': 'Get flight deals',
     'footer.newsletterDesc': 'Weekly best fares, no spam.',
     'footer.subscribe': 'Subscribe',
@@ -125,6 +136,7 @@ const dict: Record<Lang, Dict> = {
   es: {
     'nav.login': 'Iniciar sesión',
     'nav.logout': 'Cerrar sesión',
+    'nav.signup': 'Crear cuenta',
     'nav.profile': 'Perfil',
     'nav.about': 'Sobre nosotros',
     'nav.events': 'Eventos',
@@ -174,6 +186,7 @@ const dict: Record<Lang, Dict> = {
   ru: {
     'nav.login': 'Войти',
     'nav.logout': 'Выйти',
+    'nav.signup': 'Создать аккаунт',
     'nav.profile': 'Профиль',
     'nav.about': 'О нас',
     'nav.events': 'События',
@@ -181,8 +194,7 @@ const dict: Record<Lang, Dict> = {
     'nav.contact': 'Контакты',
 
     'hero.title': 'Найдите лучшие авиабилеты',
-    'hero.subtitle':
-      'Сравнивайте на Skyarmenia (FLYONE & Blackstone) и бронируйте за минуты.',
+    'hero.subtitle': 'Сравнивайте на Skyarmenia (FLYONE & Blackstone) и бронируйте за минуты.',
 
     'opts.round': 'Туда-обратно',
     'opts.oneway': 'В одну сторону',
@@ -224,6 +236,7 @@ const dict: Record<Lang, Dict> = {
   hy: {
     'nav.login': 'Մուտք գործել',
     'nav.logout': 'Դուրս գալ',
+    'nav.signup': 'Գրանցվել',
     'nav.profile': 'Պրոֆիլ',
     'nav.about': 'Մեր մասին',
     'nav.events': 'Իրադարձություններ',
@@ -274,14 +287,12 @@ const dict: Record<Lang, Dict> = {
 
 /* ---------------------------------------------
    5) Fallback seguro (Proxy)
-   - Si falta una clave en el idioma actual,
-     usa EN; si también falta, devuelve la clave.
 ---------------------------------------------- */
 function withFallback(d: Dict, fallback: Dict): Dict {
   return new Proxy(d, {
     get(target, prop: string) {
-      if (prop in target) return target[prop];
-      if (prop in fallback) return fallback[prop];
+      if (prop in target) return target[prop as keyof Dict];
+      if (prop in fallback) return fallback[prop as keyof Dict];
       return prop; // útil para detectar faltantes en UI
     }
   });
@@ -291,9 +302,6 @@ const baseEN = dict.en;
 
 /* ---------------------------------------------
    6) Store derivado REACTIVO para textos
-   🔑 Usar SIEMPRE en los componentes así:
-   { $i18n['nav.login'] }
-   (No uses t('...') si quieres reactividad)
 ---------------------------------------------- */
 export const i18n: Readable<Dict> = derived(lang, (l) =>
   withFallback(dict[l] ?? baseEN, baseEN)

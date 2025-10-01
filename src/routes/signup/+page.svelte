@@ -6,7 +6,6 @@
   import Form from '$lib/components/Form.svelte';
   import EyeIcon from '$lib/components/EyeIcon.svelte';
 
-
   export let form:
     | { sent?: boolean; error?: string | null; values?: Record<string, any> }
     | undefined;
@@ -68,7 +67,7 @@
             minlength="6"
             bind:value={password}
             required
-            style="padding-right:40px;height:46px;"
+            style="padding-right:40px;height:40px;"
           />
           <button type="button"
             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
@@ -110,6 +109,7 @@
     height: 100vh;
     overflow: hidden;
   }
+
   .login-wrap {
     --text:#1f2937;
     --muted:#6b7280;
@@ -119,41 +119,57 @@
     position: relative;
     display: grid;
     place-items: center;
-    min-height: 100dvh;
-    padding: 24px;
+    min-height: 100svh;
+    padding: 16px;
     background: transparent;
     overflow: hidden;
     z-index: 1;
   }
+
+  /* === Modal compacto === */
   .modal {
     position: relative; z-index: 2;
-    width: 100%; max-width: 520px;
-    background: rgba(255,255,255,.60);
-    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,.7);
+    width: min(380px, 92vw);
+    background: color-mix(in oklab, white 60%, transparent);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border: 1px solid rgba(0,0,0,.09);
     border-radius: 16px;
-    box-shadow: 0 16px 48px rgba(0,0,0,.12);
-    padding: 26px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.15);
+    padding: 18px 16px;
   }
-  .brand { display: grid; place-items: center; margin-bottom: 10px; text-align: center; }
-  .logo { height: 160px; width: auto; margin-bottom: 0; }
-  .pane { text-align: center; padding: 6px 0 4px; }
+  @media (min-width: 480px) {
+    .modal { width: min(400px, 90vw); padding: 20px 18px; }
+  }
+  @media (min-width: 1024px) {
+    .modal { width: 420px; padding: 22px 20px; }
+  }
 
-  .legal {
-    margin: 10px 0 0;
-    color: var(--muted);
-    font-size: .92rem;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(255,255,255,.35);
+  /* Marca más compacta */
+  .brand { display: grid; place-items: center; margin-bottom: 8px; text-align: center; }
+  .logo { height: 120px; width: auto; margin-bottom: 0; }
+
+  .pane { text-align: center; padding: 4px 0 2px; }
+
+  /* === Campos compactos === */
+  :global(form) { display: grid; gap: 10px; }
+
+  .lbl { font-size: .82rem; opacity: .9; display: inline-block; margin-bottom: 4px; }
+
+  :global(input[type="text"]),
+  :global(input[type="email"]),
+  :global(input[type="password"]) {
+    height: 40px;
+    padding: 8px 12px;
+    font-size: .95rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
   }
-  .legal.small { font-size: .86rem; }
-  .centertext { text-align: center; }
-  .link-register {
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
+
+  :global(input[name="password"]) {
+    height: 40px !important;
+    padding-right: 40px;
   }
-  .link-register:hover { text-decoration: none; }
 
   .actions-row {
     display: flex;
@@ -161,17 +177,18 @@
     align-items: stretch;
     width: 100%;
     margin-top: 6px;
+    gap: 8px;
   }
 
   :global(.btn-signup) {
     display: block;
-    height: 45px;
+    height: 42px;
     width: 100%;
     margin: 0;
     border-radius: 12px;
     border: 1px solid var(--accent);
     font-weight: 700;
-    font-size: 1rem;
+    font-size: .95rem;
     letter-spacing: .2px;
     color: #000;
     background: #fff;
@@ -197,13 +214,12 @@
       0 0 0 6px rgba(56,182,255,.25);
   }
 
-  /* ✅ Estilo aceptar condiciones */
   .accept-block {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     gap: 8px;
-    margin: 12px 0 0 0;
+    margin: 8px 0 0 0;
     text-align: left;
   }
   .accept-block input[type="checkbox"] {
@@ -213,15 +229,25 @@
     cursor: pointer;
   }
   .accept-block label {
-    font-size: 0.92rem;
+    font-size: .9rem;
     line-height: 1.3;
     color: var(--text);
     cursor: pointer;
     text-align: left;
   }
 
+  .legal {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: .85rem;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(255,255,255,.35);
+  }
+  .legal.small { font-size: .82rem; }
+  .centertext { text-align: center; }
+
   @media (max-width: 520px) {
-    .logo { height: 150px; }
-    .modal { padding: 22px; }
+    .logo { height: 110px; }
+    .modal { padding: 18px; }
   }
 </style>

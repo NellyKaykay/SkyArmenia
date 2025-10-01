@@ -1,6 +1,7 @@
 <script lang="ts">  
   import { createEventDispatcher } from 'svelte';
   import { i18n } from '$lib/i18n';
+  
 
   export let trip: 'oneway' | 'round' = 'round';
   export let origin = 'BCN';
@@ -198,8 +199,11 @@
   .search-icon-btn {
     display: flex; align-items: center; justify-content: center;
     width: 44px; height: 44px; border-radius: 6px;
-    border: 1px solid var(--border); background: #ffffff; color: #000;
+    border: 1px solid var(--border); 
+   
+    color: #000;
     cursor: pointer;
+    background: #fff;
   }
   .search-icon-btn .ico { width: 20px; height: 20px; }
 

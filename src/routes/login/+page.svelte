@@ -7,7 +7,6 @@
   import Form from '$lib/components/Form.svelte';
   import EyeIcon from '$lib/components/EyeIcon.svelte';
 
-
   export let form: ActionData | undefined;
 
   let email = (form as any)?.values?.email ?? '';
@@ -34,7 +33,12 @@
     </div>
 
     <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
-      <Form title="Iniciar sesión" method="POST" action="?/login" error={error ?? null}>
+      <Form
+        title="Iniciar sesión"
+        method="POST"
+        action="?/login"
+        error={error ?? null}
+      >
         <label>
           <span class="lbl">Email</span>
           <input
@@ -55,28 +59,24 @@
             minlength="6"
             required
             bind:value={password}
-            style="padding-right:40px;height:46px;"
+            style="padding-right:40px;"
           />
           <button
             type="button"
             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             on:click={() => (showPassword = !showPassword)}
-            style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;height:36px;width:36px;pointer-events:auto;"
+            style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;height:40px;width:40px;"
             tabindex="0"
           >
             <EyeIcon size={22} color={showPassword ? '#38b6ff' : '#888'} />
           </button>
 
-          <!-- Enlace olvidaste contraseña: mismo tamaño que 'Regístrate' y alineado a la derecha -->
           <div style="text-align:right;margin-top:8px;">
             <a href="/forgot" class="link-forgot">¿Has olvidado tu contraseña?</a>
           </div>
         </label>
 
-        <!-- ⬇️ contenedor de acciones que estira el botón -->
-        <div slot="actions" class="actions-row">
-          <Button type="submit" class="btn-login">Entrar</Button>
-        </div>
+        <Button slot="actions" type="submit" size="md" full aria-label="Entrar">Entrar</Button>
       </Form>
 
       <p class="legal small centertext" style="margin-top:10px">
@@ -95,6 +95,7 @@
     height: 100vh;
     overflow: hidden;
   }
+
   .login-wrap {
     --text:#1f2937;
     --muted:#6b7280;
@@ -110,21 +111,43 @@
     overflow: hidden;
     z-index: 1;
   }
+
   .modal {
     position: relative; z-index: 2;
-    width: 100%; max-width: 520px;
+    width: clamp(320px, 92vw, 420px);
     background: rgba(255,255,255,.60);
     -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,.7);
-    border-radius: 16px;
+    border-radius: clamp(12px, 2.2vw, 16px);
     box-shadow: 0 16px 48px rgba(0,0,0,.12);
-    padding: 26px;
+    padding: clamp(18px, 4vw, 28px);
+    
+
+    /* Variables que hereda el Form (compacto y consistente) */
+    --form-max: clamp(320px, 92vw, 400px);
+    --form-gap: clamp(12px, 2.2vw, 16px);
+    --form-field-h: clamp(40px, 4.8vw, 44px);
+    --form-radius: clamp(10px, 1.6vw, 12px);
+    --form-fz-base: clamp(13px, 1.5vw, 15px);
+    --form-fz-title: clamp(20px, 3.2vw, 24px);
   }
-  .brand { display: grid; place-items: center; margin-bottom: 10px; text-align: center; }
-  .logo { height: 160px; width: auto; margin-bottom: 0; }
+  
+
+  /* LOGO y BRAND más compactos */
+  .brand {
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .logo {
+    height: clamp(80px, 14vw, 140px);
+    width: auto;
+    margin-bottom: 0;
+  }
+
   .pane { text-align: center; padding: 6px 0 4px; }
 
-  /* Textos auxiliares (heredados) */
+  /* Enlaces auxiliares (tamaños coherentes) */
   .legal {
     margin: 10px 0 0;
     color: var(--muted);
@@ -134,72 +157,20 @@
   }
   .legal.small { font-size: .86rem; }
   .centertext { text-align: center; }
-  .link-register {
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
-    font-size: 0.92rem; /* referencia de tamaño */
-  }
-  .link-register:hover { text-decoration: none; }
 
-  /* Olvidaste contraseña: igual tamaño que 'Regístrate' */
+  .link-register,
   .link-forgot {
-    font-size: 0.92rem;
-    font-weight: 400;
+    font-size: .92rem;
     text-decoration: underline;
     color: var(--text);
   }
+  .link-register:hover,
   .link-forgot:hover {
     text-decoration: none;
   }
+  :global(.modal .pane-title) {
+  margin-top: clamp(2px, 0.5vw, 0.5px);
+  margin-bottom: clamp(8px, 1.2vw, 12px);
+}
 
-  /* ⬇️ hace que el slot de acciones estire su contenido */
-  .actions-row {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    margin-top: 6px;
-  }
-
-  /* === ESTILO SOLO PARA EL BOTÓN "Entrar" EN ESTA PÁGINA === */
-  :global(.btn-login) {
-    display: block;
-    height: 45px;
-    width: 100%;
-    margin: 0;                          /* alineado con labels */
-    border-radius: 12px;
-    border: 1px solid var(--accent);
-    font-weight: 700;
-    font-size: 1rem;
-    letter-spacing: .2px;
-    color: #000;
-    background: #fff;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);
-    transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
-  }
-  :global(.btn-login:hover) {
-    background: #f7f7f7;
-    color: #000;
-    border-color: var(--accent);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0,0,0,.15);
-  }
-  :global(.btn-login:active) {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0,0,0,.18);
-  }
-  :global(.btn-login:focus-visible) {
-    outline: none;
-    box-shadow:
-      0 0 0 3px rgba(56,182,255,.35),
-      0 0 0 6px rgba(56,182,255,.25);
-  }
-
-  /* móvil → ancho completo */
-  @media (max-width: 520px) {
-    .logo { height: 150px; }
-    .modal { padding: 22px; }
-  }
 </style>

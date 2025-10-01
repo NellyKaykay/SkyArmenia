@@ -47,10 +47,12 @@
             placeholder="tucorreo@ejemplo.com"
             bind:value={email}
             required
+            autocomplete="email"
+            inputmode="email"
           />
         </label>
 
-        <label style="position:relative;display:block;">
+        <label class="pwd">
           <span class="lbl">Contraseña</span>
           <input
             name="password"
@@ -59,27 +61,28 @@
             minlength="6"
             required
             bind:value={password}
-            style="padding-right:40px;"
+            autocomplete="current-password"
           />
           <button
             type="button"
             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             on:click={() => (showPassword = !showPassword)}
-            style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;height:40px;width:40px;"
+            class="eye"
             tabindex="0"
           >
             <EyeIcon size={22} color={showPassword ? '#38b6ff' : '#888'} />
           </button>
-
-          <div style="text-align:right;margin-top:8px;">
-            <a href="/forgot" class="link-forgot">¿Has olvidado tu contraseña?</a>
-          </div>
         </label>
+
+        <!-- Enlace separado del label, alineado a la derecha -->
+        <div class="aux">
+          <a href="/forgot" class="link-forgot">¿Has olvidado tu contraseña?</a>
+        </div>
 
         <Button slot="actions" type="submit" size="md" full aria-label="Entrar">Entrar</Button>
       </Form>
 
-      <p class="legal small centertext" style="margin-top:10px">
+      <p class="legal small centertext">
         ¿No tienes cuenta? <a class="link-register" href="/signup">Regístrate</a>
       </p>
     </section>
@@ -94,6 +97,7 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    pointer-events: none; /* igual que signup */
   }
 
   .login-wrap {
@@ -104,50 +108,69 @@
 
     position: relative;
     display: grid;
-    place-items: center;
     min-height: 100dvh;
-    padding: 24px;
+    padding: clamp(12px, 4vw, 24px);
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
     background: transparent;
     overflow: hidden;
     z-index: 1;
+
+    /* centra el contenido del grid igual que signup */
+    place-items: center;
+    place-content: center;
   }
 
   .modal {
     position: relative; z-index: 2;
-    width: clamp(320px, 92vw, 420px);
+    width: 100%;
+    max-width: 420px;            /* MISMO ancho que signup */
+    margin-inline: auto;
+    place-self: center;
+
     background: rgba(255,255,255,.60);
     -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,.7);
-    border-radius: clamp(12px, 2.2vw, 16px);
+    border-radius: 16px;
     box-shadow: 0 16px 48px rgba(0,0,0,.12);
-    padding: clamp(18px, 4vw, 28px);
-    
+    padding: clamp(16px, 4vw, 26px);
 
-    /* Variables que hereda el Form (compacto y consistente) */
-    --form-max: clamp(320px, 92vw, 400px);
-    --form-gap: clamp(12px, 2.2vw, 16px);
-    --form-field-h: clamp(40px, 4.8vw, 44px);
-    --form-radius: clamp(10px, 1.6vw, 12px);
-    --form-fz-base: clamp(13px, 1.5vw, 15px);
-    --form-fz-title: clamp(20px, 3.2vw, 24px);
+    /* Variables que hereda <Form>, IDÉNTICAS a signup */
+    --form-max: 100%;
+    --form-gap: clamp(10px, 2.2vw, 16px);
+    --form-field-h: clamp(42px, 5.2vw, 46px);
+    --form-radius: 12px;
+    --form-fz-base: clamp(13px, 1.7vw, 15px);
+    --form-fz-title: clamp(20px, 3.4vw, 24px);
   }
-  
 
-  /* LOGO y BRAND más compactos */
-  .brand {
-    display: grid;
-    place-items: center;
-    text-align: center;
-  }
-  .logo {
-    height: clamp(80px, 14vw, 140px);
-    width: auto;
-    margin-bottom: 0;
-  }
+  .brand { display: grid; place-items: center; text-align: center; }
+  .logo  { height: clamp(86px, 16vw, 140px); width: auto; margin-bottom: 0; }
 
   .pane { text-align: center; padding: 6px 0 4px; }
 
-  /* Enlaces auxiliares (tamaños coherentes) */
+  .lbl { font-size: .92rem; display: inline-block; margin-bottom: 4px; }
+
+  /* Campo contraseña con icono — EXACTO al de signup */
+  .pwd { position: relative; display: block; }
+  .pwd input { padding-right: 44px; }
+  .eye {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-10px);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    height: 40px; width: 40px;
+  }
+
+  /* Enlace “olvidado…” alineado a la derecha y pegado al campo */
+  .aux { text-align: right; margin-top: 6px; }
+  .link-forgot { font-size: .92rem; text-decoration: underline; color: var(--text); }
+  .link-forgot:hover { text-decoration: none; }
+
   .legal {
     margin: 10px 0 0;
     color: var(--muted);
@@ -158,19 +181,24 @@
   .legal.small { font-size: .86rem; }
   .centertext { text-align: center; }
 
-  .link-register,
-  .link-forgot {
+  .link-register {
     font-size: .92rem;
     text-decoration: underline;
     color: var(--text);
   }
-  .link-register:hover,
-  .link-forgot:hover {
-    text-decoration: none;
-  }
-  :global(.modal .pane-title) {
-  margin-top: clamp(2px, 0.5vw, 0.5px);
-  margin-bottom: clamp(8px, 1.2vw, 12px);
-}
+  .link-register:hover { text-decoration: none; }
 
+  :global(.modal .pane-title) {
+    margin-top: clamp(2px, 0.5vw, 2px);
+    margin-bottom: clamp(8px, 1.2vw, 12px); /* igual que signup */
+  }
+
+  /* Afinado responsive específico móvil estrecho */
+  @media (max-width: 480px) {
+    .modal {
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.14);
+    }
+  }
 </style>

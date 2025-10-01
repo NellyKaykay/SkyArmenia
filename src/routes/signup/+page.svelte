@@ -1,4 +1,3 @@
-<!-- src/routes/signup/+page.svelte -->
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import BgCarousel from '$lib/components/BgCarousel.svelte';
@@ -24,6 +23,7 @@
   <meta name="robots" content="noindex" />
 </svelte:head>
 
+<!-- Fondo carousel -->
 <div class="carousel-bg">
   <BgCarousel images={HERO_IMAGES} intervalMs={5000} />
 </div>
@@ -35,7 +35,12 @@
     </div>
 
     <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
-      <Form title="Crear cuenta" method="POST" action="?/signup" error={error ?? null}>
+      <Form
+        title="Crear cuenta"
+        method="POST"
+        action="?/signup"
+        error={error ?? null}
+      >
         <label>
           <span class="lbl">Nombre</span>
           <input
@@ -58,28 +63,28 @@
           />
         </label>
 
-        <label style="position:relative;display:block;">
+        <label class="pwd">
           <span class="lbl">Contraseña</span>
           <input
             name="password"
             type={showPassword ? 'text' : 'password'}
             placeholder="••••••••"
             minlength="6"
-            bind:value={password}
             required
-            style="padding-right:40px;height:40px;"
+            bind:value={password}
           />
-          <button type="button"
+          <button
+            type="button"
             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-            on:click={() => showPassword = !showPassword}
-            style="position:absolute;right:8px;top:26px;bottom:0;margin:auto 0;background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;height:36px;width:36px;pointer-events:auto;"
+            on:click={() => (showPassword = !showPassword)}
+            class="eye"
             tabindex="0"
           >
             <EyeIcon size={22} color={showPassword ? '#38b6ff' : '#888'} />
           </button>
         </label>
 
-        <!-- ✅ Bloque aceptar condiciones -->
+        <!-- Aceptar términos -->
         <div class="accept-block">
           <input id="accept" name="accept" type="checkbox" required />
           <label for="accept">
@@ -88,12 +93,10 @@
           </label>
         </div>
 
-        <div slot="actions" class="actions-row">
-          <Button type="submit" class="btn-signup">Registrarse</Button>
-        </div>
+        <Button slot="actions" type="submit" size="md" full aria-label="Registrarse">Registrarse</Button>
       </Form>
 
-      <p class="legal small centertext" style="margin-top:10px">
+      <p class="legal small centertext">
         ¿Ya tienes cuenta? <a class="link-register" href="/login">Inicia sesión</a>
       </p>
     </section>
@@ -108,6 +111,7 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    pointer-events: none; /* igual que login */
   }
 
   .login-wrap {
@@ -118,136 +122,107 @@
 
     position: relative;
     display: grid;
-    place-items: center;
-    min-height: 100svh;
-    padding: 16px;
+    min-height: 100dvh;
+    padding: clamp(12px, 4vw, 24px);
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
     background: transparent;
     overflow: hidden;
     z-index: 1;
+
+    /* centra el contenido del grid igual que login */
+    place-items: center;
+    place-content: center;
   }
 
-  /* === Modal compacto === */
   .modal {
     position: relative; z-index: 2;
-    width: min(380px, 92vw);
-    background: color-mix(in oklab, white 60%, transparent);
-    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-    border: 1px solid rgba(0,0,0,.09);
+    width: 100%;
+    max-width: 420px;            /* mismo ancho que login */
+    margin-inline: auto;
+    place-self: center;
+
+    background: rgba(255,255,255,.60);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.7);
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0,0,0,.15);
-    padding: 18px 16px;
-  }
-  @media (min-width: 480px) {
-    .modal { width: min(400px, 90vw); padding: 20px 18px; }
-  }
-  @media (min-width: 1024px) {
-    .modal { width: 420px; padding: 22px 20px; }
-  }
+    box-shadow: 0 16px 48px rgba(0,0,0,.12);
+    padding: clamp(16px, 4vw, 26px);
 
-  /* Marca más compacta */
-  .brand { display: grid; place-items: center; margin-bottom: 8px; text-align: center; }
-  .logo { height: 120px; width: auto; margin-bottom: 0; }
-
-  .pane { text-align: center; padding: 4px 0 2px; }
-
-  /* === Campos compactos === */
-  :global(form) { display: grid; gap: 10px; }
-
-  .lbl { font-size: .82rem; opacity: .9; display: inline-block; margin-bottom: 4px; }
-
-  :global(input[type="text"]),
-  :global(input[type="email"]),
-  :global(input[type="password"]) {
-    height: 40px;
-    padding: 8px 12px;
-    font-size: .95rem;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: #fff;
+    /* Variables que hereda el <Form>, idénticas a login */
+    --form-max: 100%;
+    --form-gap: clamp(10px, 2.2vw, 16px);
+    --form-field-h: clamp(42px, 5.2vw, 46px);
+    --form-radius: 12px;
+    --form-fz-base: clamp(13px, 1.7vw, 15px);
+    --form-fz-title: clamp(20px, 3.4vw, 24px);
   }
 
-  :global(input[name="password"]) {
-    height: 40px !important;
-    padding-right: 40px;
-  }
+  .brand { display: grid; place-items: center; text-align: center; }
+  .logo  { height: clamp(86px, 16vw, 140px); width: auto; margin-bottom: 0; }
 
-  .actions-row {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    margin-top: 6px;
-    gap: 8px;
-  }
+  .pane { text-align: center; padding: 6px 0 4px; }
 
-  :global(.btn-signup) {
-    display: block;
-    height: 42px;
-    width: 100%;
-    margin: 0;
-    border-radius: 12px;
-    border: 1px solid var(--accent);
-    font-weight: 700;
-    font-size: .95rem;
-    letter-spacing: .2px;
-    color: #000;
-    background: #fff;
+  .lbl { font-size: .92rem; display: inline-block; margin-bottom: 4px; }
+
+  /* Campo contraseña con icono — calcado de login */
+  .pwd { position: relative; display: block; }
+  .pwd input { padding-right: 44px; }
+  .eye {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-10px);
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);
-    transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
-  }
-  :global(.btn-signup:hover) {
-    background: #f7f7f7;
-    color: #000;
-    border-color: var(--accent);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0,0,0,.15);
-  }
-  :global(.btn-signup:active) {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0,0,0,.18);
-  }
-  :global(.btn-signup:focus-visible) {
-    outline: none;
-    box-shadow:
-      0 0 0 3px rgba(56,182,255,.35),
-      0 0 0 6px rgba(56,182,255,.25);
+    display: flex; align-items: center; justify-content: center;
+    height: 40px; width: 40px;
   }
 
+  /* Bloque de aceptación, sin afectar el ancho del modal */
   .accept-block {
     display: flex;
     align-items: flex-start;
-    justify-content: flex-start;
     gap: 8px;
-    margin: 8px 0 0 0;
+    margin-top: 6px;
     text-align: left;
   }
   .accept-block input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    margin-top: 2px;
-    cursor: pointer;
+    width: 16px; height: 16px; margin-top: 2px; cursor: pointer;
   }
   .accept-block label {
-    font-size: .9rem;
-    line-height: 1.3;
-    color: var(--text);
-    cursor: pointer;
-    text-align: left;
+    font-size: .92rem; line-height: 1.35; color: var(--text); cursor: pointer;
   }
 
   .legal {
-    margin: 8px 0 0;
+    margin: 10px 0 0;
     color: var(--muted);
-    font-size: .85rem;
+    font-size: .92rem;
     text-align: center;
     text-shadow: 0 1px 0 rgba(255,255,255,.35);
   }
-  .legal.small { font-size: .82rem; }
+  .legal.small { font-size: .86rem; }
   .centertext { text-align: center; }
 
-  @media (max-width: 520px) {
-    .logo { height: 110px; }
-    .modal { padding: 18px; }
+  .link-register {
+    font-size: .92rem;
+    text-decoration: underline;
+    color: var(--text);
+  }
+  .link-register:hover { text-decoration: none; }
+
+  :global(.modal .pane-title) {
+    margin-top: clamp(2px, 0.5vw, 2px);
+    margin-bottom: clamp(8px, 1.2vw, 12px);
+  }
+
+  /* Afinado responsive específico móvil estrecho */
+  @media (max-width: 480px) {
+    .modal {
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.14);
+    }
   }
 </style>

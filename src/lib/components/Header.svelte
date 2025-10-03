@@ -47,8 +47,23 @@
     };
   });
 
-  // Texto del botón cuando hay sesión
-  $: displayName = (userName && userName.trim()) || ($i18n['nav.profile'] ?? 'Mi cuenta');
+  /** i18n con fallback: si el valor es falsy o igual a la propia clave, usa el fallback */
+  function t(key: string, fallback: string) {
+    const dict = $i18n as Record<string, string> | undefined;
+    const v = dict?.[key];
+    return v && v !== key ? v : fallback;
+  }
+
+  // Etiquetas accesibles y visibles
+  $: labelLanguage = t('footer.language', 'Language');
+  $: labelLogin    = t('nav.login', 'Iniciar sesión');
+  $: labelLogout   = t('nav.logout', 'Cerrar sesión');
+  $: labelAccount  = t('nav.account', 'Mi cuenta');
+
+  // Texto del botón cuando hay sesión:
+  // - Si hay nombre, mostramos el nombre.
+  // - Si no hay nombre, mostramos "Mi cuenta" (o traducción si existe).
+  $: displayName = (userName && userName.trim()) || labelAccount;
 </script>
 
 <style>
@@ -148,11 +163,11 @@
     </a>
 
     <div class="ctrls">
-      <label class="sr-only" for="lang-select">{$i18n['footer.language'] ?? 'Language'}</label>
+      <label class="sr-only" for="lang-select">{labelLanguage}</label>
       <select
         id="lang-select"
         class="lang"
-        aria-label={$i18n['footer.language'] ?? 'Language'}
+        aria-label={labelLanguage}
         bind:value={current}
         on:change={(e) => setLang((e.target as HTMLSelectElement).value as Lang)}
       >
@@ -167,6 +182,7 @@
           <button
             type="button"
             class="btn"
+            aria-label={labelAccount}
             aria-haspopup="menu"
             aria-expanded={open}
             aria-controls={menuId}
@@ -180,14 +196,14 @@
             <div class="menu" id={menuId} role="menu">
               <form method="POST" action="/logout" class="logout-form">
                 <button type="submit" class="btn logout-btn" role="menuitem">
-                  {$i18n['nav.logout'] ?? 'Cerrar sesión'}
+                  {labelLogout}
                 </button>
               </form>
             </div>
           {/if}
         </div>
       {:else}
-        <a class="btn" href={loginHref}>{$i18n['nav.login'] ?? 'Iniciar sesión'}</a>
+        <a class="btn" href={loginHref}>{labelLogin}</a>
       {/if}
     </div>
   </div>

@@ -1,7 +1,7 @@
 <script lang="ts">  
   import { createEventDispatcher } from 'svelte';
   import { i18n } from '$lib/i18n';
-  
+   import Button from '$lib/components/Button.svelte';
 
   export let trip: 'oneway' | 'round' = 'round';
   export let origin = 'BCN';
@@ -92,7 +92,7 @@
     <select id="origin" bind:value={origin} style="width:100%;" aria-label={t('form.origin', 'Origin')}>
       <option value="EVN">Yerevan (EVN)</option>
       <option value="BCN">Barcelona (BCN)</option>
-      <option value="ALC">Alicante (ALC)</option>
+      
     </select>
   </div>
 
@@ -102,7 +102,7 @@
     <select id="destination" bind:value={destination} style="width:100%;" aria-label={t('form.destination', 'Destination')}>
       <option value="EVN">Yerevan (EVN)</option>
       <option value="BCN">Barcelona (BCN)</option>
-      <option value="ALC">Alicante (ALC)</option>
+     
     </select>
   </div>
 
@@ -143,8 +143,7 @@
        <option value={6}>6</option>
       <option value={7}>7</option>
       <option value={8}>8</option>
-      <option value={9}>9</option>
-      <option value={10}>10</option>
+      <option value={9}>9</option>      
     </select>
   </div>
 
@@ -242,15 +241,16 @@
       width: 100%;
       height: 40px;
       padding: 0 16px;
-      border: none;
-      border-radius: 20px; /* estilo login */
-      background-color: #015F78;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 14px;      
       cursor: pointer;
       transition: background-color 0.2s ease;
       text-align: center;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      font-weight: 600;
+      color: #000;
+      background: #fff;
+      text-decoration: none;
     }
     .mobile-only:hover { background-color: #01495d; }
   }

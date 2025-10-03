@@ -46,7 +46,7 @@
     cursor: pointer;
     transition: background .2s ease, box-shadow .2s ease;
     font-family: inherit;
-    box-shadow: 0 2px 6px rgba(0,0,0,.08); /* sombra ligera */
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
   }
   .btn:hover {
     background: #f7f7f7;
@@ -74,7 +74,7 @@
     font-size: 1.05rem;
   }
 
-  /* Ancho completo opcional */
+  /* Ancho completo */
   .btn.full {
     display: block;
     width: 100%;

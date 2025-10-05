@@ -1,6 +1,7 @@
 <!-- src/lib/components/Footer.svelte -->
 <script lang="ts">
   import { i18n, lang, type Lang } from '$lib/i18n';
+  import { onMount } from 'svelte';
 
   // Idioma actual (para preservar ?lang= en enlaces internos)
   let current: Lang = 'es';
@@ -12,7 +13,61 @@
     const qs = sp.toString();
     return qs ? `${path}?${qs}` : path;
   }
+
+  // Coordenadas aproximadas de Carrer de Còrsega 203, Barcelona
+  const LAT = 41.3929;
+  const LON = 2.1542;
+  let mapContainer: HTMLDivElement | null = null;
+
+  onMount(async () => {
+    // ✅ Carga Leaflet como namespace (no 'default') para cuadrar con @types/leaflet
+    const L = (await import('leaflet')) as typeof import('leaflet');
+
+    // Arreglo de iconos por bundlers
+    // @ts-ignore
+    delete (L.Icon.Default.prototype as any)._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl:
+        'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+      iconUrl:
+        'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+      shadowUrl:
+        'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+    });
+
+    if (mapContainer) {
+      const map = L.map(mapContainer, {
+        center: [LAT, LON],
+        zoom: 16,
+        scrollWheelZoom: true
+      });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      L.marker([LAT, LON])
+        .addTo(map)
+        .bindPopup('<strong>Carrer de Còrsega, 203</strong><br/>08036 Barcelona')
+        .openPopup();
+
+      // Recalcula si cambia el tamaño del contenedor
+      setTimeout(() => map.invalidateSize(), 300);
+    }
+  });
 </script>
+
+<svelte:head>
+  <!-- CSS de Leaflet por CDN para evitar errores de loader -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+</svelte:head>
 
 <footer class="footer">
   <div class="container footer-top">
@@ -30,7 +85,6 @@
         <li><a href={href('/about')}>{$i18n['nav.about']}</a></li>
         <li><a href={href('/events')}>{$i18n['nav.events']}</a></li>
         <li><a href={href('/flights')}>{$i18n['nav.flights']}</a></li>
-        <li><a href={href('/contact')}>{$i18n['nav.contact']}</a></li>
       </ul>
     </div>
 
@@ -39,8 +93,6 @@
       <h4>{$i18n['footer.cities']}</h4>
       <ul>
         <li><a href={href('/events', { city: 'Barcelona' })}>Barcelona</a></li>
-        <li><a href={href('/events', { city: 'Madrid' })}>Madrid</a></li>
-        <li><a href={href('/events', { city: 'Valencia' })}>Valencia</a></li>
         <li><a href={href('/events', { city: 'Yerevan' })}>Yerevan</a></li>
       </ul>
     </div>
@@ -51,7 +103,7 @@
       <div class="social" aria-label="Social links">
         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="icon-btn fb">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 4.99 3.66 9.13 8.44 9.93v-7.03H8v-2.9h2.44V9.41c0-2.42 1.43-3.77 3.63-3.77 1.05 0 2.15.18 2.15.18v2.37h-1.21c-1.2 0-1.57.75-1.57 1.52v1.82H16l-.39 2.9h-2.6v7.03c4.78-.8 8.44-4.94 8.44-9.93Z"/>
+            <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 4.99 3.66 9.13 8.44 9.93v-7.03H8v-2.9h2.44V9.41c0-2.42 1.43-3.77 3.63-3.77 1.05 0 2.15.18 2.15.18v2.37h-1.21c-1.2 0-1.57.75-1.57 1.52v1.82H16л-.39 2.9h-2.6v7.03c4.78-.8 8.44-4.94 8.44-9.93Z"/>
           </svg>
         </a>
         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="icon-btn ig">
@@ -61,9 +113,39 @@
         </a>
         <a href="mailto:info@skyarmenia.com" aria-label="Email" class="icon-btn mail">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5В6л8 5 8-5v2Z"/>
           </svg>
         </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact band (Contacto + mapa) -->
+  <div class="contact-band">
+    <div class="container contact-grid">
+      <!-- Datos de contacto -->
+      <div class="contact-info">
+        <h4>{$i18n['nav.contact']}</h4>
+        <address class="contact-address">
+          Carrer de Còrsega, 203, Entresuelo C<br />
+          08036 Barcelona
+        </address>
+
+        <div class="contact-links">
+          <a href="tel:+34644393949" aria-label="Llamar por teléfono">Móvil: +34 644 39 39 49</a>
+          <a href="mailto:info@skyarmenia.com" aria-label="Enviar correo">info@skyarmenia.com</a>
+          <a
+            href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es"
+            target="_blank" rel="noopener noreferrer"
+          >
+            Ver en Google Maps
+          </a>
+        </div>
+      </div>
+
+      <!-- Mapa interactivo (Leaflet + OSM) -->
+      <div class="contact-map">
+        <div class="map-embed" role="region" aria-label="Mapa de la dirección" bind:this={mapContainer}></div>
       </div>
     </div>
   </div>
@@ -79,7 +161,7 @@
 </footer>
 
 <style>
-  /* Contenedor global del footer (por si .container no tiene estilos globales) */
+  /* Contenedor global del footer */
   .footer .container {
     max-width: 1200px;
     margin-inline: auto;
@@ -93,20 +175,19 @@
     color: #111;
   }
 
-  /* TOP: grid 1→2→4 columnas */
+  /* TOP */
   .footer-top {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr; /* desktop */
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: clamp(16px, 2.5vw, 28px);
     padding: clamp(20px, 4vw, 32px) 0;
     align-items: start;
   }
 
-  /* Brand: izquierda en desktop, centrado en móvil */
   .brand-row {
     display: flex;
     align-items: center;
-    justify-content: flex-start;     /* desktop: izq */
+    justify-content: flex-start;
   }
   .brand-logo {
     height: clamp(90px, 14vw, 140px);
@@ -138,7 +219,7 @@
     border-radius: 6px;
   }
 
-  /* Social: botones accesibles */
+  /* Social */
   .social {
     margin-top: 8px;
     display: flex;
@@ -165,7 +246,70 @@
   .icon-btn.ig { color: #d6249f; border-color: rgba(214,36,159,.25); }
   .icon-btn.mail { color: #ea4335; border-color: rgba(234,67,53,.25); }
 
-  /* BOTTOM (legal) */
+  /* --- Contact band --- */
+  .contact-band {
+    border-top: 1px solid var(--border);
+    background: #fff;
+    padding: clamp(18px, 4vw, 28px) 0;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* info | mapa */
+    gap: clamp(16px, 3vw, 28px);
+    align-items: stretch;
+  }
+
+  .contact-info h4 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #222;
+  }
+
+  .contact-address {
+    margin: 0 0 10px;
+    font-style: normal; /* evita cursiva por defecto de <address> */
+    color: #1f2937;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .contact-links a {
+    color: #1f2937;
+    text-decoration: none;
+  }
+  .contact-links a:hover { text-decoration: underline; }
+  .contact-links a:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(56,182,255,.35), 0 0 0 6px rgba(56,182,255,.2);
+    border-radius: 6px;
+  }
+
+  /* Mapa responsivo 16:9 */
+  .map-embed {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 56.25%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,.08);
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+  }
+  .map-embed :global(.leaflet-container) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* --- BOTTOM (legal) --- */
   .footer-bottom {
     border-top: 1px solid var(--border);
     padding: clamp(10px, 2vw, 14px) 0;
@@ -179,14 +323,15 @@
 
   /* Breakpoints */
   @media (max-width: 900px) {
-    .footer-top { grid-template-columns: 1.2fr 1fr 1fr; } /* Social cae abajo */
+    .footer-top { grid-template-columns: 1.2fr 1fr 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 760px) {
     .footer-top {
       grid-template-columns: 1fr 1fr;
       gap: 18px;
     }
-    .brand-row { justify-content: center; }          /* móvil: centro */
+    .brand-row { justify-content: center; }
     .footer h4 { text-align: center; }
   }
   @media (max-width: 560px) {

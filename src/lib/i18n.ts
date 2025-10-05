@@ -118,7 +118,32 @@ const dict: Record<Lang, Dict> = {
     'footer.newsletterDesc': 'Weekly best fares, no spam.',
     'footer.subscribe': 'Subscribe',
     'footer.badgeIata': 'IATA-ready*',
-    'footer.badgeSecure': 'Secure checkout'
+    'footer.badgeSecure': 'Secure checkout',
+
+    /* ------ Auth (login/signup + errors) ------ */
+    'auth.login.title': 'Sign in',
+    'auth.login.email': 'Email',
+    'auth.login.password': 'Password',
+    'auth.login.submit': 'Sign in',
+    'auth.login.forgot': 'Forgot your password?',
+    'auth.login.noAccount': "Don't have an account?",
+    'auth.login.signupLink': 'Sign up',
+
+    'auth.signup.title': 'Create account',
+    'auth.signup.name': 'Name',
+    'auth.signup.email': 'Email',
+    'auth.signup.password': 'Password',
+    'auth.signup.submit': 'Sign up',
+    'auth.signup.haveAccount': 'Already have an account?',
+    'auth.signup.loginLink': 'Sign in',
+
+    'auth.error.required_email': 'Please enter your email.',
+    'auth.error.required_password': 'Please enter your password.',
+    'auth.error.required_name': 'Please enter your name.',
+    'auth.error.invalid_credentials': 'Invalid email or password.',
+    'auth.error.email_not_confirmed': 'Please confirm your email before signing in.',
+    'auth.error.too_many_requests': 'Too many attempts. Try again later.',
+    'auth.error.generic': 'Something went wrong. Please try again.'
   },
   es: {
     'nav.login': 'Iniciar sesión',
@@ -164,7 +189,32 @@ const dict: Record<Lang, Dict> = {
     'footer.newsletterDesc': 'Mejores tarifas semanales, sin spam.',
     'footer.subscribe': 'Suscribirme',
     'footer.badgeIata': 'IATA-ready*',
-    'footer.badgeSecure': 'Pago seguro'
+    'footer.badgeSecure': 'Pago seguro',
+
+    /* ------ Auth (login/signup + errors) ------ */
+    'auth.login.title': 'Iniciar sesión',
+    'auth.login.email': 'Correo electrónico',
+    'auth.login.password': 'Contraseña',
+    'auth.login.submit': 'Entrar',
+    'auth.login.forgot': '¿Has olvidado tu contraseña?',
+    'auth.login.noAccount': '¿No tienes cuenta?',
+    'auth.login.signupLink': 'Regístrate',
+
+    'auth.signup.title': 'Crear cuenta',
+    'auth.signup.name': 'Nombre',
+    'auth.signup.email': 'Correo electrónico',
+    'auth.signup.password': 'Contraseña',
+    'auth.signup.submit': 'Registrarse',
+    'auth.signup.haveAccount': '¿Ya tienes cuenta?',
+    'auth.signup.loginLink': 'Inicia sesión',
+
+    'auth.error.required_email': 'Por favor, introduce tu email.',
+    'auth.error.required_password': 'Por favor, introduce tu contraseña.',
+    'auth.error.required_name': 'Por favor, introduce tu nombre.',
+    'auth.error.invalid_credentials': 'Email o contraseña incorrectos.',
+    'auth.error.email_not_confirmed': 'Debes confirmar tu email antes de iniciar sesión.',
+    'auth.error.too_many_requests': 'Demasiados intentos. Inténtalo de nuevo más tarde.',
+    'auth.error.generic': 'Ha ocurrido un error. Vuelve a intentarlo.'
   },
   ru: {
     'nav.login': 'Войти',
@@ -210,7 +260,32 @@ const dict: Record<Lang, Dict> = {
     'footer.newsletterDesc': 'Лучшие цены каждую неделю, без спама.',
     'footer.subscribe': 'Подписаться',
     'footer.badgeIata': 'IATA-ready*',
-    'footer.badgeSecure': 'Безопасная оплата'
+    'footer.badgeSecure': 'Безопасная оплата',
+
+    /* ------ Auth (login/signup + errors) ------ */
+    'auth.login.title': 'Войти',
+    'auth.login.email': 'Электронная почта',
+    'auth.login.password': 'Пароль',
+    'auth.login.submit': 'Войти',
+    'auth.login.forgot': 'Забыли пароль?',
+    'auth.login.noAccount': 'Нет аккаунта?',
+    'auth.login.signupLink': 'Зарегистрироваться',
+
+    'auth.signup.title': 'Создать аккаунт',
+    'auth.signup.name': 'Имя',
+    'auth.signup.email': 'Электронная почта',
+    'auth.signup.password': 'Пароль',
+    'auth.signup.submit': 'Зарегистрироваться',
+    'auth.signup.haveAccount': 'Уже есть аккаунт?',
+    'auth.signup.loginLink': 'Войти',
+
+    'auth.error.required_email': 'Пожалуйста, укажите e-mail.',
+    'auth.error.required_password': 'Пожалуйста, укажите пароль.',
+    'auth.error.required_name': 'Пожалуйста, укажите имя.',
+    'auth.error.invalid_credentials': 'Неверная почта или пароль.',
+    'auth.error.email_not_confirmed': 'Подтвердите e-mail перед входом.',
+    'auth.error.too_many_requests': 'Слишком много попыток. Повторите позже.',
+    'auth.error.generic': 'Произошла ошибка. Попробуйте ещё раз.'
   },
   hy: {
     'nav.login': 'Մուտք գործել',
@@ -256,7 +331,32 @@ const dict: Record<Lang, Dict> = {
     'footer.newsletterDesc': 'Լավագույն գները ամեն շաբաթ, առանց սպամի։',
     'footer.subscribe': 'Բաժանորդագրվել',
     'footer.badgeIata': 'IATA-ready*',
-    'footer.badgeSecure': 'Անվտանգ վճարում'
+    'footer.badgeSecure': 'Անվտանգ վճարում',
+
+    /* ------ Auth (login/signup + errors) ------ */
+    'auth.login.title': 'Մուտք',
+    'auth.login.email': 'Էլ. փոստ',
+    'auth.login.password': 'Գաղտնաբառ',
+    'auth.login.submit': 'Մուտք գործել',
+    'auth.login.forgot': 'Մոռացել ե՞ս գաղտնաբառը',
+    'auth.login.noAccount': 'Չունե՞ս հաշիվ',
+    'auth.login.signupLink': 'Գրանցվել',
+
+    'auth.signup.title': 'Գրանցում',
+    'auth.signup.name': 'Անուն',
+    'auth.signup.email': 'Էլ. փոստ',
+    'auth.signup.password': 'Գաղտնաբառ',
+    'auth.signup.submit': 'Ստեղծել հաշիվ',
+    'auth.signup.haveAccount': 'Արդեն ունե՞ս հաշիվ',
+    'auth.signup.loginLink': 'Մուտք',
+
+    'auth.error.required_email': 'Խնդրում ենք մուտքագրել էլ. փոստը։',
+    'auth.error.required_password': 'Խնդրում ենք մուտքագրել գաղտնաբառը։',
+    'auth.error.required_name': 'Խնդրում ենք մուտքագրել անունը։',
+    'auth.error.invalid_credentials': 'Էլ. փոստը կամ գաղտնաբառը սխալ է։',
+    'auth.error.email_not_confirmed': 'Մուտք գործելուց առաջ հաստատեք էլ. փոստը։',
+    'auth.error.too_many_requests': 'Չափազանց շատ փորձեր։ Կրկնեք ավելի ուշ։',
+    'auth.error.generic': 'Տեղի ունեցավ սխալ։ Խնդրում ենք կրկին փորձել։'
   }
 };
 

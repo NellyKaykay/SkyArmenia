@@ -6,6 +6,7 @@
   import Button from '$lib/components/Button.svelte';
   import Form from '$lib/components/Form.svelte';
   import EyeIcon from '$lib/components/EyeIcon.svelte';
+  import { i18n } from '$lib/i18n';
 
   export let form: ActionData | undefined;
 
@@ -34,17 +35,17 @@
 
     <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
       <Form
-        title="Iniciar sesión"
+        title={$i18n['auth.login.title']}
         method="POST"
         action="?/login"
         error={error ?? null}
       >
         <label>
-          <span class="lbl">Email</span>
+          <span class="lbl">{$i18n['auth.login.email']}</span>
           <input
             name="email"
             type="email"
-            placeholder="tucorreo@ejemplo.com"
+            placeholder={$i18n['auth.login.email']}
             bind:value={email}
             required
             autocomplete="email"
@@ -53,11 +54,11 @@
         </label>
 
         <label class="pwd">
-          <span class="lbl">Contraseña</span>
+          <span class="lbl">{$i18n['auth.login.password']}</span>
           <input
             name="password"
             type={showPassword ? 'text' : 'password'}
-            placeholder="••••••••"
+            placeholder={$i18n['auth.login.password']}
             minlength="6"
             required
             bind:value={password}
@@ -74,16 +75,17 @@
           </button>
         </label>
 
-        <!-- Enlace separado del label, alineado a la derecha -->
         <div class="aux">
-          <a href="/forgot" class="link-forgot">¿Has olvidado tu contraseña?</a>
+          <a href="/forgot" class="link-forgot">{$i18n['auth.login.forgot']}</a>
         </div>
 
-        <Button slot="actions" type="submit" size="md" full aria-label="Entrar">Entrar</Button>
+        <Button slot="actions" type="submit" size="md" full aria-label={$i18n['auth.login.submit']}>
+          {$i18n['auth.login.submit']}
+        </Button>
       </Form>
 
       <p class="legal small centertext">
-        ¿No tienes cuenta? <a class="link-register" href="/signup">Regístrate</a>
+        {$i18n['auth.login.noAccount']} <a class="link-register" href="/signup">{$i18n['auth.login.signupLink']}</a>
       </p>
     </section>
   </div>

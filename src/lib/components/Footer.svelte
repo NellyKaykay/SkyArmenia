@@ -2,10 +2,15 @@
 <script lang="ts">
   import { i18n, lang, type Lang } from '$lib/i18n';
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
 
   // Idioma actual (para preservar ?lang= en enlaces internos)
   let current: Lang = 'es';
   $: current = $lang;
+
+  // Ruta actual y flag de páginas de auth
+  $: pathname = $page.url.pathname;
+  $: isAuth = pathname.startsWith('/login') || pathname.startsWith('/signup');
 
   function href(path: string, params: Record<string, string> = {}) {
     const sp = new URLSearchParams(params);
@@ -36,17 +41,18 @@
       const map = L.map(mapContainer, {
         center: [LAT, LON],
         zoom: 16,
-        // evita que robe el scroll de la página en desktop
-        scrollWheelZoom: false,
-        touchZoom: false,
-        keyboard: false,
+        // En auth bloqueamos interacciones que “roban” scroll; fuera de auth, normal
+        scrollWheelZoom: !isAuth,
+        touchZoom: !isAuth,
+        keyboard: !isAuth,
         dragging: true,
         zoomControl: true
       });
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
 
       L.marker([LAT, LON])
@@ -54,6 +60,7 @@
         .bindPopup('<strong>Carrer de Còrsega, 203</strong><br/>08036 Barcelona')
         .openPopup();
 
+      // Recalcula si cambia el tamaño del contenedor
       setTimeout(() => map.invalidateSize(), 300);
     }
   });
@@ -102,20 +109,26 @@
       <h4>Social</h4>
       <div class="social" aria-label="Social links">
         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="icon-btn fb">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 4.99 3.66 9.13 8.44 9.93v-7.03H8v-2.9h2.44V9.41c0-2.42 1.43-3.77 3.63-3.77 1.05 0 2.15.18 2.15.18v2.37h-1.21c-1.2 0-1.57.75-1.57 1.52v1.82H16l-.39 2.9h-2.6v7.03c4.78-.8 8.44-4.94 8.44-9.93Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 4.99 3.66 9.13 8.44 9.93v-7.03H8v-2.9h2.44V9.41c0-2.42 1.43-3.77 3.63-3.77 1.05 0 2.15.18 2.15.18v2.37h-1.21c-1.2 0-1.57.75-1.57 1.52v1.82H16l-.39 2.9h-2.6v7.03c4.78-.8 8.44-4.94 8.44-9.93Z"/>
+          </svg>
         </a>
         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="icon-btn ig">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7Zm10 2c1.65 0 3 1.35 3 3v10c0 1.65-1.35 3-3 3H7c-1.65 0-3-1.35-3-3V7c0-1.65 1.35-3 3-3h10Zm-5 3.5A5.5 5.5 0 1 0 17.5 13 5.51 5.51 0 0 0 12 7.5Zm0 2A3.5 3.5 0 1 1 8.5 13 3.5 3.5 0 0 1 12 9.5Zm4.75-2.88a1 1 0 1 0 1 1 1 1 0 0 0-1-1Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7Zm10 2c1.65 0 3 1.35 3 3v10c0 1.65-1.35 3-3 3H7c-1.65 0-3-1.35-3-3V7c0-1.65 1.35-3 3-3h10Zm-5 3.5A5.5 5.5 0 1 0 17.5 13 5.51 5.51 0 0 0 12 7.5Zm0 2A3.5 3.5 0 1 1 8.5 13 3.5 3.5 0 0 1 12 9.5Zm4.75-2.88a1 1 0 1 0 1 1 1 1 0 0 0-1-1Z"/>
+          </svg>
         </a>
         <a href="mailto:info@skyarmenia.com" aria-label="Email" class="icon-btn mail">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+          </svg>
         </a>
       </div>
     </div>
   </div>
 
-  <!-- Contact band (sticky) -->
-  <div class="contact-band sticky">
+  <!-- Contact band (sticky solo en login/signup) -->
+  <div class="contact-band" class:sticky={isAuth}>
     <div class="container contact-grid">
       <!-- Datos de contacto -->
       <div class="contact-info">
@@ -128,7 +141,10 @@
         <div class="contact-links">
           <a href="tel:+34644393949" aria-label="Llamar por teléfono">Móvil: +34 644 39 39 49</a>
           <a href="mailto:info@skyarmenia.com" aria-label="Enviar correo">info@skyarmenia.com</a>
-          <a href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es"
+            target="_blank" rel="noopener noreferrer"
+          >
             Ver en Google Maps
           </a>
         </div>
@@ -179,11 +195,22 @@
   .brand-logo { height: clamp(90px, 14vw, 140px); width: auto; display: block; }
 
   /* Títulos y enlaces */
-  .footer h4 { margin: 0 0 10px; font-size: 14px; text-transform: uppercase; letter-spacing: .04em; color: #222; text-align: left; }
+  .footer h4 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #222;
+    text-align: left;
+  }
   .footer ul { list-style: none; margin: 0; padding: 0; }
   .footer li + li { margin-top: 8px; }
 
-  .footer a { color: #1f2937; text-decoration: none; text-underline-offset: 2px; }
+  .footer a {
+    color: #1f2937;
+    text-decoration: none;
+    text-underline-offset: 2px;
+  }
   .footer a:hover { text-decoration: underline; }
   .footer a:focus-visible {
     outline: none;
@@ -210,12 +237,15 @@
     color: #1f2937;
     transition: transform .08s ease, box-shadow .15s ease, background .2s;
   }
-  .icon-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(0,0,0,.12); }
+  .icon-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(0,0,0,.12);
+  }
   .icon-btn.fb { color: #1877f2; border-color: rgba(24,119,242,.25); }
   .icon-btn.ig { color: #d6249f; border-color: rgba(214,36,159,.25); }
   .icon-btn.mail { color: #ea4335; border-color: rgba(234,67,53,.25); }
 
-  /* --- Contact band sticky --- */
+  /* --- Contact band --- */
   .contact-band {
     border-top: 1px solid var(--border);
     background: #fff;
@@ -223,9 +253,9 @@
   }
   .contact-band.sticky {
     position: sticky;
-    bottom: 0;               /* pegado al borde inferior */
-    z-index: 9;
-    box-shadow: 0 -10px 24px rgba(0,0,0,.08);  /* sombra superior suave */
+    bottom: 0;                /* pegado al borde inferior */
+    z-index: 5;               /* más bajo para no interferir con hero en home */
+    box-shadow: 0 -10px 24px rgba(0,0,0,.08);
     backdrop-filter: blur(6px);
   }
 
@@ -244,9 +274,22 @@
     color: #222;
   }
 
-  .contact-address { margin: 0 0 10px; font-style: normal; color: #1f2937; }
-  .contact-links { display: flex; flex-direction: column; gap: 6px; }
-  .contact-links a { color: #1f2937; text-decoration: none; }
+  .contact-address {
+    margin: 0 0 10px;
+    font-style: normal; /* evita cursiva por defecto de <address> */
+    color: #1f2937;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .contact-links a {
+    color: #1f2937;
+    text-decoration: none;
+  }
   .contact-links a:hover { text-decoration: underline; }
   .contact-links a:focus-visible {
     outline: none;
@@ -254,13 +297,13 @@
     border-radius: 6px;
   }
 
-  /* Mapa responsivo 16:9 (pero con altura mínima para sticky) */
+  /* Mapa responsivo (altura cómoda para sticky) */
   .map-embed {
     position: relative;
     width: 100%;
     height: 0;
-    padding-top: 45%;         /* un poco más bajo que 16:9 para que no ocupe tanto */
-    min-height: 220px;        /* asegura altura visible cuando está sticky */
+    padding-top: 45%;
+    min-height: 220px;
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid rgba(0,0,0,.08);
@@ -301,6 +344,7 @@
     }
     .brand-row { justify-content: center; }
     .footer h4 { text-align: center; }
+
     /* Centrado de contacto en responsive */
     .contact-info { text-align: center; }
     .contact-links { align-items: center; }
@@ -314,12 +358,17 @@
     }
     .social { justify-content: center; }
     .brand-logo { height: 100px; }
+
     /* Centra los textos de abajo del footer en móvil */
     .footer-bottom {
       justify-content: center;
       text-align: center;
       gap: 8px;
     }
-    .footer-copy, .policy { width: 100%; display: flex; justify-content: center; }
+    .footer-copy, .policy {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
   }
 </style>

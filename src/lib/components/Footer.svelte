@@ -9,7 +9,7 @@
   $: current = $lang;
 
   // Ruta actual y flag de páginas de auth
-  $: pathname = $page.url.pathname;
+  $: pathname = $page?.url?.pathname || '';
   $: isAuth = pathname.startsWith('/login') || pathname.startsWith('/signup');
 
   function href(path: string, params: Record<string, string> = {}) {
@@ -106,7 +106,8 @@
 
     <!-- Social -->
     <div>
-      <h4>Social</h4>
+     
+       <h4>{$i18n['footer.social']}</h4>
       <div class="social" aria-label="Social links">
         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="icon-btn fb">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -116,11 +117,6 @@
         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="icon-btn ig">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7Zm10 2c1.65 0 3 1.35 3 3v10c0 1.65-1.35 3-3 3H7c-1.65 0-3-1.35-3-3V7c0-1.65 1.35-3 3-3h10Zm-5 3.5A5.5 5.5 0 1 0 17.5 13 5.51 5.51 0 0 0 12 7.5Zm0 2A3.5 3.5 0 1 1 8.5 13 3.5 3.5 0 0 1 12 9.5Zm4.75-2.88a1 1 0 1 0 1 1 1 1 0 0 0-1-1Z"/>
-          </svg>
-        </a>
-        <a href="mailto:info@skyarmenia.com" aria-label="Email" class="icon-btn mail">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
           </svg>
         </a>
       </div>
@@ -140,7 +136,14 @@
 
         <div class="contact-links">
           <a href="tel:+34644393949" aria-label="Llamar por teléfono">Móvil: +34 644 39 39 49</a>
-          <a href="mailto:info@skyarmenia.com" aria-label="Enviar correo">info@skyarmenia.com</a>
+          
+          <a href="mailto:info@skyarmenia.com" aria-label="Email" class="email-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+            </svg>
+            <span>info@skyarmenia.com</span>
+          </a>
+          
           <a
             href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es"
             target="_blank" rel="noopener noreferrer"
@@ -243,7 +246,7 @@
   }
   .icon-btn.fb { color: #1877f2; border-color: rgba(24,119,242,.25); }
   .icon-btn.ig { color: #d6249f; border-color: rgba(214,36,159,.25); }
-  .icon-btn.mail { color: #ea4335; border-color: rgba(234,67,53,.25); }
+  /* Removed unused CSS selector */
 
   /* --- Contact band --- */
   .contact-band {
@@ -295,6 +298,12 @@
     outline: none;
     box-shadow: 0 0 0 3px rgba(56,182,255,.35), 0 0 0 6px rgba(56,182,255,.2);
     border-radius: 6px;
+  }
+
+  .email-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   /* Mapa responsivo (altura cómoda para sticky) */

@@ -163,8 +163,7 @@ const dict: Record<Lang, Dict> = {
     'form.email': 'Email',
     'form.password': 'Contraseña',
     'offers.title': 'Vuelos directos',
-    'offer.card1': 'Erevan',
-    'offer.card2': 'Barcelona',
+    
     'status.soon': 'Pronto...',
     'status.searching': 'Buscando…',
     'status.results': 'Resultados cargados',
@@ -238,8 +237,7 @@ const dict: Record<Lang, Dict> = {
     'form.email': 'Email',
     'form.password': 'Пароль',
     'offers.title': 'Прямые рейсы',
-    'offer.card1': 'Ереван',
-    'offer.card2': 'Барселона',
+    
     'status.soon': 'Скоро...',
     'status.searching': 'Поиск…',
     'status.results': 'Результаты загружены',
@@ -314,8 +312,7 @@ const dict: Record<Lang, Dict> = {
     'form.email': 'Email',
     'form.password': 'Գաղտնաբառ',
     'offers.title': 'Ուղիղ չվերթներ', 
-    'offer.card': 'Երևան',
-    'offer.body': 'Բարսելոնա',        
+         
     'status.searching': 'Որոնում…',
     'status.results': 'Արդյունքները բեռնվեցին',
     'status.no_results': 'Արդյունքներ չկան',

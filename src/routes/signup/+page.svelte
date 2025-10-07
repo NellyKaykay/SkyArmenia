@@ -4,6 +4,7 @@
   import Button from '$lib/components/Button.svelte';
   import Form from '$lib/components/Form.svelte';
   import EyeIcon from '$lib/components/EyeIcon.svelte';
+  import { i18n } from '$lib/i18n';
 
   export let form:
     | { sent?: boolean; error?: string | null; values?: Record<string, any> }
@@ -36,46 +37,46 @@
 
     <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
       <Form
-        title="Crear cuenta"
+        title={$i18n['auth.signup.title']}
         method="POST"
         action="?/signup"
         error={error ?? null}
       >
         <label>
-          <span class="lbl">Nombre</span>
+          <span class="lbl">{$i18n['auth.signup.name']}</span>
           <input
             name="name"
             type="text"
-            placeholder="Tu nombre"
+            placeholder={$i18n['auth.signup.name']}
             bind:value={name}
             required
           />
         </label>
 
         <label>
-          <span class="lbl">Email</span>
+          <span class="lbl">{$i18n['auth.signup.email']}</span>
           <input
             name="email"
             type="email"
-            placeholder="tucorreo@ejemplo.com"
+            placeholder={$i18n['auth.signup.email']}
             bind:value={email}
             required
           />
         </label>
 
         <label class="pwd">
-          <span class="lbl">Contraseña</span>
+          <span class="lbl">{$i18n['auth.signup.password']}</span>
           <input
             name="password"
             type={showPassword ? 'text' : 'password'}
-            placeholder="••••••••"
+            placeholder={$i18n['auth.signup.password']}
             minlength="6"
             required
             bind:value={password}
           />
           <button
             type="button"
-            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            aria-label={showPassword ? $i18n['auth.password.hide'] : $i18n['auth.password.show']}
             on:click={() => (showPassword = !showPassword)}
             class="eye"
             tabindex="0"
@@ -84,20 +85,24 @@
           </button>
         </label>
 
-        <!-- Aceptar términos -->
+        <!-- Aceptar términos (traducido con i18n) -->
         <div class="accept-block">
           <input id="accept" name="accept" type="checkbox" required />
           <label for="accept">
-            Acepto las <a href="/terms" target="_blank" rel="noopener noreferrer">Condiciones del servicio</a>
-            y la <a href="/privacy" target="_blank" rel="noopener noreferrer">Política de privacidad</a>.
+            {$i18n['legal.accept']}
+            <a href="/terms" target="_blank" rel="noopener noreferrer">{$i18n['legal.terms']}</a>
+            &nbsp;{$i18n['footer.and'] ?? 'y'}&nbsp;
+            <a href="/privacy" target="_blank" rel="noopener noreferrer">{$i18n['legal.privacy']}</a>.
           </label>
         </div>
 
-        <Button slot="actions" type="submit" size="md" full aria-label="Registrarse">Registrarse</Button>
+        <Button slot="actions" type="submit" size="md" full aria-label={$i18n['auth.signup.submit']}>
+          {$i18n['auth.signup.submit']}
+        </Button>
       </Form>
 
       <p class="legal small centertext">
-        ¿Ya tienes cuenta? <a class="link-register" href="/login">Inicia sesión</a>
+        {$i18n['auth.signup.haveAccount']} <a class="link-register" href="/login">{$i18n['auth.signup.loginLink']}</a>
       </p>
     </section>
   </div>

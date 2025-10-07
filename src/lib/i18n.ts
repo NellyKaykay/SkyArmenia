@@ -29,19 +29,17 @@ function pickInitial(): Lang {
   return 'es';
 }
 
-// Store base (¡no lo toques en SSR!)
+// Store base
 export const lang = writable<Lang>('es');
 
-/** Inicializa en cliente con el valor acordado con el servidor (o autodetección) */
 export function initLang(initialFromServer?: Lang) {
   if (!browser) return;
   const l = initialFromServer && languages.includes(initialFromServer)
     ? initialFromServer
     : pickInitial();
-  applyLang(l, { updateUrl: false }); // set sin tocar URL en el primer paint
+  applyLang(l, { updateUrl: false });
 }
 
-/** Cambia el idioma de forma segura (store + URL + cookie + LS + <html lang>) */
 export function setLang(l: Lang, opts?: { updateUrl?: boolean }) {
   if (!languages.includes(l)) return;
   applyLang(l, { updateUrl: opts?.updateUrl ?? true });
@@ -53,20 +51,14 @@ function applyLang(l: Lang, { updateUrl }: { updateUrl: boolean }) {
   if (!browser) return;
 
   try {
-    // URL (?lang=xx)
     if (updateUrl) {
       const url = new URL(window.location.href);
       url.searchParams.set('lang', l);
       history.replaceState(history.state, '', url);
     }
 
-    // Cookie (1 año)
     document.cookie = `lang=${l}; Path=/; Max-Age=${60 * 60 * 24 * 365}`;
-
-    // localStorage
     localStorage.setItem('lang', l);
-
-    // <html lang="xx">
     document.documentElement.setAttribute('lang', l);
   } catch { /* noop */ }
 }
@@ -110,6 +102,7 @@ const dict: Record<Lang, Dict> = {
     'footer.links': 'Links',
     'footer.cities': 'Cities',
     'footer.language': 'Language',
+    'footer.and': 'and',
     'footer.rights': 'All rights reserved.',
     'footer.privacy': 'Privacy',
     'footer.terms': 'Terms',
@@ -137,6 +130,12 @@ const dict: Record<Lang, Dict> = {
     'auth.signup.haveAccount': 'Already have an account?',
     'auth.signup.loginLink': 'Sign in',
 
+    'auth.password.show': 'Show password',
+    'auth.password.hide': 'Hide password',
+    'legal.accept': 'I accept the',
+    'legal.terms': 'Terms of Service',
+    'legal.privacy': 'Privacy Policy',
+
     'auth.error.required_email': 'Please enter your email.',
     'auth.error.required_password': 'Please enter your password.',
     'auth.error.required_name': 'Please enter your name.',
@@ -145,6 +144,7 @@ const dict: Record<Lang, Dict> = {
     'auth.error.too_many_requests': 'Too many attempts. Try again later.',
     'auth.error.generic': 'Something went wrong. Please try again.'
   },
+
   es: {
     'nav.login': 'Iniciar sesión',
     'nav.logout': 'Cerrar sesión',
@@ -181,6 +181,7 @@ const dict: Record<Lang, Dict> = {
     'footer.links': 'Enlaces',
     'footer.cities': 'Ciudades',
     'footer.language': 'Idioma',
+    'footer.and': 'y',
     'footer.rights': 'Todos los derechos reservados.',
     'footer.privacy': 'Privacidad',
     'footer.terms': 'Términos',
@@ -208,6 +209,12 @@ const dict: Record<Lang, Dict> = {
     'auth.signup.haveAccount': '¿Ya tienes cuenta?',
     'auth.signup.loginLink': 'Inicia sesión',
 
+    'auth.password.show': 'Mostrar contraseña',
+    'auth.password.hide': 'Ocultar contraseña',
+    'legal.accept': 'Acepto las',
+    'legal.terms': 'Condiciones del servicio',
+    'legal.privacy': 'Política de privacidad',
+
     'auth.error.required_email': 'Por favor, introduce tu email.',
     'auth.error.required_password': 'Por favor, introduce tu contraseña.',
     'auth.error.required_name': 'Por favor, introduce tu nombre.',
@@ -216,6 +223,7 @@ const dict: Record<Lang, Dict> = {
     'auth.error.too_many_requests': 'Demasiados intentos. Inténtalo de nuevo más tarde.',
     'auth.error.generic': 'Ha ocurrido un error. Vuelve a intentarlo.'
   },
+
   ru: {
     'nav.login': 'Войти',
     'nav.logout': 'Выйти',
@@ -252,6 +260,7 @@ const dict: Record<Lang, Dict> = {
     'footer.links': 'Ссылки',
     'footer.cities': 'Города',
     'footer.language': 'Язык',
+    'footer.and': 'и',
     'footer.rights': 'Все права защищены.',
     'footer.privacy': 'Конфиденциальность',
     'footer.terms': 'Условия',
@@ -279,6 +288,12 @@ const dict: Record<Lang, Dict> = {
     'auth.signup.haveAccount': 'Уже есть аккаунт?',
     'auth.signup.loginLink': 'Войти',
 
+    'auth.password.show': 'Показать пароль',
+    'auth.password.hide': 'Скрыть пароль',
+    'legal.accept': 'Я принимаю',
+    'legal.terms': 'Условия обслуживания',
+    'legal.privacy': 'Политику конфиденциальности',
+
     'auth.error.required_email': 'Пожалуйста, укажите e-mail.',
     'auth.error.required_password': 'Пожалуйста, укажите пароль.',
     'auth.error.required_name': 'Пожалуйста, укажите имя.',
@@ -287,6 +302,7 @@ const dict: Record<Lang, Dict> = {
     'auth.error.too_many_requests': 'Слишком много попыток. Повторите позже.',
     'auth.error.generic': 'Произошла ошибка. Попробуйте ещё раз.'
   },
+
   hy: {
     'nav.login': 'Մուտք գործել',
     'nav.logout': 'Դուրս գալ',
@@ -323,6 +339,7 @@ const dict: Record<Lang, Dict> = {
     'footer.links': 'Հղումներ',
     'footer.cities': 'Քաղաքներ',
     'footer.language': 'Լեզու',
+    'footer.and': 'և',
     'footer.rights': 'Բոլոր իրավունքները պաշտպանված են։',
     'footer.privacy': 'Գաղտնիություն',
     'footer.terms': 'Պայմաններ',
@@ -350,6 +367,12 @@ const dict: Record<Lang, Dict> = {
     'auth.signup.haveAccount': 'Արդեն ունե՞ս հաշիվ',
     'auth.signup.loginLink': 'Մուտք',
 
+    'auth.password.show': 'Ցուցադրել գաղտնաբառը',
+    'auth.password.hide': 'Թաքցնել գաղտնաբառը',
+    'legal.accept': 'Ես ընդունում եմ',
+    'legal.terms': 'Օգտագործման պայմանները',
+    'legal.privacy': 'Գաղտնիության քաղաքականություն',
+
     'auth.error.required_email': 'Խնդրում ենք մուտքագրել էլ. փոստը։',
     'auth.error.required_password': 'Խնդրում ենք մուտքագրել գաղտնաբառը։',
     'auth.error.required_name': 'Խնդրում ենք մուտքագրել անունը։',
@@ -370,6 +393,7 @@ function withFallback(d: Dict, fallback: Dict): Dict {
     }
   });
 }
+
 const baseEN = dict.en;
 
 export const i18n: Readable<Dict> = derived(lang, (l) =>

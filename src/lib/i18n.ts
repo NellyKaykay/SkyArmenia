@@ -75,8 +75,7 @@ const dict: Record<Lang, Dict> = {
     'nav.events': 'Events',
     'nav.flights': 'Flights',
     'nav.contact': 'Contact',
-    'hero.title': 'Find the best flights',
-    'hero.subtitle': 'Compare on Skyarmenia (FLYONE & Blackstone) and book in minutes.',
+    'hero.title': 'Find the best flights',   
     'opts.round': 'Round trip',
     'opts.oneway': 'One-way',
     'opts.bags': 'Bags',
@@ -98,7 +97,6 @@ const dict: Record<Lang, Dict> = {
     'flight.direct': 'direct',
     'flight.stops': 'with stops',
     'price.from': 'from',
-    'footer.about': 'Flights and trips focused on Armenia and beyond. Compare, plan and book with confidence.',
     'footer.links': 'Links',
     'footer.cities': 'Cities',
     'footer.language': 'Language',
@@ -107,11 +105,7 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Privacy',
     'footer.terms': 'Terms',
     'footer.cookies': 'Cookies',
-    'footer.newsletterTitle': 'Get flight deals',
-    'footer.newsletterDesc': 'Weekly best fares, no spam.',
-    'footer.subscribe': 'Subscribe',
-    'footer.badgeIata': 'IATA-ready*',
-    'footer.badgeSecure': 'Secure checkout',
+    
 
     /* ------ Auth (login/signup + errors) ------ */
     'auth.login.title': 'Sign in',
@@ -154,8 +148,7 @@ const dict: Record<Lang, Dict> = {
     'nav.events': 'Eventos',
     'nav.flights': 'Vuelos',
     'nav.contact': 'Contacto',
-    'hero.title': 'Encuentra vuelos al mejor precio',
-    'hero.subtitle': 'Compara en Skyarmenia (FLYONE & Blackstone) y reserva en minutos.',
+    'hero.title': 'Encuentra vuelos al mejor precio',   
     'opts.round': 'Ida y vuelta',
     'opts.oneway': 'Solo ida',
     'opts.bags': 'Maletas',
@@ -176,8 +169,7 @@ const dict: Record<Lang, Dict> = {
     'unit.hours': 'horas',
     'flight.direct': 'directo',
     'flight.stops': 'con escalas',
-    'price.from': 'desde',
-    'footer.about': 'Vuelos y viajes con foco en Armenia y más. Compara, planifica y reserva con confianza.',
+    'price.from': 'desde',   
     'footer.links': 'Enlaces',
     'footer.cities': 'Ciudades',
     'footer.language': 'Idioma',
@@ -186,11 +178,7 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Privacidad',
     'footer.terms': 'Términos',
     'footer.cookies': 'Cookies',
-    'footer.newsletterTitle': 'Recibe ofertas de vuelos',
-    'footer.newsletterDesc': 'Mejores tarifas semanales, sin spam.',
-    'footer.subscribe': 'Suscribirme',
-    'footer.badgeIata': 'IATA-ready*',
-    'footer.badgeSecure': 'Pago seguro',
+   
 
     /* ------ Auth (login/signup + errors) ------ */
     'auth.login.title': 'Iniciar sesión',
@@ -233,8 +221,7 @@ const dict: Record<Lang, Dict> = {
     'nav.events': 'События',
     'nav.flights': 'Рейсы',
     'nav.contact': 'Контакты',
-    'hero.title': 'Найдите лучшие авиабилеты',
-    'hero.subtitle': 'Сравнивайте на Skyarmenia (FLYONE & Blackstone) и бронируйте за минуты.',
+    'hero.title': 'Найдите лучшие авиабилеты',    
     'opts.round': 'Туда-обратно',
     'opts.oneway': 'В одну сторону',
     'opts.bags': 'Багаж',
@@ -256,7 +243,7 @@ const dict: Record<Lang, Dict> = {
     'flight.direct': 'прямой',
     'flight.stops': 'с пересадками',
     'price.from': 'от',
-    'footer.about': 'Рейсы и путешествия с фокусом на Армению и не только. Сравнивайте, планируйте и бронируйте уверенно.',
+    
     'footer.links': 'Ссылки',
     'footer.cities': 'Города',
     'footer.language': 'Язык',
@@ -265,11 +252,7 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Конфиденциальность',
     'footer.terms': 'Условия',
     'footer.cookies': 'Cookies',
-    'footer.newsletterTitle': 'Получать предложения',
-    'footer.newsletterDesc': 'Лучшие цены каждую неделю, без спама.',
-    'footer.subscribe': 'Подписаться',
-    'footer.badgeIata': 'IATA-ready*',
-    'footer.badgeSecure': 'Безопасная оплата',
+    
 
     /* ------ Auth (login/signup + errors) ------ */
     'auth.login.title': 'Войти',
@@ -304,8 +287,8 @@ const dict: Record<Lang, Dict> = {
   },
 
   hy: {
-    'nav.login': 'Մուտք գործել',
-    'nav.logout': 'Դուրս գալ',
+    'nav.login': 'Մուտք',
+    'nav.logout': 'Ելք',
     'nav.signup': 'Գրանցվել',
     'nav.profile': 'Պրոֆիլ',
     'nav.about': 'Մեր մասին',
@@ -313,7 +296,6 @@ const dict: Record<Lang, Dict> = {
     'nav.flights': 'Թռիչքներ',
     'nav.contact': 'Կապ',
     'hero.title': 'Գտիր լավագույն ավիատոմսերը',
-    'hero.subtitle': 'Համեմատիր Skyarmenia-ում (FLYONE & Blackstone) և ամրագրիր րոպեների ընթացքում։',
     'opts.round': 'Երթա-եկա',
     'opts.oneway': 'Մեկ ուղղություն',
     'opts.bags': 'Ուղեբեռ',
@@ -335,7 +317,7 @@ const dict: Record<Lang, Dict> = {
     'flight.direct': 'ուղիղ',
     'flight.stops': 'փոխանցումով',
     'price.from': 'սկսած',
-    'footer.about': 'Թռիչքներ և ճամփորդություններ՝ կենտրոնացած Հայաստանի և շրջակայքի վրա։',
+    
     'footer.links': 'Հղումներ',
     'footer.cities': 'Քաղաքներ',
     'footer.language': 'Լեզու',
@@ -344,11 +326,7 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Գաղտնիություն',
     'footer.terms': 'Պայմաններ',
     'footer.cookies': 'Cookie-ներ',
-    'footer.newsletterTitle': 'Ստանալ առաջարկներ',
-    'footer.newsletterDesc': 'Լավագույն գները ամեն շաբաթ, առանց սպամի։',
-    'footer.subscribe': 'Բաժանորդագրվել',
-    'footer.badgeIata': 'IATA-ready*',
-    'footer.badgeSecure': 'Անվտանգ վճարում',
+    
 
     /* ------ Auth (login/signup + errors) ------ */
     'auth.login.title': 'Մուտք',
@@ -371,15 +349,15 @@ const dict: Record<Lang, Dict> = {
     'auth.password.hide': 'Թաքցնել գաղտնաբառը',
     'legal.accept': 'Ընդունում եմ',
     'legal.terms': 'Օգտագործման պայմանները',
-    'legal.privacy': 'Գաղտնիության քաղաքականություն',
+    'legal.privacy': 'Գաղտնիության քաղաքականությունը',
 
-    'auth.error.required_email': 'Խնդրում ենք մուտքագրել էլ. փոստը։',
-    'auth.error.required_password': 'Խնդրում ենք մուտքագրել գաղտնաբառը։',
+    'auth.error.required_email': 'Խնդրում ենք մուտքագրել էլ. փոստը',
+    'auth.error.required_password': 'Խնդրում ենք մուտքագրել գաղտնաբառը',
     'auth.error.required_name': 'Խնդրում ենք մուտքագրել անունը։',
-    'auth.error.invalid_credentials': 'Էլ. փոստը կամ գաղտնաբառը սխալ է։',
-    'auth.error.email_not_confirmed': 'Մուտք գործելուց առաջ հաստատեք էլ. փոստը։',
-    'auth.error.too_many_requests': 'Չափազանց շատ փորձեր։ Կրկնեք ավելի ուշ։',
-    'auth.error.generic': 'Տեղի ունեցավ սխալ։ Խնդրում ենք կրկին փորձել։'
+    'auth.error.invalid_credentials': 'Էլ. փոստը կամ գաղտնաբառը սխալ է',
+    'auth.error.email_not_confirmed': 'Մուտք գործելուց առաջ հաստատեք էլ. փոստը',
+    'auth.error.too_many_requests': 'Չափազանց շատ փորձեր։ Կրկնեք ավելի ուշ',
+    'auth.error.generic': 'Տեղի ունեցավ սխալ։ Խնդրում ենք կրկին փորձել'
   }
 };
 

@@ -369,7 +369,7 @@ const dict: Record<Lang, Dict> = {
 
     'auth.password.show': 'Ցուցադրել գաղտնաբառը',
     'auth.password.hide': 'Թաքցնել գաղտնաբառը',
-    'legal.accept': 'Ես ընդունում եմ',
+    'legal.accept': 'Ընդունում եմ',
     'legal.terms': 'Օգտագործման պայմանները',
     'legal.privacy': 'Գաղտնիության քաղաքականություն',
 

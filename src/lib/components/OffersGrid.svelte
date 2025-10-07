@@ -21,14 +21,14 @@
 
   <div class="offers-grid">
     <!-- Card 1: Yerevan -->
-    <div class="offer-card">
+    <div class="offer-card1">
       <img
         src="https://ca-times.brightspotcdn.com/dims4/default/1b5cd92/2147483647/strip/true/crop/1600x534+0+201/resize/2000x667!/format/webp/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F8b%2F6d%2F8a82b3f44b62a048a080602302fb%2Fyerevan-republic-square-at-night-yerevan-armenia.jpg"
         alt="Yerevan"
         loading="lazy"
       />
       <div class="offer-body">
-        <h3>Erevan</h3>
+        <h3>{$i18n['offer.card2']}</h3>
         <p>{offerLine(4, true, 400, '€')}</p>
       </div>
     </div>
@@ -41,7 +41,7 @@
         loading="lazy"
       />
       <div class="offer-body">
-        <h3>Barcelona</h3>
+        <h3>{$i18n['offer.card']}</h3>
         <p>{offerLine(4, true, 400, '€')}</p>
       </div>
     </div>

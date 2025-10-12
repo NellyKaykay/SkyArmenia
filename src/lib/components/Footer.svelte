@@ -106,8 +106,7 @@
 
     <!-- Social -->
     <div>
-     
-       <h4>{$i18n['footer.social']}</h4>
+      <h4>{$i18n['footer.social']}</h4>
       <div class="social" aria-label="Social links">
         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="icon-btn fb">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -136,19 +135,23 @@
 
         <div class="contact-links">
           <a href="tel:+34644393949" aria-label="Llamar por teléfono">Móvil: +34 644 39 39 49</a>
-          
+
+          <!-- EMAIL con icono tipo botón redondo (como Facebook/Instagram) -->
           <a href="mailto:info@skyarmenia.com" aria-label="Email" class="email-link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
-            </svg>
+            <span class="icon-btn mail" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+              </svg>
+            </span>
             <span>info@skyarmenia.com</span>
           </a>
-          
-          <a
-            href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es"
-            target="_blank" rel="noopener noreferrer"
-          >
-            Ver en Google Maps
+
+          <a href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es"
+            target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v6h2V7zm0 8h-2v2h2v-2z"/>
+            </svg>
+            <span>Ver en Google Maps</span>
           </a>
         </div>
       </div>
@@ -246,7 +249,8 @@
   }
   .icon-btn.fb { color: #1877f2; border-color: rgba(24,119,242,.25); }
   .icon-btn.ig { color: #d6249f; border-color: rgba(214,36,159,.25); }
-  /* Removed unused CSS selector */
+  /* NUEVO: variante para email con el mismo estilo */
+  .icon-btn.mail { color: #ea4335; border-color: rgba(234,67,53,.25); }
 
   /* --- Contact band --- */
   .contact-band {
@@ -256,8 +260,8 @@
   }
   .contact-band.sticky {
     position: sticky;
-    bottom: 0;                /* pegado al borde inferior */
-    z-index: 5;               /* más bajo para no interferir con hero en home */
+    bottom: 0;
+    z-index: 5;
     box-shadow: 0 -10px 24px rgba(0,0,0,.08);
     backdrop-filter: blur(6px);
   }
@@ -279,7 +283,7 @@
 
   .contact-address {
     margin: 0 0 10px;
-    font-style: normal; /* evita cursiva por defecto de <address> */
+    font-style: normal;
     color: #1f2937;
   }
 
@@ -305,6 +309,8 @@
     align-items: center;
     gap: 8px;
   }
+  /* asegura que el botón redondo no se deforma junto al texto */
+  .email-link .icon-btn { flex-shrink: 0; }
 
   /* Mapa responsivo (altura cómoda para sticky) */
   .map-embed {

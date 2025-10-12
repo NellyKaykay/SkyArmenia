@@ -1,4 +1,4 @@
-:root{
+:root{ 
   --bg:#ffffff;        /* fondo blanco */
   --panel:#f5faff;     /* blanco con un toque celeste muy suave */
   --text:#000000;      /* texto negro */
@@ -33,7 +33,6 @@ body{
 .header.is-scrolled {
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
-
 
 .search-bar{
   display:grid; gap:8px;
@@ -76,3 +75,18 @@ body{
   text-decoration:none;
 }
 .link:hover{ text-decoration:underline; }
+
+/* ──────────────────────────────── */
+/* 🔹 Anti-bandera Leaflet / OSM   */
+/* ──────────────────────────────── */
+.leaflet-control-attribution *::before,
+.leaflet-control-attribution *::after {
+  content: none !important;
+  background: none !important;
+}
+
+/* Elimina imágenes o SVG añadidos por extensiones */
+.leaflet-control-attribution a img,
+.leaflet-control-attribution a svg {
+  display: none !important;
+}

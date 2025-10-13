@@ -9,27 +9,27 @@
 
   // "4 horas · directo · desde 400 €"
   function offerLine(hours: number, direct = true, price = 400, currency = '€') {
-    const h = `${hours} ${t('unit.hours', 'hours')}`;
-    const d = direct ? t('flight.direct', 'direct') : t('flight.stops', 'with stops');
-    const from = t('price.from', 'from');
+    const h = `${hours} ${t('unit.hours', 'horas')}`;
+    const d = direct ? t('flight.direct', 'directo') : t('flight.stops', 'con escalas');
+    const from = t('price.from', 'desde');
     return `${h} · ${d} · ${from} ${price} ${currency}`;
   }
 </script>
 
 <section class="offers">
-  <h2 class="offers-title">{t('offers.title', 'Destinations')}</h2>
+  <h2 class="offers-title">{t('offers.title', 'Destinos')}</h2>
 
   <div class="offers-grid">
     <!-- Card 1 -->
     <div class="offer-card">
       <img
         src="https://ca-times.brightspotcdn.com/dims4/default/1b5cd92/2147483647/strip/true/crop/1600x534+0+201/resize/2000x667!/format/webp/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F8b%2F6d%2F8a82b3f44b62a048a080602302fb%2Fyerevan-republic-square-at-night-yerevan-armenia.jpg"
-        alt="Yerevan"
+        alt="Ereván"
         loading="lazy"
       />
       <div class="offer-body">
-        <h3>Erevan</h3>
-        <p>{offerLine(4, true, 400, '€')}</p>
+        <h3>{t('offers.yerevan', 'Ereván')}</h3>
+       
       </div>
     </div>
 
@@ -41,8 +41,8 @@
         loading="lazy"
       />
       <div class="offer-body">
-        <h3>Barcelona</h3>
-        <p>{offerLine(4, true, 400, '€')}</p>
+        <h3>{t('offers.barcelona', 'Barcelona')}</h3>
+        
       </div>
     </div>
   </div>
@@ -56,7 +56,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 24px;
-    align-items: stretch; /* asegura alturas coherentes */
+    align-items: stretch;
   }
 
   .offer-card {
@@ -77,7 +77,7 @@
 
   .offer-card img {
     width: 100%;
-    height: 200px;           /* misma altura para ambas imágenes */
+    height: 200px;
     object-fit: cover;
     display: block;
   }
@@ -92,9 +92,5 @@
     color: #000;
   }
 
-  .offer-body p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 14px;
-  }
+  
 </style>

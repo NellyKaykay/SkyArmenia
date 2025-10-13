@@ -1,14 +1,11 @@
-<!-- src/lib/components/Footer.svelte -->
 <script lang="ts">
   import { i18n, lang, type Lang } from '$lib/i18n';
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
 
-  // Idioma actual (para preservar ?lang= en enlaces internos)
   let current: Lang = 'es';
   $: current = $lang;
 
-  // Ruta actual y flag de páginas de auth
   $: pathname = $page?.url?.pathname || '';
   $: isAuth = pathname.startsWith('/login') || pathname.startsWith('/signup');
 
@@ -105,6 +102,7 @@
     </div>
 
     <!-- Social -->
+    
     <div>
       <h4>{$i18n['footer.social']}</h4>
       <div class="social" aria-label="Social links">
@@ -128,17 +126,38 @@
       <!-- Datos de contacto -->
       <div class="contact-info">
         <h4>{$i18n['nav.contact']}</h4>
-        <address class="contact-address">
-          Carrer de Còrsega, 203, Entresuelo C<br />
-          08036 Barcelona
-        </address>
+         <a
+            href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es"
+            target="_blank" rel="noopener noreferrer" class="email-link" aria-label="Ver en Google Maps"
+          >
+            <span class="icon-btn location" aria-hidden="true">
+              <!-- Location / Pin SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5Z"/>
+              </svg>
+            </span>
+            <span>Carrer de Còrsega, 203, Entresuelo C<br>
+              
+          08036 Barcelona</span>
+          </a>
+        
 
         <div class="contact-links">
-          <a href="tel:+34644393949" aria-label="Llamar por teléfono">Móvil: +34 644 39 39 49</a>
+          <!-- TELÉFONO con icono redondo y color -->
+          <a href="tel:+34644393949" aria-label="Llamar por teléfono" class="email-link">
+            <span class="icon-btn phone" aria-hidden="true">
+              <!-- Phone SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a2 2 0 0 1-2 2C10.4 22 2 13.6 2 3a2 2 0 0 1 2-2h3.49a1 1 0 0 1 1 1c0 1.24.2 2.45.57 3.57a1 1 0 0 1-.24 1.02l-2.2 2.2Z"/>
+              </svg>
+            </span>
+            <span>Móvil: +34 644 39 39 49</span>
+          </a>
 
           <!-- EMAIL con icono tipo botón redondo (como Facebook/Instagram) -->
           <a href="mailto:info@skyarmenia.com" aria-label="Email" class="email-link">
             <span class="icon-btn mail" aria-hidden="true">
+              <!-- Mail SVG -->
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
               </svg>
@@ -146,13 +165,8 @@
             <span>info@skyarmenia.com</span>
           </a>
 
-          <a href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es"
-            target="_blank" rel="noopener noreferrer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v6h2V7zm0 8h-2v2h2v-2z"/>
-            </svg>
-            <span>Ver en Google Maps</span>
-          </a>
+          <!-- DIRECCIÓN / MAPS con icono redondo y color -->
+         
         </div>
       </div>
 
@@ -249,8 +263,11 @@
   }
   .icon-btn.fb { color: #1877f2; border-color: rgba(24,119,242,.25); }
   .icon-btn.ig { color: #d6249f; border-color: rgba(214,36,159,.25); }
-  /* NUEVO: variante para email con el mismo estilo */
+  /* Email (ya estaba) */
   .icon-btn.mail { color: #ea4335; border-color: rgba(234,67,53,.25); }
+  /* Nuevos colores para contacto (mismo estilo que email) */
+  .icon-btn.phone    { color: #10b981; border-color: rgba(16,185,129,.25); }  /* verde */
+  .icon-btn.location { color: #2563eb; border-color: rgba(37,99,235,.25); }   /* azul */
 
   /* --- Contact band --- */
   .contact-band {
@@ -274,24 +291,24 @@
   }
 
   .contact-info h4 {
-    margin: 0 0 10px;
+    margin: 0 0 30px;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: .04em;
     color: #222;
+   
   }
 
-  .contact-address {
-    margin: 0 0 10px;
-    font-style: normal;
-    color: #1f2937;
-  }
+  
+ 
 
   .contact-links {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+   
   }
+
+  
 
   .contact-links a {
     color: #1f2937;
@@ -307,8 +324,11 @@
   .email-link {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: clamp(14px, 3vw, 28px);
+    padding: clamp(14px, 3vw, 20px) 0;
   }
+
+
   /* asegura que el botón redondo no se deforma junto al texto */
   .email-link .icon-btn { flex-shrink: 0; }
 

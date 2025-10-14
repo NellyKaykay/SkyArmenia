@@ -347,9 +347,9 @@ const dict: Record<Lang, Dict> = {
     'status.searching': 'Որոնում…',
     'status.results': 'Արդյունքները բեռնվեցին',
     'status.no_results': 'Արդյունքներ չկան',
-    'unit.hours': 'ժամ',
-    'flight.direct': 'ուղիղ',   
-    'price.from': 'սկսած',
+    'unit.hours': 'Ժամ',
+    'flight.direct': 'Ուղիղ',
+    'price.from': 'Սկսած',
     
     'footer.links': 'Հղումներ',
     'footer.cities': 'Քաղաքներ',
@@ -367,8 +367,8 @@ const dict: Record<Lang, Dict> = {
     'passengers.adults.hint': 'մինչև 12 տարեկան',
     'passengers.children': 'Երեխաներ',
     'passengers.children.hint': '2-ից 11 տարեկան',
-    'passengers.infants': 'Մладенцы',
-    'passengers.infants.hint': 'до 2 лет',
+    'passengers.infants': 'Մանկահասակներ',
+    'passengers.infants.hint': '2 տարեկանից ցածր',
 
 
     /* ------ Auth (login/signup + errors) ------ */

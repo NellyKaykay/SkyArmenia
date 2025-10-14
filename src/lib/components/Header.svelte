@@ -55,10 +55,10 @@
   }
 
   // Etiquetas accesibles y visibles
-  $: labelLanguage = t('footer.language', 'Language');
-  $: labelLogin    = t('nav.login', 'Iniciar sesión');
-  $: labelLogout   = t('nav.logout', 'Cerrar sesión');
-  $: labelAccount  = t('nav.account', 'Mi cuenta');
+  $: labelLanguage = t($i18n?.['footer.language'], 'Language');
+  $: labelLogin    = t($i18n?.['nav.login'], 'Login');
+  $: labelLogout   = t($i18n?.['nav.logout'], 'Logout');
+  $: labelAccount  = t($i18n?.['nav.account'], 'My Account');
 
   // Texto del botón cuando hay sesión:
   // - Si hay nombre, mostramos el nombre.

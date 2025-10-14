@@ -80,7 +80,7 @@
   </div>
 {:else}
   <!-- Estado no autenticado: mismo botón que ya tienes -->
-  <a href={loginHref} class={buttonClass}>{$i18n['nav.login']}</a>
+  <a href={loginHref} class={buttonClass}>{$i18n['auth.login.title']}</a>
 {/if}
 
 <style>

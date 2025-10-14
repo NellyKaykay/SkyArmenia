@@ -1,6 +1,7 @@
 <!-- src/lib/components/HeaderAuth.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { lang, setLang, i18n, languages, type Lang } from '$lib/i18n';
 
   // Props
   export let user: any = null;
@@ -79,7 +80,7 @@
   </div>
 {:else}
   <!-- Estado no autenticado: mismo botón que ya tienes -->
-  <a href={loginHref} class={buttonClass}>Iniciar sesión</a>
+  <a href={loginHref} class={buttonClass}>{$i18n['nav.login']}</a>
 {/if}
 
 <style>

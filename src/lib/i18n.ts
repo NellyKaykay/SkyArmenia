@@ -139,6 +139,15 @@ const dict: Record<Lang, Dict> = {
     'auth.error.email_not_confirmed': 'Please confirm your email before signing in.',
     'auth.error.too_many_requests': 'Too many attempts. Try again later.',
     'auth.error.generic': 'Something went wrong. Please try again.'
+  ,
+  
+    'passengers.title': 'Passengers',
+    'passengers.adults': 'Adults',
+    'passengers.adults.hint': 'from 12 years old',
+    'passengers.children': 'Children',
+    'passengers.children.hint': 'from 2 to 11 years old',
+    'passengers.infants': 'Infants',
+    'passengers.infants.hint': 'under 2 years old',
   },
 
   es: {
@@ -214,6 +223,16 @@ const dict: Record<Lang, Dict> = {
     'auth.error.email_not_confirmed': 'Debes confirmar tu email antes de iniciar sesión.',
     'auth.error.too_many_requests': 'Demasiados intentos. Inténtalo de nuevo más tarde.',
     'auth.error.generic': 'Ha ocurrido un error. Vuelve a intentarlo.'
+  ,
+
+  
+    'passengers.title': 'Pasajeros',
+    'passengers.adults': 'Adultos',
+    'passengers.adults.hint': 'desde 12 años',
+    'passengers.children': 'Niños',
+    'passengers.children.hint': 'de 2 a 11 años',
+    'passengers.infants': 'Bebés',
+    'passengers.infants.hint': 'menores de 2 años',
   },
 
   ru: {
@@ -289,8 +308,17 @@ const dict: Record<Lang, Dict> = {
     'auth.error.invalid_credentials': 'Неверная почта или пароль.',
     'auth.error.email_not_confirmed': 'Подтвердите e-mail перед входом.',
     'auth.error.too_many_requests': 'Слишком много попыток. Повторите позже.',
-    'auth.error.generic': 'Произошла ошибка. Попробуйте ещё раз.'
+    'auth.error.generic': 'Произошла ошибка. Попробуйте ещё раз.',
+    
+    'passengers.title': 'Пассажиры',
+    'passengers.adults': 'Взрослые',
+    'passengers.adults.hint': 'от 12 лет',
+    'passengers.children': 'Дети',
+    'passengers.children.hint': 'от 2 до 11 лет',
+    'passengers.infants': 'Младенцы',
+    'passengers.infants.hint': 'до 2 лет',
   },
+  
 
   hy: {
     'nav.login': 'Մուտք',
@@ -332,7 +360,16 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Գաղտնիություն',
     'footer.terms': 'Պայմաններ',
     'footer.cookies': 'Cookie-ներ',
+
     
+    'passengers.title': 'Ուղևորներ',
+    'passengers.adults': 'Մեծահասակներ',
+    'passengers.adults.hint': 'մինչև 12 տարեկան',
+    'passengers.children': 'Երեխաներ',
+    'passengers.children.hint': '2-ից 11 տարեկան',
+    'passengers.infants': 'Մладенцы',
+    'passengers.infants.hint': 'до 2 лет',
+
 
     /* ------ Auth (login/signup + errors) ------ */
     'auth.login.title': 'Մուտք',

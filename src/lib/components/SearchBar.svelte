@@ -208,11 +208,10 @@
   <!-- ===== Pasajeros ===== -->
   <div class="pax-field" use:outside={() => (paxOpen = false)}>
      <label class="label" for="pax">{t('form.passengers','Pasajeros')}</label>
-        <button type="button" class="picker pax-trigger" aria-haspopup="dialog" aria-expanded={paxOpen} aria-labelledby="pax-label"
-      on:click={() => (paxOpen = !paxOpen)}>
-      
-      <span class="pax-trigger-right">{totalPax}</span>
-    </button>
+     <button type="button" class="picker pax-trigger" aria-haspopup="dialog" aria-expanded={paxOpen} aria-labelledby="pax-label"
+       on:click={() => (paxOpen = !paxOpen)}>
+       <span class="pax-trigger-right">{totalPax}</span>
+     </button>
 
     {#if paxOpen}
       <!-- dialog accesible -->
@@ -220,12 +219,16 @@
            tabindex="-1" on:keydown={onDialogKeydown}
            on:click|stopPropagation>
         <div class="pax-head">
-          <div class="pax-head-title">{t('form.passengers','Pasajeros')}</div>
+          <div class="pax-head-title">{t('passengers.title','Pasajeros')}</div>
           <div class="pax-head-count">{totalPax} {t('pax.passengers','PASAJEROS')}</div>
         </div>
 
+        <!-- Adults -->
         <div class="row">
-          <div class="left"><div class="title">{t('pax.adults','Adults')}</div><div class="sub">{t('pax.adultsHint','Age 12+')}</div></div>
+          <div class="left">
+            <div class="title">{t('passengers.adults','Adultos')}</div>
+            <div class="sub">{t('passengers.adults.hint','desde 12 años')}</div>
+          </div>
           <div class="right">
             <button type="button" class="square" on:click={(e)=>dec('adults',e)} aria-label="Quitar adulto">−</button>
             <div class="count" aria-live="polite">{adultsC}</div>
@@ -233,8 +236,12 @@
           </div>
         </div>
 
+        <!-- Children -->
         <div class="row">
-          <div class="left"><div class="title">{t('pax.children','Kids')}</div><div class="sub">{t('pax.childrenHint','Age 2–11')}</div></div>
+          <div class="left">
+            <div class="title">{t('passengers.children','Niños')}</div>
+            <div class="sub">{t('passengers.children.hint','de 2 a 11 años')}</div>
+          </div>
           <div class="right">
             <button type="button" class="square" on:click={(e)=>dec('children',e)} aria-label="Quitar niño">−</button>
             <div class="count" aria-live="polite">{childrenC}</div>
@@ -242,8 +249,12 @@
           </div>
         </div>
 
+        <!-- Infants -->
         <div class="row">
-          <div class="left"><div class="title">{t('pax.infants','Infants')}</div><div class="sub">{t('pax.infantsHint','on lap')}</div></div>
+          <div class="left">
+            <div class="title">{t('passengers.infants','Bebés')}</div>
+            <div class="sub">{t('passengers.infants.hint','menores de 2 años')}</div>
+          </div>
           <div class="right">
             <button type="button" class="square" on:click={(e)=>dec('infants',e)} aria-label="Quitar bebé">−</button>
             <div class="count" aria-live="polite">{infantsC}</div>
@@ -270,90 +281,133 @@
 
 <style>
   /* ===== Rail Ida/Vuelta — pequeño & en línea ===== */
-  .trip-rail { display: inline-flex; gap: 14px; margin: 6px 0 12px; }
-  .rail-btn {
-    display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px;
-    background: transparent; border: 0; cursor: pointer; border-radius: 999px;
-  }
-  .rail-btn:focus-visible { outline: 2px solid var(--accent, #2740ff); outline-offset: 2px; }
-  .dot {
-    width: 16px; height: 16px; border-radius: 999px;
-    border: 2px solid var(--accent, #2740ff); background: #fff;
-  }
-  .dot[data-active="true"] { background: var(--accent, #2740ff); }
-  .rail-text { color: #fff; font-weight: 700; font-size: 14px; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+.trip-rail { display: inline-flex; gap: 14px; margin: 6px 0 12px; }
+.rail-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px;
+  background: transparent; border: 0; cursor: pointer; border-radius: 999px;
+}
+.rail-btn:focus-visible { outline: 2px solid var(--accent, #2740ff); outline-offset: 2px; }
+.dot {
+  width: 16px; height: 16px; border-radius: 999px;
+  border: 2px solid var(--accent, #2740ff); background: #fff;
+}
+.dot[data-active="true"] { background: var(--accent, #2740ff); }
+.rail-text { color: #fff; font-weight: 700; font-size: 14px; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
 
-  /* ===== Form ===== */
-  .label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px; }
+ /* ===== Form ===== */
+.label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px; }
+.search-bar {
+  display: grid; gap: 28px; align-items: end; background: #ffffff;
+  padding: 16px; border-radius: 8px; box-shadow: 0 6px 12px rgba(39,6,160,.15);
+  grid-template-columns: repeat(5, minmax(150px,1fr)) auto;
+}
+.picker, select, input {
+  width: 100%; height: 44px; border: 1px solid var(--border); border-radius: 6px; padding: 0 12px; background: #fff;
+}
+.search-icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 6px; border: 1px solid var(--border);
+  color: #000; cursor: pointer; background: #fff;
+}
+.search-icon-btn .ico { width: 20px; height: 20px; }
+
+/* Flatpickr: puntito azul lunes/viernes */
+:global(.flatpickr-day.pos-rel) { position: relative; }
+:global(.flatpickr-day.monfri::after) {
+  content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+}
+
+/* ===== Pasajeros ===== */
+.pax-field { position: relative; }
+.pax-trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; height: 44px; padding: 0 12px;
+  border: 1px solid var(--border); border-radius: 6px; background: #fff; color: var(--ink,#0b1220);
+  font-weight: 500;
+}
+.pax-trigger-right { font-weight: 800; }
+
+/* ----- Popup (mismo estilo en desktop y móvil) ----- */
+.pax-pop {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  width: 360px; max-width: min(360px, 92vw);
+  background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.12); padding: 10px; z-index: 1000;
+}
+.pax-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 8px; }
+.pax-head-title { font-weight: 800; }
+.pax-head-count { font-size: 12px; font-weight: 800; opacity: .7; }
+
+.row { display: flex; align-items: center; justify-content: space-between; padding: 10px 2px; border-bottom: 1px solid rgba(0,0,0,.06); }
+.row:last-child { border-bottom: none; }
+.left .title { font-weight: 700; }
+.left .sub { font-size: 12px; color: #6b7280; }
+
+.right { display: flex; align-items: center; gap: 12px; }
+.square {
+  width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; color: var(--accent, #2740ff); border: 1px solid var(--accent, #2740ff); font-weight: 900; cursor: pointer;
+}
+.square:active { transform: translateY(1px); }
+.count { width: 24px; text-align: center; font-weight: 900; }
+
+.pax-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+.pax-ok { 
+  height: 38px; 
+  padding: 0 18px; 
+  border-radius: 10px; 
+  border: 1px solid var(--accent);
+  background: #ffffff;
+  color: #000;
+  font-weight: 600; 
+  cursor: pointer; 
+  font-family: inherit;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
   .search-bar {
-    display: grid; gap: 28px; align-items: end; background: #ffffff;
-    padding: 16px; border-radius: 8px; box-shadow: 0 6px 12px rgba(39,6,160,.15);
-    grid-template-columns: repeat(5, minmax(150px,1fr)) auto;
-  }
-  .picker, select, input {
-    width: 100%; height: 44px; border: 1px solid var(--border); border-radius: 6px; padding: 0 12px; background: #fff;
-  }
-  .search-icon-btn {
-    display: flex; align-items: center; justify-content: center;
-    width: 44px; height: 44px; border-radius: 6px; border: 1px solid var(--border);
-    color: #000; cursor: pointer; background: #fff;
-  }
-  .search-icon-btn .ico { width: 20px; height: 20px; }
-
-  /* Flatpickr: puntito azul lunes/viernes */
-  :global(.flatpickr-day.pos-rel) { position: relative; }
-  :global(.flatpickr-day.monfri::after) {
-    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
-    bottom: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 6px;
   }
 
-  /* ===== Pasajeros ===== */
-  .pax-field { position: relative; }
-  .pax-trigger {
-    display: flex; align-items: center; justify-content: space-between;
-    width: 100%; height: 44px; padding: 0 12px;
-    border: 1px solid var(--border); border-radius: 6px; background: #fff; color: var(--ink,#0b1220);
-    font-weight: 500;
-  }
-  .pax-trigger-right { font-weight: 800; }
-
+  /* Popover igual que desktop: NO bottom-sheet */
   .pax-pop {
-    position: absolute; top: calc(100% + 8px); right: 0;
-    width: 360px; max-width: min(360px, 92vw);
-    background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 12px;
-    box-shadow: 0 12px 28px rgba(0,0,0,.12); padding: 10px; z-index: 1000;
+    right: 0;
+    left: auto;
+    width: 360px;
+    max-width: min(360px, 92vw);
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.12);
+    padding: 10px;
+    animation: none;
   }
-  .pax-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 8px; }
-  .pax-head-title { font-weight: 800; }
-  .pax-head-count { font-size: 12px; font-weight: 800; opacity: .7; }
-
-  .row { display: flex; align-items: center; justify-content: space-between; padding: 10px 2px; border-bottom: 1px solid rgba(0,0,0,.06); }
-  .row:last-child { border-bottom: none; }
-  .left .title { font-weight: 700; }
-  .left .sub { font-size: 12px; color: #6b7280; }
-
-  .right { display: flex; align-items: center; gap: 12px; }
-  .square {
-    width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
-    background: #fff; color: var(--accent, #2740ff); border: 1px solid var(--accent, #2740ff); font-weight: 900; cursor: pointer;
-  }
-  .square:active { transform: translateY(1px); }
-  .count { width: 24px; text-align: center; font-weight: 900; }
-
-  .pax-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
-  .pax-ok { height: 38px; padding: 0 18px; border-radius: 10px; background: var(--accent,#2740ff); color: #fff; border: none; font-weight: 700; cursor: pointer; }
-
-  /* Responsive */
-  @media (max-width: 640px) {
-    .search-bar { grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; border-radius: 6px; }
-    .pax-pop { left: 0; right: 0; width: 100%; max-width: 100%; }
+   .pax-field { overflow: visible; }        
+  .pax-pop {
+    left: 50%;   
+    width: clamp(100px, 92vw, 280px);       
+    max-width: 92vw;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.12);    
+    padding: 10px;
+    z-index: 1000;
   }
 
-  /* ===== Botón "Buscar" solo para responsive ===== */
+  /* asegúrate de que el texto tenga espacio y no se colapse */
+  .row { gap: 8px; }
+  .left { flex: 1; min-width: 0; }
+  .right { flex-shrink: 0; }
+}
+
+
+/* ===== Botón "Buscar" solo para responsive ===== */
 .search-text-btn { display: none; }
 
 /* Solo visible en móviles */
-@media (max-width: 640px){
+@media (max-width: 640px) {
   .search-icon-btn { display: none !important; }
   .search-text-btn {
     display: flex;
@@ -368,7 +422,7 @@
     font-family: inherit;
     font-size: 16px;
     cursor: pointer;
-    grid-column: 1 / -1; /* ocupa todo el ancho */
+    grid-column: 1 / -1;
     box-shadow: 0 2px 6px rgba(0,0,0,.08);
     transition: all 0.2s ease;
   }
@@ -381,5 +435,4 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
 }
-
 </style>

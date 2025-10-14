@@ -55,14 +55,14 @@
   }
 
   // Etiquetas accesibles y visibles
-  $: labelLanguage = t($i18n?.['footer.language'], 'Language');
-  $: labelLogin    = t($i18n?.['auth.login.title'], 'Login');
-  $: labelLogout   = t($i18n?.['auth.logout.title'], 'Logout');
-  $: labelAccount  = t($i18n?.['nav.account'], 'My Account');
+  $: labelLanguage = t('footer.language', 'Language');
+  $: labelLogin    = t('auth.login.title', 'Login');
+  $: labelLogout   = t('nav.logout', 'Logout');
+  $: labelAccount  = t('nav.profile', 'My Account');
 
   // Texto del botón cuando hay sesión:
   // - Si hay nombre, mostramos el nombre.
-  // - Si no hay nombre, mostramos "Mi cuenta" (o traducción si existe).
+  // - Si no hay nombre, mostramos "Mi cuenta" .
   $: displayName = (userName && userName.trim()) || labelAccount;
 </script>
 

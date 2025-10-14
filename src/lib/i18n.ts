@@ -364,7 +364,7 @@ const dict: Record<Lang, Dict> = {
     
     'passengers.title': 'Ուղևորներ',
     'passengers.adults': 'Մեծահասակներ',
-    'passengers.adults.hint': 'մինչև 12 տարեկան',
+    'passengers.adults.hint': 'Սկսաժ 12 տարեկանից',
     'passengers.children': 'Երեխաներ',
     'passengers.children.hint': '2-ից 11 տարեկան',
     'passengers.infants': 'Մանկահասակներ',

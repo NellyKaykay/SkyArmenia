@@ -56,8 +56,8 @@
 
   // Etiquetas accesibles y visibles
   $: labelLanguage = t($i18n?.['footer.language'], 'Language');
-  $: labelLogin    = t($i18n?.['nav.login'], 'Login');
-  $: labelLogout   = t($i18n?.['nav.logout'], 'Logout');
+  $: labelLogin    = t($i18n?.['auth.login.title'], 'Login');
+  $: labelLogout   = t($i18n?.['auth.logout.title'], 'Logout');
   $: labelAccount  = t($i18n?.['nav.account'], 'My Account');
 
   // Texto del botón cuando hay sesión:

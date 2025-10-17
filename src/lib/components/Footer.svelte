@@ -22,10 +22,8 @@
   let mapContainer: HTMLDivElement | null = null;
 
   onMount(async () => {
-    // Carga Leaflet como namespace (compatible con @types/leaflet)
     const L = (await import('leaflet')) as typeof import('leaflet');
 
-    // Arreglo de iconos por bundlers
     // @ts-ignore
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
@@ -38,7 +36,6 @@
       const map = L.map(mapContainer, {
         center: [LAT, LON],
         zoom: 16,
-        // En auth bloqueamos interacciones que “roban” scroll; fuera de auth, normal
         scrollWheelZoom: !isAuth,
         touchZoom: !isAuth,
         keyboard: !isAuth,
@@ -57,14 +54,12 @@
         .bindPopup('<strong>Carrer de Còrsega, 203</strong><br/>08036 Barcelona')
         .openPopup();
 
-      // Recalcula si cambia el tamaño del contenedor
       setTimeout(() => map.invalidateSize(), 300);
     }
   });
 </script>
 
 <svelte:head>
-  <!-- CSS de Leaflet por CDN para evitar errores de loader -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -82,49 +77,44 @@
       </div>
     </div>
 
-   <!-- Links -->
-<div>
-  <h4>{$i18n['footer.links']}</h4>
-  <ul>
-    <li><a href={href('/about')}>{$i18n['nav.about']}</a></li>
-    <li><a href={href('/events')}>{$i18n['nav.events']}</a></li>
+    <!-- Links -->
+    <div>
+      <h4>{$i18n['footer.links']}</h4>
+      <ul>
+        <li><a href={href('/about')}>{$i18n['nav.about']}</a></li>
+        <li><a href={href('/events')}>{$i18n['nav.events']}</a></li>
+        <li><a href={`${href('/') }#searchbar`}>{$i18n['nav.flights']}</a></li>
+      </ul>
+    </div>
 
-    <!-- antes: href('/flights') -->
-    <!-- ahora: a la home + ancla del buscador -->
-    <li><a href={`${href('/') }#searchbar`}>{$i18n['nav.flights']}</a></li>
-  </ul>
-</div>
-
-
-   <!-- Cities -->
-<div>
-  <h4>{$i18n['footer.cities']}</h4>
-  <ul>
-    <li>
-      <a
-        href="https://share.google/NhvfbVIC9fuoQJOB9"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="{$i18n['offers.yerevan']}"
-      >
-        {$i18n['offers.yerevan']}
-      </a>
-    </li>
-    <li>
-      <a
-        href="https://share.google/oVA2anBjkd4xetgMf"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="{$i18n['offers.barcelona']}"
-      >
-        {$i18n['offers.barcelona']}
-      </a>
-    </li>
-  </ul>
-</div>
+    <!-- Cities -->
+    <div>
+      <h4>{$i18n['footer.cities']}</h4>
+      <ul>
+        <li>
+          <a
+            href="https://share.google/NhvfbVIC9fuoQJOB9"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="{$i18n['offers.yerevan']}"
+          >
+            {$i18n['offers.yerevan']}
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://share.google/oVA2anBjkd4xetgMf"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="{$i18n['offers.barcelona']}"
+          >
+            {$i18n['offers.barcelona']}
+          </a>
+        </li>
+      </ul>
+    </div>
 
     <!-- Social -->
-    
     <div>
       <h4>{$i18n['footer.social']}</h4>
       <div class="social" aria-label="Social links">
@@ -148,27 +138,11 @@
       <!-- Datos de contacto -->
       <div class="contact-info">
         <h4>{$i18n['nav.contact']}</h4>
-         <a
-            href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es"
-            target="_blank" rel="noopener noreferrer" class="email-link" aria-label="Ver en Google Maps"
-          >
-            <span class="icon-btn location" aria-hidden="true">
-              <!-- Location / Pin SVG -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5Z"/>
-              </svg>
-            </span>
-            <span>Carrer de Còrsega, 203, Entresuelo C<br>
-              
-          08036 Barcelona</span>
-          </a>
-        
 
         <div class="contact-links">
-          <!-- TELÉFONO con icono redondo y color -->
+          <!-- TELÉFONO -->
           <a href="tel:+34644393949" aria-label="Llamar por teléfono" class="email-link">
             <span class="icon-btn phone" aria-hidden="true">
-              <!-- Phone SVG -->
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a2 2 0 0 1-2 2C10.4 22 2 13.6 2 3a2 2 0 0 1 2-2h3.49a1 1 0 0 1 1 1c0 1.24.2 2.45.57 3.57a1 1 0 0 1-.24 1.02l-2.2 2.2Z"/>
               </svg>
@@ -176,10 +150,9 @@
             <span>Móvil: +34 644 39 39 49</span>
           </a>
 
-          <!-- EMAIL con icono tipo botón redondo (como Facebook/Instagram) -->
+          <!-- EMAIL -->
           <a href="mailto:info@skyarmenia.com" aria-label="Email" class="email-link">
             <span class="icon-btn mail" aria-hidden="true">
-              <!-- Mail SVG -->
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
               </svg>
@@ -187,12 +160,28 @@
             <span>info@skyarmenia.com</span>
           </a>
 
-          <!-- DIRECCIÓN / MAPS con icono redondo y color -->
-         
+          <!-- DIRECCIÓN / MAPS (MOVIDA DEBAJO DEL EMAIL) -->
+          <a
+            href="https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="email-link"
+            aria-label="Ver en Google Maps"
+          >
+            <span class="icon-btn location" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5Z"/>
+              </svg>
+            </span>
+            <span>
+              Carrer de Còrsega, 203, Entresuelo C<br />
+              08036 Barcelona
+            </span>
+          </a>
         </div>
       </div>
 
-      <!-- Mapa interactivo (Leaflet + OSM) -->
+      <!-- Mapa -->
       <div class="contact-map">
         <div class="map-embed" role="region" aria-label="Mapa de la dirección" bind:this={mapContainer}></div>
       </div>
@@ -210,12 +199,10 @@
 </footer>
 
 <style>
-  /* Contenedor global del footer */
   .footer .container {
     max-width: 1200px;
     margin-inline: auto;
     padding-inline: clamp(16px, 4vw, 24px);
-   
   }
 
   .footer {
@@ -237,7 +224,6 @@
   .brand-row { display: flex; align-items: center; justify-content: flex-start; }
   .brand-logo { height: clamp(90px, 14vw, 140px); width: auto; display: block; }
 
-  /* Títulos y enlaces */
   .footer h4 {
     margin: 0 0 10px;
     font-size: 14px;
@@ -286,13 +272,11 @@
   }
   .icon-btn.fb { color: #1877f2; border-color: rgba(24,119,242,.25); }
   .icon-btn.ig { color: #d6249f; border-color: rgba(214,36,159,.25); }
-  /* Email (ya estaba) */
   .icon-btn.mail { color: #ea4335; border-color: rgba(234,67,53,.25); }
-  /* Nuevos colores para contacto (mismo estilo que email) */
-  .icon-btn.phone    { color: #10b981; border-color: rgba(16,185,129,.25); }  /* verde */
-  .icon-btn.location { color: #2563eb; border-color: rgba(37,99,235,.25); }   /* azul */
+  .icon-btn.phone { color: #10b981; border-color: rgba(16,185,129,.25); }
+  .icon-btn.location { color: #2563eb; border-color: rgba(37,99,235,.25); }
 
-  /* --- Contact band --- */
+  /* Contact band */
   .contact-band {
     border-top: 1px solid var(--border);
     background: #fff;
@@ -308,7 +292,7 @@
 
   .contact-grid {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* info | mapa */
+    grid-template-columns: 1fr 2fr;
     gap: clamp(16px, 3vw, 28px);
     align-items: stretch;
   }
@@ -319,19 +303,12 @@
     text-transform: uppercase;
     letter-spacing: .04em;
     color: #222;
-   
   }
-
-  
- 
 
   .contact-links {
     display: flex;
     flex-direction: column;
-   
   }
-
-  
 
   .contact-links a {
     color: #1f2937;
@@ -350,12 +327,8 @@
     gap: clamp(14px, 3vw, 28px);
     padding: clamp(14px, 3vw, 20px) 0;
   }
-
-
-  /* asegura que el botón redondo no se deforma junto al texto */
   .email-link .icon-btn { flex-shrink: 0; }
 
-  /* Mapa responsivo (altura cómoda para sticky) */
   .map-embed {
     position: relative;
     width: 100%;
@@ -374,7 +347,7 @@
     height: 100%;
   }
 
-  /* --- BOTTOM (legal) --- */
+  /* Bottom legal */
   .footer-bottom {
     border-top: 1px solid var(--border);
     padding: clamp(10px, 2vw, 14px) 0;
@@ -390,9 +363,7 @@
   .policy a { color: inherit; }
   .policy a:hover { text-decoration: underline; }
 
-
   :global(html) { scroll-behavior: smooth; }
-
 
   /* Breakpoints */
   @media (max-width: 900px) {
@@ -407,7 +378,6 @@
     .brand-row { justify-content: center; }
     .footer h4 { text-align: center; }
 
-    /* Centrado de contacto en responsive */
     .contact-info { text-align: center; }
     .contact-links { align-items: center; }
   }
@@ -421,7 +391,6 @@
     .social { justify-content: center; }
     .brand-logo { height: 100px; }
 
-    /* Centra los textos de abajo del footer en móvil */
     .footer-bottom {
       justify-content: center;
       text-align: center;

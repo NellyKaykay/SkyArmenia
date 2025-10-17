@@ -174,8 +174,7 @@
               </svg>
             </span>
             <span>
-              Carrer de Còrsega, 203, Entresuelo C<br />
-              08036 Barcelona
+              C/Còrsega, 203, Entlo. C, 08036 Barcelona
             </span>
           </a>
         </div>
@@ -280,7 +279,7 @@
   .contact-band {
     border-top: 1px solid var(--border);
     background: #fff;
-    padding: clamp(14px, 3vw, 120px) 0;
+    padding: clamp(64px, 3vw, 120px) 0;
   }
   .contact-band.sticky {
     position: sticky;

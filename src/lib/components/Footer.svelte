@@ -273,7 +273,7 @@
   .contact-band {
     border-top: 1px solid var(--border);
     background: #fff;
-    padding: clamp(14px, 3vw, 20px) 0;
+    padding: clamp(14px, 3vw, 120px) 0;
   }
   .contact-band.sticky {
     position: sticky;

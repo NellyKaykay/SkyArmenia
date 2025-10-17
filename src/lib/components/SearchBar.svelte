@@ -331,9 +331,9 @@
 /* ----- Popup (mismo estilo en desktop y móvil) ----- */
 .pax-pop {
   position: absolute; top: calc(100% + 8px); right: 0;
-  width: 360px; max-width: min(360px, 92vw);
+  width: 260px; max-width: min(260px, 82vw);
   background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 12px;
-  box-shadow: 0 12px 28px rgba(0,0,0,.12); padding: 10px; z-index: 1000;
+  box-shadow: 0 12px 48px rgba(3, 22, 117, 0.12); padding: 10px; z-index: 1000;
 }
 .pax-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 8px; }
 .pax-head-title { font-weight: 800; }
@@ -388,10 +388,10 @@
    .pax-field { overflow: visible; }        
   .pax-pop {
     left: 50%;   
-    width: clamp(100px, 92vw, 280px);       
-    max-width: 92vw;
+    width: clamp(90px, 82vw, 200px);       
+    max-width: 82vw;
     border-radius: 12px;
-    box-shadow: 0 12px 28px rgba(0,0,0,.12);    
+    box-shadow: 0 16px 38px rgba(0,0,0,.12);    
     padding: 10px;
     z-index: 1000;
   }

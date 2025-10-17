@@ -215,6 +215,7 @@
     max-width: 1200px;
     margin-inline: auto;
     padding-inline: clamp(16px, 4vw, 24px);
+   
   }
 
   .footer {

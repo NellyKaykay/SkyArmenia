@@ -82,15 +82,19 @@
       </div>
     </div>
 
-    <!-- Links -->
-    <div>
-      <h4>{$i18n['footer.links']}</h4>
-      <ul>
-        <li><a href={href('/about')}>{$i18n['nav.about']}</a></li>
-        <li><a href={href('/events')}>{$i18n['nav.events']}</a></li>
-        <li><a href={href('/flights')}>{$i18n['nav.flights']}</a></li>
-      </ul>
-    </div>
+   <!-- Links -->
+<div>
+  <h4>{$i18n['footer.links']}</h4>
+  <ul>
+    <li><a href={href('/about')}>{$i18n['nav.about']}</a></li>
+    <li><a href={href('/events')}>{$i18n['nav.events']}</a></li>
+
+    <!-- antes: href('/flights') -->
+    <!-- ahora: a la home + ancla del buscador -->
+    <li><a href={`${href('/') }#searchbar`}>{$i18n['nav.flights']}</a></li>
+  </ul>
+</div>
+
 
    <!-- Cities -->
 <div>
@@ -384,6 +388,10 @@
   .policy { display: flex; gap: 14px; flex-wrap: wrap; }
   .policy a { color: inherit; }
   .policy a:hover { text-decoration: underline; }
+
+
+  :global(html) { scroll-behavior: smooth; }
+
 
   /* Breakpoints */
   @media (max-width: 900px) {

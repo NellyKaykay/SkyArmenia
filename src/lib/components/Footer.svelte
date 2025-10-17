@@ -92,14 +92,32 @@
       </ul>
     </div>
 
-    <!-- Cities -->
-    <div>
-      <h4>{$i18n['footer.cities']}</h4>
-      <ul>
-        <li><a href={href('/events', { city: 'Barcelona' })}>Barcelona</a></li>
-        <li><a href={href('/events', { city: 'Yerevan' })}>Yerevan</a></li>
-      </ul>
-    </div>
+   <!-- Cities -->
+<div>
+  <h4>{$i18n['footer.cities']}</h4>
+  <ul>
+    <li>
+      <a
+        href="https://share.google/NhvfbVIC9fuoQJOB9"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="{$i18n['offers.yerevan']}"
+      >
+        {$i18n['offers.yerevan']}
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://share.google/oVA2anBjkd4xetgMf"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="{$i18n['offers.barcelona']}"
+      >
+        {$i18n['offers.barcelona']}
+      </a>
+    </li>
+  </ul>
+</div>
 
     <!-- Social -->
     

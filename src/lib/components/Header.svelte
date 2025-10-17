@@ -47,22 +47,20 @@
     };
   });
 
-  /** i18n con fallback: si el valor es falsy o igual a la propia clave, usa el fallback */
-  function t(key: string, fallback: string) {
+  /** i18n reactivo: fuerza dependencia a $i18n para que Svelte recalcule */
+  $: t = (key: string, fallback: string) => {
     const dict = $i18n as Record<string, string> | undefined;
     const v = dict?.[key];
     return v && v !== key ? v : fallback;
-  }
+  };
 
-  // Etiquetas accesibles y visibles
+  // Etiquetas accesibles y visibles (dependen de $i18n)
   $: labelLanguage = t('footer.language', 'Language');
   $: labelLogin    = t('auth.login.title', 'Login');
   $: labelLogout   = t('nav.logout', 'Logout');
   $: labelAccount  = t('nav.profile', 'My Account');
 
-  // Texto del botón cuando hay sesión:
-  // - Si hay nombre, mostramos el nombre.
-  // - Si no hay nombre, mostramos "Mi cuenta" .
+  // Texto del botón cuando hay sesión
   $: displayName = (userName && userName.trim()) || labelAccount;
 </script>
 
@@ -203,6 +201,7 @@
           {/if}
         </div>
       {:else}
+        <!-- Aquí usamos la etiqueta reactiva -->
         <a class="btn" href={loginHref}>{labelLogin}</a>
       {/if}
     </div>

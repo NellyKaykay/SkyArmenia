@@ -3,7 +3,9 @@
   import '../app.css';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
-
+import { onMount } from 'svelte';
+import { initLang } from '$lib/i18n';
+onMount(() => initLang());
   // Recibe { user } desde +layout.server.ts (usando supabase.auth.getUser())
   export let data: { user?: any };
 

@@ -5,10 +5,11 @@ import { browser } from '$app/environment';
 export const languages = ['en', 'es', 'ru', 'hy'] as const;
 export type Lang = (typeof languages)[number];
 
+/* ========= Detectar idioma inicial ========= */
 function pickInitial(): Lang {
   try {
     if (browser) {
-      // 1) URL
+      // 1) URL ?lang=
       const urlLang = new URL(window.location.href).searchParams.get('lang') as Lang | null;
       if (urlLang && languages.includes(urlLang)) return urlLang;
 
@@ -21,7 +22,7 @@ function pickInitial(): Lang {
       const saved = localStorage.getItem('lang') as Lang | null;
       if (saved && languages.includes(saved)) return saved;
 
-      // 4) Navegador
+      // 4) Idioma del navegador
       const nav = (navigator.language || 'en').slice(0, 2) as Lang;
       if (languages.includes(nav)) return nav;
     }
@@ -29,14 +30,15 @@ function pickInitial(): Lang {
   return 'es';
 }
 
-// Store base
+/* ========= Store de idioma ========= */
 export const lang = writable<Lang>('es');
 
 export function initLang(initialFromServer?: Lang) {
   if (!browser) return;
-  const l = initialFromServer && languages.includes(initialFromServer)
-    ? initialFromServer
-    : pickInitial();
+  const l =
+    initialFromServer && languages.includes(initialFromServer)
+      ? initialFromServer
+      : pickInitial();
   applyLang(l, { updateUrl: false });
 }
 
@@ -47,7 +49,6 @@ export function setLang(l: Lang, opts?: { updateUrl?: boolean }) {
 
 function applyLang(l: Lang, { updateUrl }: { updateUrl: boolean }) {
   lang.set(l);
-
   if (!browser) return;
 
   try {
@@ -56,15 +57,15 @@ function applyLang(l: Lang, { updateUrl }: { updateUrl: boolean }) {
       url.searchParams.set('lang', l);
       history.replaceState(history.state, '', url);
     }
-
     document.cookie = `lang=${l}; Path=/; Max-Age=${60 * 60 * 24 * 365}`;
     localStorage.setItem('lang', l);
     document.documentElement.setAttribute('lang', l);
   } catch { /* noop */ }
 }
 
-/* ================= Diccionarios ================= */
+/* ========= Diccionarios ========= */
 type Dict = Record<string, string>;
+
 const dict: Record<Lang, Dict> = {
   en: {
     'nav.login': 'Sign in',
@@ -75,9 +76,11 @@ const dict: Record<Lang, Dict> = {
     'nav.events': 'Events',
     'nav.flights': 'Flights',
     'nav.contact': 'Contact',
-    'hero.title': 'Find the best flights',   
+
+    'hero.title': 'Find the best flights',
     'opts.round': 'Round trip',
-    'opts.oneway': 'One-way',   
+    'opts.oneway': 'One-way',
+
     'form.passengers': 'Passengers',
     'form.origin': 'Origin',
     'form.destination': 'Destination',
@@ -87,17 +90,21 @@ const dict: Record<Lang, Dict> = {
     'form.promo': 'Promotion',
     'form.email': 'Email',
     'form.password': 'Password',
+
     'offers.title': 'Direct flights',
-    'offer.yerevan': 'Yeravan',
-    'offer.barcelona': 'Barcelona',
+    'offers.yerevan': 'Yerevan',
+    'offers.barcelona': 'Barcelona',
+
     'status.soon': 'Soon...',
     'status.searching': 'Searching…',
     'status.results': 'Results loaded',
     'status.no_results': 'No results',
+
     'unit.hours': 'hours',
     'flight.direct': 'direct',
     'flight.stops': 'with stops',
     'price.from': 'from',
+
     'footer.links': 'Links',
     'footer.cities': 'Cities',
     'footer.language': 'Language',
@@ -107,9 +114,8 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Privacy',
     'footer.terms': 'Terms',
     'footer.cookies': 'Cookies',
-    
 
-    /* ------ Auth (login/signup + errors) ------ */
+    /* Auth */
     'auth.login.title': 'Sign in',
     'auth.login.email': 'Email',
     'auth.login.password': 'Password',
@@ -138,16 +144,16 @@ const dict: Record<Lang, Dict> = {
     'auth.error.invalid_credentials': 'Invalid email or password.',
     'auth.error.email_not_confirmed': 'Please confirm your email before signing in.',
     'auth.error.too_many_requests': 'Too many attempts. Try again later.',
-    'auth.error.generic': 'Something went wrong. Please try again.'
-  ,
-  
+    'auth.error.generic': 'Something went wrong. Please try again.',
+
+    /* Passengers */
     'passengers.title': 'Passengers',
     'passengers.adults': 'Adults',
     'passengers.adults.hint': 'from 12 years old',
     'passengers.children': 'Children',
     'passengers.children.hint': 'from 2 to 11 years old',
     'passengers.infants': 'Infants',
-    'passengers.infants.hint': 'under 2 years old',
+    'passengers.infants.hint': 'under 2 years old'
   },
 
   es: {
@@ -159,29 +165,35 @@ const dict: Record<Lang, Dict> = {
     'nav.events': 'Eventos',
     'nav.flights': 'Vuelos',
     'nav.contact': 'Contacto',
-    'hero.title': 'Encuentra vuelos al mejor precio',   
+
+    'hero.title': 'Encuentra vuelos al mejor precio',
     'opts.round': 'Ida y vuelta',
     'opts.oneway': 'Solo ida',
     'opts.bags': 'Maletas',
+
     'form.passengers': 'Pasajeros',
     'form.origin': 'Origen',
     'form.destination': 'Destino',
     'form.depart': 'Salida',
     'form.return': 'Regreso',
-    'form.search': 'Buscar vuelos',   
+    'form.search': 'Buscar vuelos',
     'form.email': 'Email',
     'form.password': 'Contraseña',
+
     'offers.title': 'Vuelos directos',
-    'offers.yerevan': 'Yeravan',
+    'offers.yerevan': 'Yereván',
     'offers.barcelona': 'Barcelona',
+
     'status.soon': 'Pronto...',
     'status.searching': 'Buscando…',
     'status.results': 'Resultados cargados',
     'status.no_results': 'Sin resultados',
+
     'unit.hours': 'horas',
     'flight.direct': 'directo',
     'flight.stops': 'con escalas',
-    'price.from': 'desde',   
+    'price.from': 'desde',
+
     'footer.links': 'Enlaces',
     'footer.cities': 'Ciudades',
     'footer.language': 'Idioma',
@@ -191,9 +203,8 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Privacidad',
     'footer.terms': 'Términos',
     'footer.cookies': 'Cookies',
-   
 
-    /* ------ Auth (login/signup + errors) ------ */
+    /* Auth */
     'auth.login.title': 'Iniciar sesión',
     'auth.login.email': 'Correo electrónico',
     'auth.login.password': 'Contraseña',
@@ -222,17 +233,16 @@ const dict: Record<Lang, Dict> = {
     'auth.error.invalid_credentials': 'Email o contraseña incorrectos.',
     'auth.error.email_not_confirmed': 'Debes confirmar tu email antes de iniciar sesión.',
     'auth.error.too_many_requests': 'Demasiados intentos. Inténtalo de nuevo más tarde.',
-    'auth.error.generic': 'Ha ocurrido un error. Vuelve a intentarlo.'
-  ,
+    'auth.error.generic': 'Ha ocurrido un error. Vuelve a intentarlo.',
 
-  
+    /* Passengers */
     'passengers.title': 'Pasajeros',
     'passengers.adults': 'Adultos',
     'passengers.adults.hint': 'desde 12 años',
     'passengers.children': 'Niños',
     'passengers.children.hint': 'de 2 a 11 años',
     'passengers.infants': 'Bebés',
-    'passengers.infants.hint': 'menores de 2 años',
+    'passengers.infants.hint': 'menores de 2 años'
   },
 
   ru: {
@@ -244,30 +254,35 @@ const dict: Record<Lang, Dict> = {
     'nav.events': 'События',
     'nav.flights': 'Рейсы',
     'nav.contact': 'Контакты',
-    'hero.title': 'Найдите лучшие авиабилеты',    
+
+    'hero.title': 'Найдите лучшие авиабилеты',
     'opts.round': 'Туда-обратно',
     'opts.oneway': 'В одну сторону',
     'opts.bags': 'Багаж',
+
     'form.passengers': 'Пассажиры',
     'form.origin': 'Отправление',
     'form.destination': 'Назначение',
     'form.depart': 'Вылет',
     'form.return': 'Обратный рейс',
-    'form.search': 'Найти рейсы',    
+    'form.search': 'Найти рейсы',
     'form.email': 'Email',
     'form.password': 'Пароль',
+
     'offers.title': 'Прямые рейсы',
     'offers.yerevan': 'Ереван',
     'offers.barcelona': 'Барселона',
+
     'status.soon': 'Скоро...',
     'status.searching': 'Поиск…',
     'status.results': 'Результаты загружены',
     'status.no_results': 'Нет результатов',
+
     'unit.hours': 'часов',
     'flight.direct': 'прямой',
     'flight.stops': 'с пересадками',
     'price.from': 'от',
-    
+
     'footer.links': 'Ссылки',
     'footer.cities': 'Города',
     'footer.language': 'Язык',
@@ -277,9 +292,8 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Конфиденциальность',
     'footer.terms': 'Условия',
     'footer.cookies': 'Cookies',
-    
 
-    /* ------ Auth (login/signup + errors) ------ */
+    /* Auth */
     'auth.login.title': 'Войти',
     'auth.login.email': 'Электронная почта',
     'auth.login.password': 'Пароль',
@@ -309,16 +323,16 @@ const dict: Record<Lang, Dict> = {
     'auth.error.email_not_confirmed': 'Подтвердите e-mail перед входом.',
     'auth.error.too_many_requests': 'Слишком много попыток. Повторите позже.',
     'auth.error.generic': 'Произошла ошибка. Попробуйте ещё раз.',
-    
+
+    /* Passengers */
     'passengers.title': 'Пассажиры',
     'passengers.adults': 'Взрослые',
     'passengers.adults.hint': 'от 12 лет',
     'passengers.children': 'Дети',
     'passengers.children.hint': 'от 2 до 11 лет',
     'passengers.infants': 'Младенцы',
-    'passengers.infants.hint': 'до 2 лет',
+    'passengers.infants.hint': 'до 2 лет'
   },
-  
 
   hy: {
     'nav.login': 'Մուտք',
@@ -329,28 +343,34 @@ const dict: Record<Lang, Dict> = {
     'nav.events': 'Իրադարձություններ',
     'nav.flights': 'Թռիչքներ',
     'nav.contact': 'Կապ',
+
     'hero.title': 'Գտիր լավագույն ավիատոմսերը',
-    'opts.round': 'Ida y vuelta',
-    'opts.oneway': 'Solo ida',
+    'opts.round': 'Դարձի հետ',
+    'opts.oneway': 'Միակողմանի',
     'opts.bags': 'Ուղեբեռ',
+
     'form.passengers': 'Ուղևորներ',
     'form.origin': 'Սկիզբ',
     'form.destination': 'Դեպի',
     'form.depart': 'Մեկնում',
-    'form.return': 'Ժամանում',
-    'form.search': 'Որոնում',    
+    'form.return': 'Վերադարձ',
+    'form.search': 'Որոնել',
     'form.email': 'Email',
     'form.password': 'Գաղտնաբառ',
+
     'offers.title': 'Ուղիղ չվերթներ',
     'offers.yerevan': 'Երևան',
     'offers.barcelona': 'Բարսելոնա',
+
     'status.searching': 'Որոնում…',
     'status.results': 'Արդյունքները բեռնվեցին',
     'status.no_results': 'Արդյունքներ չկան',
-    'unit.hours': 'Ժամ',
-    'flight.direct': 'Ուղիղ',
-    'price.from': 'Սկսած',
-    
+
+    'unit.hours': 'ժամ',
+    'flight.direct': 'ուղիղ',
+    'flight.stops': 'փոխադրումով',
+    'price.from': 'սկսած',
+
     'footer.links': 'Հղումներ',
     'footer.cities': 'Քաղաքներ',
     'footer.language': 'Լեզու',
@@ -361,23 +381,13 @@ const dict: Record<Lang, Dict> = {
     'footer.terms': 'Պայմաններ',
     'footer.cookies': 'Cookie-ներ',
 
-    
-    'passengers.title': 'Ուղևորներ',
-    'passengers.adults': 'Մեծահասակներ',
-    'passengers.adults.hint': 'Սկսաժ 12 տարեկանից',
-    'passengers.children': 'Երեխաներ',
-    'passengers.children.hint': '2-ից 11 տարեկան',
-    'passengers.infants': 'Մանկահասակներ',
-    'passengers.infants.hint': '2 տարեկանից ցածր',
-
-
-    /* ------ Auth (login/signup + errors) ------ */
+    /* Auth */
     'auth.login.title': 'Մուտք',
     'auth.login.email': 'Էլ. փոստ',
     'auth.login.password': 'Գաղտնաբառ',
     'auth.login.submit': 'Մուտք գործել',
-    'auth.login.forgot': 'Մոռացել ե՞ս գաղտնաբառը',
-    'auth.login.noAccount': 'Չունե՞ս հաշիվ',
+    'auth.login.forgot': 'Մոռացե՞լ եք գաղտնաբառը',
+    'auth.login.noAccount': 'Չունե՞ք հաշիվ',
     'auth.login.signupLink': 'Գրանցվել',
 
     'auth.signup.title': 'Գրանցում',
@@ -385,38 +395,48 @@ const dict: Record<Lang, Dict> = {
     'auth.signup.email': 'Էլ. փոստ',
     'auth.signup.password': 'Գաղտնաբառ',
     'auth.signup.submit': 'Ստեղծել հաշիվ',
-    'auth.signup.haveAccount': 'Արդեն ունե՞ս հաշիվ',
+    'auth.signup.haveAccount': 'Արդեն ունե՞ք հաշիվ',
     'auth.signup.loginLink': 'Մուտք',
 
     'auth.password.show': 'Ցուցադրել գաղտնաբառը',
     'auth.password.hide': 'Թաքցնել գաղտնաբառը',
     'legal.accept': 'Ընդունում եմ',
     'legal.terms': 'Օգտագործման պայմանները',
-    'legal.privacy': 'Գաղտնիության քաղաքականությունը',
+    'legal.privacy': 'Գաղտնիության քաղաքականություն',
 
     'auth.error.required_email': 'Խնդրում ենք մուտքագրել էլ. փոստը',
     'auth.error.required_password': 'Խնդրում ենք մուտքագրել գաղտնաբառը',
-    'auth.error.required_name': 'Խնդրում ենք մուտքագրել անունը։',
-    'auth.error.invalid_credentials': 'Էլ. փոստը կամ գաղտնաբառը սխալ է',
-    'auth.error.email_not_confirmed': 'Մուտք գործելուց առաջ հաստատեք էլ. փոստը',
-    'auth.error.too_many_requests': 'Չափազանց շատ փորձեր։ Կրկնեք ավելի ուշ',
-    'auth.error.generic': 'Տեղի ունեցավ սխալ։ Խնդրում ենք կրկին փորձել'
+    'auth.error.required_name': 'Խնդրում ենք մուտքագրել անունը',
+    'auth.error.invalid_credentials': 'Սխալ էլ. փոստ կամ գաղտնաբառ',
+    'auth.error.email_not_confirmed': 'Ստուգեք էլ. փոստը նախքան մուտքը',
+    'auth.error.too_many_requests': 'Չափազանց շատ փորձեր. կրկնեք ավելի ուշ',
+    'auth.error.generic': 'Սխալ տեղի ունեցավ. կրկին փորձեք',
+
+    /* Passengers */
+    'passengers.title': 'Ուղևորներ',
+    'passengers.adults': 'Մեծահասակներ',
+    'passengers.adults.hint': 'սկսած 12 տարեկանից',
+    'passengers.children': 'Երեխաներ',
+    'passengers.children.hint': '2–11 տարեկան',
+    'passengers.infants': 'Մանկահասակներ',
+    'passengers.infants.hint': 'մինչև 2 տարեկան'
   }
 };
 
-// Fallback a EN si falta una key
+/* ========= Fallback a EN si falta una key ========= */
 function withFallback(d: Dict, fallback: Dict): Dict {
   return new Proxy(d, {
     get(target, prop: string) {
       if (prop in target) return target[prop as keyof Dict];
       if (prop in fallback) return fallback[prop as keyof Dict];
-      return prop as string;
+      return prop as string; // devuelve la clave si no existe en ninguno
     }
   });
 }
 
 const baseEN = dict.en;
 
+/* Store derivado con fallback automático */
 export const i18n: Readable<Dict> = derived(lang, (l) =>
   withFallback(dict[l] ?? baseEN, baseEN)
 );

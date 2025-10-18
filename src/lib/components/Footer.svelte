@@ -231,6 +231,7 @@
   .contact{
     border-top: 1px solid var(--border);
     padding: clamp(20px, 4vw, 32px) 0;
+    margin-top: clamp(20px, 4vw, 40px);
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: clamp(16px, 2.5vw, 28px);

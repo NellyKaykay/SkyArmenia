@@ -21,8 +21,8 @@ onMount(() => initLang());
       "@type": "TravelAgency",
       "name": "SkyArmenia",
       "description": "Agencia de viajes especializada en vuelos entre Barcelona y Yerevan",
-      "url": "https://skyarmenia.com",
-      "logo": "https://skyarmenia.com/logo-skyarmenia.svg",
+      "url": "https://skyarmenia-api.onrender.com",
+      "logo": "https://skyarmenia-api.onrender.com/logo-skyarmenia.svg",
       "contactPoint": {
         "@type": "ContactPoint",
         "telephone": "+34644393949",

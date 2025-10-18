@@ -1,0 +1,68 @@
+{
+  "masterPicture": "static/logo-skyarmenia.svg",
+  "iconsPath": "/",
+  "design": {
+    "ios": {
+      "pictureAspect": "backgroundAndMargin",
+      "backgroundColor": "#2740ff",
+      "margin": "14%",
+      "assets": {
+        "ios6AndPriorIcons": false,
+        "ios7AndLaterIcons": false,
+        "precomposedIcons": false,
+        "declareOnlyDefaultIcon": true
+      }
+    },
+    "desktopBrowser": {
+      "design": "raw"
+    },
+    "windows": {
+      "pictureAspect": "whiteSilhouette",
+      "backgroundColor": "#2740ff",
+      "onConflict": "override",
+      "assets": {
+        "windows80Ie10Tab": false,
+        "windows10Ie11EdgeTabs": {
+          "single": false,
+          "low": {
+            "size": 24
+          },
+          "medium": {
+            "size": 70
+          },
+          "big": {
+            "size": 150
+          }
+        }
+      }
+    },
+    "androidChrome": {
+      "pictureAspect": "backgroundAndMargin",
+      "margin": "17%",
+      "backgroundColor": "#2740ff",
+      "themeColor": "#2740ff",
+      "manifest": {
+        "name": "SkyArmenia",
+        "display": "standalone",
+        "orientation": "notSet",
+        "onConflict": "override",
+        "declared": true
+      },
+      "assets": {
+        "legacyIcon": false,
+        "lowResolutionIcons": false
+      }
+    },
+    "safariPinnedTab": {
+      "pictureAspect": "silhouette",
+      "themeColor": "#2740ff"
+    }
+  },
+  "settings": {
+    "scalingAlgorithm": "Mitchell",
+    "errorOnImageTooSmall": false,
+    "readmeFile": false,
+    "htmlCodeFile": false,
+    "usePathAsIs": false
+  }
+}

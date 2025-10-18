@@ -1,6 +1,3 @@
 # allow crawling everything by default
 User-agent: *
 Disallow:
-
-# Sitemap
-Sitemap: https://skyarmenia-api.onrender.com/sitemap.xml

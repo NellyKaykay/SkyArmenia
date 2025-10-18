@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Favicon Generator</title>
+</head>
+<body>
+    <canvas id="canvas" width="32" height="32"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Fondo blanco
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, 32, 32);
+        
+        // Color azul de SkyArmenia
+        ctx.fillStyle = '#38b6ff';
+        
+        // Dibujar tiles simplificados
+        ctx.fillRect(4, 8, 6, 6);
+        ctx.fillRect(12, 8, 6, 6);
+        ctx.fillRect(20, 8, 6, 6);
+        
+        // Dibujar forma de avión simple
+        ctx.beginPath();
+        ctx.moveTo(8, 18);
+        ctx.lineTo(16, 20);
+        ctx.lineTo(24, 18);
+        ctx.lineTo(20, 22);
+        ctx.lineTo(12, 22);
+        ctx.closePath();
+        ctx.fill();
+    </script>
+</body>
+</html>

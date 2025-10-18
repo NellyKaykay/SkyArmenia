@@ -5,7 +5,9 @@
   --muted:#4b5563;     /* gris medio */
   --accent:#38b6ff;    /* celeste argentino */
   --accent-2:#38b6ff;  /* mismo celeste para consistencia */
-  --border:#ffffff;    /* gris claro para bordes */
+  --border:#e5e7eb;    /* gris claro para bordes (corregido) */
+  --shadow: 0 1px 3px rgba(0,0,0,0.1); /* sombra estándar */
+  --radius: 8px;       /* radio de borde estándar */
 }
 
 *{box-sizing:border-box}
@@ -89,6 +91,122 @@ body{
 .leaflet-control-attribution a img,
 .leaflet-control-attribution a svg {
   display: none !important;
+}
+
+/* ──────────────────────────────── */
+/* 🔹 RESPONSIVE DESIGN             */
+/* ──────────────────────────────── */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 16px;
+  }
+  
+  .search-bar {
+    grid-template-columns: 1fr 1fr 1fr 100px;
+    gap: 6px;
+  }
+}
+
+/* Móviles grandes */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 12px;
+  }
+  
+  .search-bar {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .search-bar input, 
+  .search-bar select, 
+  .search-bar button {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+  
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+  }
+  
+  .price {
+    font-size: 18px;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 8px;
+  }
+  
+  .search-bar {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+  
+  .search-bar input, 
+  .search-bar select, 
+  .search-bar button {
+    padding: 10px;
+    min-height: 44px; /* mejor para táctil */
+  }
+  
+  .card {
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .badge {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  
+  .price {
+    font-size: 16px;
+  }
+}
+
+/* ──────────────────────────────── */
+/* 🔹 UTILIDADES RESPONSIVE        */
+/* ──────────────────────────────── */
+
+/* Ocultar elementos en móvil */
+.hide-mobile {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+/* Mostrar solo en móvil */
+.show-mobile {
+  display: none !important;
+  @media (max-width: 768px) {
+    display: block !important;
+  }
+}
+
+/* Texto más pequeño en móvil */
+.text-responsive {
+  @media (max-width: 768px) {
+    font-size: 0.9em;
+  }
+}
+
+/* Padding responsive */
+.p-responsive {
+  padding: 16px;
+  @media (max-width: 768px) {
+    padding: 12px;
+  }
+  @media (max-width: 480px) {
+    padding: 8px;
+  }
 }
 
 

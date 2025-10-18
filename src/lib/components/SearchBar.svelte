@@ -281,18 +281,19 @@
 
 <style>
   /* ===== Rail Ida/Vuelta — pequeño & en línea ===== */
-.trip-rail { display: inline-flex; gap: 14px; margin: 6px 0 12px; }
+.trip-rail { display: inline-flex; gap: 8px; margin: 4px 0 8px; }
 .rail-btn {
-  display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px;
+  display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px;
   background: transparent; border: 0; cursor: pointer; border-radius: 999px;
+  font-size: 12px;
 }
 .rail-btn:focus-visible { outline: 2px solid var(--accent, #2740ff); outline-offset: 2px; }
 .dot {
-  width: 16px; height: 16px; border-radius: 999px;
-  border: 2px solid var(--accent, #2740ff); background: #fff;
+  width: 12px; height: 12px; border-radius: 999px;
+  border: 1.5px solid var(--accent, #2740ff); background: #fff;
 }
 .dot[data-active="true"] { background: var(--accent, #2740ff); }
-.rail-text { color: #fff; font-weight: 700; font-size: 14px; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+.rail-text { color: #fff; font-weight: 600; font-size: 12px; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
 
  /* ===== Form ===== */
 .label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px; }

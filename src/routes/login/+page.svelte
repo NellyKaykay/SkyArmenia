@@ -1,21 +1,144 @@
-<!-- src/routes/login/+page.svelte -->
+<!-- Login profesional - SkyArmenia -->
 <script lang="ts">
-  import { fade } from 'svelte/transition';
+  import { onMount } from 'svelte';
+  import { fade, fly, scale } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
+  import { browser } from '$app/environment';
+  import { enhance } from '$app/forms';
   import type { ActionData } from './$types';
+  
   import BgCarousel from '$lib/components/BgCarousel.svelte';
   import Button from '$lib/components/Button.svelte';
   import Form from '$lib/components/Form.svelte';
   import EyeIcon from '$lib/components/EyeIcon.svelte';
   import { i18n } from '$lib/i18n';
 
+  // Props del servidor
   export let form: ActionData | undefined;
 
-  let email = (form as any)?.values?.email ?? '';
-  let error = form?.error ?? '';
-  let showPassword = false;
-  let password = '';
+  // Interfaces y tipos
+  interface FormState {
+    email: string;
+    password: string;
+    isLoading: boolean;
+    isSubmitting: boolean;
+    showPassword: boolean;
+    errors: {
+      email?: string;
+      password?: string;
+      general?: string;
+    };
+    touched: {
+      email: boolean;
+      password: boolean;
+    };
+  }
 
-  const HERO_IMAGES = Array.from({ length: 12 }, (_, i) => `/barcelona${i + 1}.jpg`);
+  // Estado del formulario
+  let formState: FormState = {
+    email: (form as any)?.values?.email ?? '',
+    password: '',
+    isLoading: false,
+    isSubmitting: false,
+    showPassword: false,
+    errors: {
+      general: form?.error ?? ''
+    },
+    touched: {
+      email: false,
+      password: false
+    }
+  };
+
+  // Configuración
+  const CONFIG = {
+    heroImages: Array.from({ length: 12 }, (_, i) => `/barcelona${i + 1}.jpg`),
+    validation: {
+      emailPattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      minPasswordLength: 6
+    },
+    ui: {
+      animationDuration: 300,
+      debounceMs: 500
+    }
+  } as const;
+
+  // Referencias DOM
+  let emailInput: HTMLInputElement;
+  let passwordInput: HTMLInputElement;
+  let formElement: HTMLFormElement;
+
+  // Funciones de utilidad
+  function validateEmail(email: string): string | undefined {
+    if (!email.trim()) return 'El email es requerido';
+    if (!CONFIG.validation.emailPattern.test(email)) return 'Formato de email inválido';
+    return undefined;
+  }
+
+  function validatePassword(password: string): string | undefined {
+    if (!password.trim()) return 'La contraseña es requerida';
+    if (password.length < CONFIG.validation.minPasswordLength) return `Mínimo ${CONFIG.validation.minPasswordLength} caracteres`;
+    return undefined;
+  }
+
+  function validateForm(): boolean {
+    const emailError = validateEmail(formState.email);
+    const passwordError = validatePassword(formState.password);
+    
+    formState.errors = {
+      email: emailError,
+      password: passwordError,
+      general: formState.errors.general
+    };
+
+    return !emailError && !passwordError;
+  }
+
+  // Manejadores de eventos
+  function handleEmailChange() {
+    formState.touched.email = true;
+    if (formState.touched.email) {
+      formState.errors.email = validateEmail(formState.email);
+    }
+  }
+
+  function handlePasswordChange() {
+    formState.touched.password = true;
+    if (formState.touched.password) {
+      formState.errors.password = validatePassword(formState.password);
+    }
+  }
+
+  function togglePasswordVisibility() {
+    formState.showPassword = !formState.showPassword;
+    // Mantener focus en el input
+    if (passwordInput) {
+      passwordInput.focus();
+    }
+  }
+
+  function clearError(field?: keyof FormState['errors']) {
+    if (field) {
+      formState.errors[field] = undefined;
+    } else {
+      formState.errors.general = undefined;
+    }
+  }
+
+  // Auto-focus en el primer campo con error
+  onMount(() => {
+    if (browser && formState.errors.general) {
+      setTimeout(() => emailInput?.focus(), 100);
+    }
+  });
+
+  // Computed values
+  $: isFormValid = !formState.errors.email && !formState.errors.password && formState.email && formState.password;
+  $: hasErrors = Object.values(formState.errors).some(error => error);
+  $: t = (key: string, fallback?: string): string => {
+    const value = $i18n[key];
+    return value === key ? (fallback ?? key) : value;
+  };
 </script>
 
 <svelte:head>
@@ -24,7 +147,7 @@
 
 <!-- Fondo carousel -->
 <div class="carousel-bg">
-  <BgCarousel images={HERO_IMAGES} intervalMs={5000} />
+  <BgCarousel images={CONFIG.heroImages} intervalMs={5000} />
 </div>
 
 <div class="login-wrap">
@@ -33,60 +156,186 @@
       <img src="/logo-skyarmenia.svg" alt="SkyArmenia" class="logo" loading="eager" decoding="async" />
     </div>
 
-    <section class="pane" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
-      <Form
-        title={$i18n['auth.login.title']}
+    <section 
+      class="login-pane" 
+      in:fly="{{ y: 30, duration: CONFIG.ui.animationDuration, easing: quintOut }}"
+      out:fade="{{ duration: CONFIG.ui.animationDuration / 2 }}"
+    >
+      <!-- Header del formulario -->
+      <div class="form-header">
+        <h1 class="form-title">
+          {t('auth.login.title', 'Iniciar Sesión')}
+        </h1>
+      </div>
+
+      <!-- Error global -->
+      {#if formState.errors.general}
+        <div 
+          class="alert alert-error"
+          role="alert"
+          aria-live="assertive"
+          in:scale="{{ duration: 200, easing: quintOut }}"
+        >
+          <span class="alert-icon">⚠️</span>
+          <span class="alert-text">{formState.errors.general}</span>
+          <button 
+            type="button" 
+            class="alert-close"
+            on:click={() => clearError('general')}
+            aria-label="Cerrar error"
+          >
+            ✕
+          </button>
+        </div>
+      {/if}
+
+      <!-- Formulario con progressive enhancement -->
+      <form
+        bind:this={formElement}
         method="POST"
         action="?/login"
-        error={error ?? null}
+        class="login-form"
+        novalidate
+        use:enhance={({ formElement, formData, action, cancel, submitter }) => {
+          formState.isSubmitting = true;
+          
+          // Validación cliente
+          if (!validateForm()) {
+            cancel();
+            formState.isSubmitting = false;
+            return;
+          }
+
+          return async ({ result, update }) => {
+            formState.isSubmitting = false;
+            
+            if (result.type === 'failure') {
+              // result.data may be an object without a typed 'error' property; guard its type
+              const maybeError = (result as any).data?.error;
+              formState.errors.general = typeof maybeError === 'string' ? maybeError : 'Error al iniciar sesión';
+            }
+            
+            await update();
+          };
+        }}
       >
-        <label>
-          <span class="lbl">{$i18n['auth.login.email']}</span>
-          <input
-            name="email"
-            type="email"
-            placeholder={$i18n['auth.login.email']}
-            bind:value={email}
-            required
-            autocomplete="email"
-            inputmode="email"
-          />
-        </label>
-
-        <label class="pwd">
-          <span class="lbl">{$i18n['auth.login.password']}</span>
-          <input
-            name="password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder={$i18n['auth.login.password']}
-            minlength="6"
-            required
-            bind:value={password}
-            autocomplete="current-password"
-          />
-          <button
-            type="button"
-            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-            on:click={() => (showPassword = !showPassword)}
-            class="eye"
-            tabindex="0"
-          >
-            <EyeIcon size={22} color={showPassword ? '#38b6ff' : '#888'} />
-          </button>
-        </label>
-
-        <div class="aux">
-          <a href="/forgot" class="link-forgot">{$i18n['auth.login.forgot']}</a>
+        <!-- Campo Email -->
+        <div class="field-group">
+          <label for="email" class="field-label">
+            <span class="label-text">{t('auth.login.email', 'Email')}</span>
+            {#if formState.errors.email}
+              <span class="label-error" role="alert" aria-live="polite">
+                {formState.errors.email}
+              </span>
+            {/if}
+          </label>
+          <div class="input-wrapper" class:has-error={formState.errors.email}>
+            <input
+              id="email"
+              bind:this={emailInput}
+              name="email"
+              type="email"
+              placeholder={t('auth.login.email', 'Email')}
+              bind:value={formState.email}
+              on:input={handleEmailChange}
+              on:blur={handleEmailChange}
+              on:focus={() => clearError('email')}
+              required
+              autocomplete="email"
+              inputmode="email"
+              aria-describedby={formState.errors.email ? 'email-error' : undefined}
+              aria-invalid={!!formState.errors.email}
+              disabled={formState.isSubmitting}
+              class="form-input"
+            />
+            <div class="input-icon email-icon" aria-hidden="true">
+              📧
+            </div>
+          </div>
         </div>
 
-        <Button slot="actions" type="submit" size="md" full aria-label={$i18n['auth.login.submit']}>
-          {$i18n['auth.login.submit']}
-        </Button>
-      </Form>
+        <!-- Campo Password -->
+        <div class="field-group">
+          <label for="password" class="field-label">
+            <span class="label-text">{t('auth.login.password', 'Contraseña')}</span>
+            {#if formState.errors.password}
+              <span class="label-error" role="alert" aria-live="polite">
+                {formState.errors.password}
+              </span>
+            {/if}
+          </label>
+          <div class="input-wrapper" class:has-error={formState.errors.password}>
+            <input
+              id="password"
+              bind:this={passwordInput}
+              name="password"
+              type={formState.showPassword ? 'text' : 'password'}
+              placeholder={t('auth.login.password', 'Contraseña')}
+              bind:value={formState.password}
+              on:input={handlePasswordChange}
+              on:blur={handlePasswordChange}
+              on:focus={() => clearError('password')}
+              minlength="6"
+              required
+              autocomplete="current-password"
+              aria-describedby={formState.errors.password ? 'password-error' : undefined}
+              aria-invalid={!!formState.errors.password}
+              disabled={formState.isSubmitting}
+              class="form-input password-input"
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              on:click={togglePasswordVisibility}
+              aria-label={formState.showPassword ? t('auth.hide_password', 'Ocultar contraseña') : t('auth.show_password', 'Mostrar contraseña')}
+              tabindex="0"
+              disabled={formState.isSubmitting}
+            >
+              <EyeIcon 
+                size={20} 
+                color={formState.showPassword ? 'var(--accent)' : '#6b7280'} 
+              />
+            </button>
+          </div>
+        </div>
 
-      <p class="legal small centertext">
-        {$i18n['auth.login.noAccount']} <a class="link-register" href="/signup">{$i18n['auth.login.signupLink']}</a>
-      </p>
+        <!-- Opciones de formulario -->
+        <div class="form-options">
+          <a href="/forgot" class="forgot-link">
+            {t('auth.login.forgot', '¿Olvidaste tu contraseña?')}
+          </a>
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="submit-section">
+          <Button 
+            type="submit" 
+            size="lg" 
+            full 
+            disabled={!isFormValid || formState.isSubmitting}
+            aria-label={t('auth.login.submit', 'Iniciar sesión')}
+          >
+            {#if formState.isSubmitting}
+              <div class="loading-content">
+                <div class="spinner" aria-hidden="true"></div>
+                <span>{t('auth.login.submitting', 'Iniciando...')}</span>
+              </div>
+            {:else}
+              {t('auth.login.submit', 'Iniciar Sesión')}
+            {/if}
+          </Button>
+        </div>
+      </form>
+
+      <!-- Footer del formulario -->
+      <div class="form-footer">
+        <p class="signup-prompt">
+          {t('auth.login.noAccount', '¿No tienes una cuenta?')}
+          <a href="/signup" class="signup-link">
+            {t('auth.login.signupLink', 'Regístrate')}
+          </a>
+        </p>
+      </div>
     </section>
   </div>
 </div>
@@ -125,7 +374,7 @@
   .modal {
     position: relative; z-index: 2;
     width: 100%;
-    max-width: 420px;            /* MISMO ancho que signup */
+    max-width: 320px;            /* Tamaño más corto */
     margin-inline: auto;
     place-self: center;
 
@@ -134,7 +383,7 @@
     border: 1px solid rgba(255,255,255,.7);
     border-radius: 16px;
     box-shadow: 0 16px 48px rgba(0,0,0,.12);
-    padding: clamp(16px, 4vw, 26px);
+    padding: clamp(14px, 3vw, 20px);
 
     /* Variables que hereda <Form>, IDÉNTICAS a signup */
     --form-max: 100%;
@@ -148,59 +397,402 @@
   .brand { display: grid; place-items: center; text-align: center; }
   .logo  { height: clamp(86px, 16vw, 140px); width: auto; margin-bottom: 0; }
 
-  .pane { text-align: center; padding: 6px 0 4px; }
+  /* .pane removed: unused selector — styles consolidated elsewhere */
 
-  .lbl { font-size: .92rem; display: inline-block; margin-bottom: 4px; }
 
-  /* Campo contraseña con icono — EXACTO al de signup */
-  .pwd { position: relative; display: block; }
-  .pwd input { padding-right: 44px; }
-  .eye {
-    position: absolute;
-    right: 6px;
-    top: 50%;
-    transform: translateY(-10px);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    height: 40px; width: 40px;
-  }
+  /* Campo contraseña con icono — styles consolidated to .input-wrapper and .toggle-password */
+  /* Removed unused .pwd and .eye selectors; .input-wrapper (position: relative) and
+     .toggle-password (absolute positioned) provide the necessary layout and spacing. */
 
   /* Enlace “olvidado…” alineado a la derecha y pegado al campo */
-  .aux { text-align: right; margin-top: 6px; }
-  .link-forgot { font-size: .92rem; text-decoration: underline; color: var(--text); }
-  .link-forgot:hover { text-decoration: none; }
+  .forgot-link { font-size: .92rem; text-decoration: underline; color: var(--text); }
+  .forgot-link:hover { text-decoration: none; }
 
-  .legal {
-    margin: 10px 0 0;
-    color: var(--muted);
-    font-size: .92rem;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(255,255,255,.35);
-  }
-  .legal.small { font-size: .86rem; }
-  .centertext { text-align: center; }
+  /* removed unused .legal and .centertext selectors to avoid unused CSS warnings */
 
-  .link-register {
-    font-size: .92rem;
-    text-decoration: underline;
-    color: var(--text);
-  }
-  .link-register:hover { text-decoration: none; }
+  /* .link-register removed because it's unused; use .signup-link instead */
 
   :global(.modal .pane-title) {
     margin-top: clamp(2px, 0.5vw, 2px);
     margin-bottom: clamp(8px, 1.2vw, 12px); /* igual que signup */
   }
 
-  /* Afinado responsive específico móvil estrecho */
-  @media (max-width: 480px) {
+  /* ================================
+     ESTILOS PROFESIONALES NUEVOS
+     ================================ */
+
+  /* Variables de Diseño Mejoradas */
+  .login-wrap {
+    --primary: #38b6ff;
+    --primary-dark: #2563eb;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --border-light: #e5e7eb;
+    --border-focus: var(--primary);
+    --error: #ef4444;
+    --error-bg: #fef2f2;
+    --error-border: #fecaca;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --background: rgba(255, 255, 255, 0.95);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.2);
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+  }
+
+  /* Formulario Profesional */
+  .login-pane {
+    width: 100%;
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .form-title {
+    font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-sm);
+    line-height: 1.2;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  /* Campos de Formulario */
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .field-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+  }
+
+  .label-text {
+    font-weight: 600;
+  }
+
+  .label-error {
+    color: var(--error);
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .form-input {
+    width: 100%;
+    height: 3rem;
+    padding: 0 1rem;
+    padding-right: 3rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: #fff;
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .form-input:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(56, 182, 255, 0.1);
+  }
+
+  .form-input:disabled {
+    background: #f9fafb;
+    color: var(--text-muted);
+    cursor: not-allowed;
+  }
+
+  .input-wrapper.has-error .form-input {
+    border-color: var(--error);
+    background: var(--error-bg);
+  }
+
+  .input-icon {
+    position: absolute;
+    right: 0.75rem;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .toggle-password:hover {
+    background: rgba(56, 182, 255, 0.1);
+    color: var(--primary);
+  }
+
+  .toggle-password:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* Alertas y Estados */
+  .alert {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .alert-error {
+    background: var(--error-bg);
+    border: 1px solid var(--error-border);
+    color: #991b1b;
+  }
+
+  .alert-icon {
+    font-size: 1.1em;
+  }
+
+  .alert-text {
+    flex: 1;
+  }
+
+  .alert-close {
+    background: none;
+    border: none;
+    color: currentColor;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s ease;
+  }
+
+  .alert-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Opciones y Enlaces */
+  .form-options {
+    text-align: right;
+    margin-top: calc(var(--spacing-sm) * -1);
+  }
+
+  .forgot-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .forgot-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+  }
+
+  .submit-section {
+    margin-top: var(--spacing-md);
+  }
+
+  .loading-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+  }
+
+  .spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .form-footer {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-light);
+  }
+
+  .signup-prompt {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .signup-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: var(--spacing-xs);
+    transition: all 0.2s ease;
+  }
+
+  .signup-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+  }
+
+  /* Responsive Design Profesional */
+
+  /* Large Desktop */
+  @media (min-width: 1200px) {
     .modal {
-      border-radius: 14px;
-      padding: 16px;
+      max-width: 350px;
+      padding: var(--spacing-xl);
+    }
+  }
+
+  /* Desktop */
+  @media (max-width: 1024px) {
+    .modal {
+      max-width: 320px;
+    }
+  }
+
+  /* Tablets */
+  @media (max-width: 768px) {
+    .login-wrap {
+      padding: var(--spacing-md) var(--spacing-sm);
+    }
+    
+    .modal {
+      max-width: 100%;
+      margin: var(--spacing-sm);
+    }
+
+    .form-input {
+      height: 2.75rem;
+      font-size: 0.95rem;
+    }
+  }
+
+  /* Mobile Large */
+  @media (max-width: 640px) {
+    .modal {
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+    }
+
+    .form-title {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* Mobile Standard */
+  @media (max-width: 480px) {
+    .login-wrap {
+      padding: var(--spacing-sm);
+    }
+
+    .modal {
+      padding: var(--spacing-sm);
+      margin: 0;
+      border-radius: var(--radius-md);
       box-shadow: 0 10px 28px rgba(0,0,0,.14);
+    }
+
+    .form-input {
+      height: 2.5rem;
+      padding: 0 0.875rem;
+      padding-right: 2.75rem;
+      font-size: 0.9rem;
+    }
+
+    .login-form {
+      gap: var(--spacing-md);
+    }
+
+    .field-group {
+      gap: calc(var(--spacing-sm) * 0.75);
+    }
+  }
+
+  /* Mobile Small */
+  @media (max-width: 360px) {
+    .modal {
+      padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .form-input {
+      height: 2.25rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  /* Accessibility & Preferences */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  @media (prefers-contrast: high) {
+    .form-input {
+      border-width: 3px;
+    }
+    
+    .modal {
+      border-width: 2px;
+      border-color: var(--text-primary);
+    }
+  }
+
+  /* Dark mode preparation */
+  @media (prefers-color-scheme: dark) {
+    .login-wrap {
+      --background: rgba(17, 24, 39, 0.95);
+      --text-primary: #f9fafb;
+      --text-secondary: #d1d5db;
+      --text-muted: #9ca3af;
+      --border-light: #374151;
     }
   }
 </style>

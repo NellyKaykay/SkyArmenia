@@ -19,10 +19,11 @@ body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
 }
 
+/* Contenedor base - definido en +layout.svelte */
 .container{
   max-width:1200px;
   margin:0 auto;
-  padding: 0 20px;
+  padding: 0 1rem;
 }
 
 .header{

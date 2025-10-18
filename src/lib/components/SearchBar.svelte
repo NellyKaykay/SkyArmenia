@@ -298,7 +298,9 @@
 .label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px; }
 .search-bar {
   display: grid; gap: 28px; align-items: end; background: #ffffff;
-  padding: 16px; border-radius: 8px; box-shadow: 0 6px 12px rgba(39,6,160,.15);
+  padding: 16px; border-radius: 8px; 
+  box-shadow: 0 6px 12px rgba(39,6,160,.15), 0 0 0 1px rgba(39,6,160,.08);
+  border: 1px solid rgba(39,6,160,.12);
   grid-template-columns: repeat(5, minmax(150px,1fr)) auto;
 }
 .picker, select, input {
@@ -381,7 +383,11 @@
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     padding: 12px;
-    border-radius: 6px;
+    border-radius: 16px;
+    box-shadow: 
+      0 25px 50px -12px rgba(39,6,160,.25),
+      0 0 0 1px rgba(255,255,255,.1),
+      inset 0 1px 0 rgba(255,255,255,.2);
   }
 
   /* Popover igual que desktop: NO bottom-sheet */

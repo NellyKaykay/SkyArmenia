@@ -148,8 +148,14 @@
     }
     .brand { justify-content: center; }
     .ctrls { width: 100%; gap: 8px; justify-content: center; flex-wrap: wrap; }
-    .lang { flex: 1 1 160px; min-width: 140px; }
-    .btn  { flex: 1 1 140px; min-width: 120px; }
+    .lang { 
+      flex: 1 1 120px; min-width: 100px; 
+      padding: 6px 8px; min-height: 36px; font-size: 14px;
+    }
+    .btn { 
+      flex: 1 1 120px; min-width: 100px;
+      padding: 6px 10px; min-height: 36px; font-size: 14px;
+    }
   }
 </style>
 

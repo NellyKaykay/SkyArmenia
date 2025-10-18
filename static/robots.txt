@@ -1,13 +1,6 @@
-# SkyArmenia - Vuelos Barcelona Yerevan
+# allow crawling everything by default
 User-agent: *
-Allow: /
-Disallow: /api/
-Disallow: /admin/
-
-# Crawl-delay for better server performance
-Crawl-delay: 1
+Disallow:
 
 # Sitemap
 Sitemap: https://skyarmenia-api.onrender.com/sitemap.xml
-
-# Last updated: 2025-10-18

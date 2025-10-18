@@ -1,68 +1,76 @@
+<!-- src/routes/+layout.svelte -->
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { i18n, lang, type Lang } from '$lib/i18n';
-  import { PUBLIC_SITE_URL } from '$env/static/public';
+  import '../app.css';
+  import Header from '$lib/components/Header.svelte';
+  import Footer from '$lib/components/Footer.svelte';
+import { onMount } from 'svelte';
+import { initLang } from '$lib/i18n';
+onMount(() => initLang());
+  // Recibe { user } desde +layout.server.ts (usando supabase.auth.getUser())
+  export let data: { user?: any };
 
-  let current: Lang = 'es';
-  $: current = $lang;
-  $: pathname = $page?.url?.pathname || '';
-  $: isAuth = pathname.startsWith('/login') || pathname.startsWith('/signup');
-
-  // Normaliza base (sin barra final)
-  $: site = (PUBLIC_SITE_URL || 'https://skyarmenia.com').replace(/\/+$/, '');
-  // URL completa de la página actual
-  $: fullUrl = site + $page.url.pathname + ($page.url.search || '');
-
-  // Helper de traducción
-  $: t = (k: string, fallback?: string) => {
-    const v = ($i18n as any)?.[k];
-    return typeof v === 'string' ? v : (fallback ?? k);
-  };
-
-  function href(path: string, params: Record<string, string> = {}) {
-    const sp = new URLSearchParams(params);
-    sp.set('lang', current);
-    const qs = sp.toString();
-    return qs ? `${path}?${qs}` : path;
-  }
+  // Derivamos session para usarlo en el Header y evitar warnings
+  const session = !!data?.user;
 </script>
 
 <svelte:head>
-  <!-- Canonical -->
-  <link rel="canonical" href={fullUrl} />
-
-  <!-- OpenGraph -->
-  <meta property="og:url" content={fullUrl} />
-  <meta property="og:site_name" content="SkyArmenia" />
-  <meta property="og:title" content="SkyArmenia" />
-  <meta property="og:description" content="Vuelos Barcelona ↔︎ Ereván con buscador rápido y claro." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content={site + '/og.jpg'} />
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content={fullUrl} />
-  <meta name="twitter:title" content="SkyArmenia" />
-  <meta name="twitter:description" content="Vuelos Barcelona ↔︎ Ereván con buscador rápido y claro." />
-  <meta name="twitter:image" content={site + '/og.jpg'} />
+  <!-- Datos estructurados para Google -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TravelAgency",
+      "name": "SkyArmenia",
+      "description": "Agencia de viajes especializada en vuelos entre Barcelona y Yerevan",
+      "url": "https://skyarmenia-api.onrender.com",
+      "logo": "https://skyarmenia-api.onrender.com/logo-skyarmenia.svg",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+34644393949",
+        "email": "info@skyarmenia.com",
+        "contactType": "customer service",
+        "availableLanguage": ["Spanish", "English", "Russian", "Armenian"]
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Carrer de Còrsega, 203, Entresuelo C",
+        "addressLocality": "Barcelona",
+        "postalCode": "08036",
+        "addressCountry": "ES"
+      },
+      "sameAs": [
+        "https://facebook.com/skyarmenia",
+        "https://instagram.com/skyarmenia"
+      ]
+    }
+  </script>
 </svelte:head>
 
-<slot />
+<!-- Header -->
+<Header session={session} />
+
+<!-- Main -->
+<div class="container page">
+  <slot />
+</div>
+
+<!-- Footer -->
+<Footer />
 
 <style>
-  :global(:root) {
-    --text: #0c0c0d;
-    --muted: #6b7280;
-    --bg: #fff;
-    --hover: #f6f7f8;
-    --shadow: 0 1px 6px rgba(0, 0, 0, 0.035);
-    --radius: 999px;
+  /* Contenedor general */
+  .container {
+    width: min(1200px, 100% - 32px);
+    margin: 0 auto;
   }
 
-  :global(body) {
-    margin: 0;
-    color: var(--text);
-    background: var(--bg);
-    font-family: system-ui, sans-serif;
+  .page {
+    padding-top: 0;
+    min-height: 40vh; /* asegura altura mínima para que el footer no “suba” demasiado */
+  }
+
+  @media (max-width: 600px) {
+    .container {
+      width: min(100%, 100% - 24px);
+    }
   }
 </style>

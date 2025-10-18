@@ -8,6 +8,7 @@ Disallow: /admin/
 Crawl-delay: 1
 
 # Sitemap
-Sitemap: https://skyarmenia.com/sitemap.xml?v=20251018
+Sitemap: https://skyarmenia.com/sitemap.xml
+Sitemap: https://skyarmenia.com/sitemap-updated.xml
 
-# Last updated: 2025-10-18
+# Last updated: 2025-10-18T15:30:00+00:00

@@ -318,6 +318,16 @@
   bottom: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
 }
 
+/* Flatpickr responsive: centrar calendario */
+@media (max-width: 640px) {
+  :global(.flatpickr-calendar) {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    max-width: 90vw !important;
+    margin: 0 auto !important;
+  }
+}
+
 /* ===== Pasajeros ===== */
 .pax-field { position: relative; }
 .pax-trigger {

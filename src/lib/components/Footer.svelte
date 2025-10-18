@@ -235,7 +235,7 @@
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: clamp(16px, 2.5vw, 28px);
-    
+    align-items: start;
   }
   .contact{
     display: grid;

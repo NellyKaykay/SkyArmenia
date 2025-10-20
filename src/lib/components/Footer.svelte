@@ -587,38 +587,98 @@
     transform: none;
   }
 
-  /* Responsive Design */
-  @media (max-width: 1024px) {
+  /* Responsive Design - Professional 5-tier system */
+  @media (max-width: 1200px) {
     .top {
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap: 1.25rem;
+      grid-template-columns: 1.8fr 1fr 1fr 1fr;
+      gap: 1.5rem;
     }
 
     .contact {
-      grid-template-columns: 1fr 1.5fr;
+      grid-template-columns: 1fr 1.8fr;
+      gap: 1.5rem;
     }
   }
 
   @media (max-width: 768px) {
+    .wrap {
+      padding-inline: 1.25rem;
+    }
+
     .top {
-      grid-template-columns: 1.2fr 1fr 1fr;
-      gap: 1rem;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    /* Hide cities section on tablet to prevent overcrowding */
+    .top .col:nth-child(3) {
+      display: none;
     }
 
     .contact {
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1.25rem;
     }
 
     .map-inner {
-      min-height: 200px;
+      min-height: 220px;
     }
   }
 
   @media (max-width: 640px) {
     .top {
       grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      text-align: center;
+      justify-items: center;
+    }
+
+    /* Show only brand and social on small tablets */
+    .top .col:nth-child(2),
+    .top .col:nth-child(3) {
+      display: none;
+    }
+
+    .brand img {
+      height: 110px;
+    }
+
+    .social {
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .contact {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+      justify-items: center;
+    }
+
+    .map-inner {
+      min-height: 200px;
+    }
+
+    .bottom {
+      flex-direction: column;
+      text-align: center;
       gap: 1.25rem;
+    }
+
+    .policy {
+      justify-content: center;
+      gap: 1.25rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .wrap {
+      padding-inline: 1rem;
+    }
+
+    .top {
+      grid-template-columns: 1fr;
+      gap: 2rem;
       text-align: center;
       justify-items: center;
     }
@@ -627,80 +687,72 @@
       height: 100px;
     }
 
-    .social {
-      justify-content: center;
-    }
-
     .contact {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      text-align: left;
-      justify-items: stretch;
-    }
-
-    .bottom {
-      flex-direction: column;
-      text-align: center;
-      gap: 1rem;
-    }
-
-    .policy {
-      justify-content: center;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .top {
       grid-template-columns: 1fr;
-      text-align: center;
-      justify-items: center;
-    }
-
-    .wrap {
-      padding-inline: 1rem;
-    }
-
-    .contact {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
+      gap: 1.5rem;
     }
 
     .map-inner {
-      min-height: 160px;
+      min-height: 180px;
     }
 
     h4 {
+      font-size: 0.8125rem;
+      margin-bottom: 1rem;
+    }
+
+    .social {
+      gap: 0.875rem;
+    }
+
+    .icon {
+      width: 1.375rem;
+      height: 1.375rem;
+    }
+
+    .contact-text,
+    .city-text {
       font-size: 0.8125rem;
     }
   }
 
   @media (max-width: 375px) {
     .ftr {
-      margin-top: 1.5rem;
+      margin-top: 1.25rem;
     }
 
-    .top,
-    .contact {
-      padding: 1.25rem 0;
+    .top {
+      padding: 1.5rem 0;
+      gap: 1.5rem;
     }
 
     .contact {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
+      padding: 1.5rem 0;
+      gap: 1.25rem;
+    }
+
+    .brand img {
+      height: 90px;
     }
 
     .map-inner {
-      min-height: 140px;
+      min-height: 160px;
     }
 
     .bottom {
-      padding: 0.625rem 0;
+      padding: 1rem 0;
+      gap: 1rem;
     }
 
     .policy {
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
+    }
+
+    .policy a {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.75rem;
     }
   }
 </style>

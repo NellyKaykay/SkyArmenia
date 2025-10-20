@@ -606,13 +606,30 @@
     }
 
     .top {
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 1.25rem;
     }
 
-    /* Hide cities section on tablet to prevent overcrowding */
-    .top .col:nth-child(3) {
-      display: none;
+    /* Stack brand on top, then navigation columns */
+    .brand {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .brand img {
+      height: 120px;
+    }
+
+    /* Social section spans full width */
+    .top .col:last-child {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .social {
+      justify-content: center;
     }
 
     .contact {
@@ -627,20 +644,47 @@
 
   @media (max-width: 640px) {
     .top {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 1.5rem;
       text-align: center;
       justify-items: center;
     }
 
-    /* Show only brand and social on small tablets */
-    .top .col:nth-child(2),
-    .top .col:nth-child(3) {
-      display: none;
+    /* All navigation sections stack vertically */
+    .brand {
+      order: 1;
+      margin-bottom: 1.5rem;
     }
 
     .brand img {
       height: 110px;
+    }
+
+    .top .col {
+      order: 2;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .top .col:last-child {
+      order: 3;
+      margin-top: 1rem;
+    }
+
+    /* Center city links in responsive */
+    .top .col ul {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top .col li {
+      justify-content: center;
+    }
+
+    .city-link {
+      justify-content: center;
+      text-align: center;
     }
 
     .social {
@@ -685,6 +729,100 @@
 
     .brand img {
       height: 100px;
+    }
+
+    /* Ensure all navigation links are centered */
+    .top .col ul {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+.top .col ul {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+}
+
+.city-link,
+.top .col ul a {
+  justify-content: center;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}.top .col ul {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+}
+
+.city-link,
+.top .col ul a {
+  justify-content: center;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}.top .col ul {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+}
+
+.city-link,
+.top .col ul a {
+  justify-content: center;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}.top .col ul {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+}
+
+.city-link,
+.top .col ul a {
+  justify-content: center;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}.top .col ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top .col li {
+  justify-content: center;
+}
+
+.city-link {
+  justify-content: center;
+  text-align: center;
+}.top .col ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top .col li {
+  justify-content: center;
+}
+
+.city-link {
+  justify-content: center;
+  text-align: center;
+}
+    .top .col li {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .city-link,
+    .top .col ul a {
+      justify-content: center;
+      text-align: center;
+      display: flex;
+      align-items: center;
     }
 
     .contact {

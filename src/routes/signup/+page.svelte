@@ -245,14 +245,32 @@
         class="login-form"
         novalidate
         use:enhance={({ formElement, formData, action, cancel, submitter }) => {
-          formState.isSubmitting = true;
-          
-          // Validación cliente
-          if (!validateForm()) {
+          // Validaciones del lado del cliente
+          if (!formState.name || formState.errors.name) {
+            formState.errors.name = formState.errors.name || 'Nombre es requerido';
             cancel();
-            formState.isSubmitting = false;
             return;
           }
+          
+          if (!formState.email || formState.errors.email) {
+            formState.errors.email = formState.errors.email || 'Email es requerido';
+            cancel();
+            return;
+          }
+          
+          if (!formState.password || formState.errors.password) {
+            formState.errors.password = formState.errors.password || 'Password es requerido';
+            cancel();
+            return;
+          }
+          
+          if (!formState.acceptTerms) {
+            formState.errors.terms = 'Debes aceptar los términos y condiciones';
+            cancel();
+            return;
+          }
+          
+          formState.isSubmitting = true;
 
           return async ({ result, update }) => {
             formState.isSubmitting = false;
@@ -419,22 +437,35 @@
 
         <!-- Botón de envío -->
         <div class="submit-section">
-          <Button 
+          <button 
             type="submit" 
-            size="lg" 
-            full 
+            class="signup-btn"
             disabled={!isFormValid || formState.isSubmitting}
-            aria-label={t('auth.signup.submit', 'Crear cuenta')}
+            style="
+              border: 1px solid #2563eb; 
+              border-radius: 8px; 
+              font-weight: 600; 
+              color: #000; 
+              background: #fff; 
+              padding: 10px 20px; 
+              min-height: 46px; 
+              font-size: 1rem; 
+              display: block; 
+              width: 100%; 
+              max-width: 400px; 
+              margin: 0 auto; 
+              cursor: pointer; 
+              font-family: inherit;
+              box-shadow: 0 2px 6px rgba(0,0,0,.08);
+              transition: all 0.2s ease;
+            "
           >
             {#if formState.isSubmitting}
-              <div class="loading-content">
-                <div class="spinner" aria-hidden="true"></div>
-                <span>{t('auth.signup.submitting', 'Creando cuenta...')}</span>
-              </div>
+              Creando cuenta...
             {:else}
               {t('auth.signup.submit', 'Crear Cuenta')}
             {/if}
-          </Button>
+          </button>
         </div>
       </form>
 
@@ -751,26 +782,6 @@
 
   .submit-section {
     margin-top: var(--spacing-md);
-  }
-
-  .loading-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
-  }
-
-  .spinner {
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid currentColor;
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
   }
 
   .form-footer {

@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts"> 
   import { i18n, lang, type Lang } from '$lib/i18n';
   import { page } from '$app/stores';
   import { onMount, onDestroy } from 'svelte';
@@ -69,6 +69,18 @@
       icon: 'instagram', 
       label: 'Instagram',
       color: '#d6249f'
+    },
+    {
+      href: 'https://x.com/skyarmenia',
+      icon: 'x',
+      label: 'X',
+      color: '#000000'
+    },
+    {
+      href: 'https://youtube.com/@skyarmenia',
+      icon: 'youtube',
+      label: 'YouTube',
+      color: '#ff0000'
     }
   ];
 
@@ -175,34 +187,22 @@
       <ul role="list">
         <li role="listitem">
           <a 
-            class="city-link"
             href="https://share.google/NhvfbVIC9fuoQJOB9"
             target="_blank" 
             rel="noopener noreferrer"
             aria-label="Ver ofertas para Yerevan (se abre en nueva ventana)"
           >
-            <span class="icon location" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5Z"/>
-              </svg>
-            </span>
-            <span class="city-text">{$i18n['offers.yerevan']}</span>
+            {$i18n['offers.yerevan']}
           </a>
         </li>
         <li role="listitem">
           <a 
-            class="city-link"
             href="https://share.google/oVA2anBjkd4xetgMf"
             target="_blank" 
             rel="noopener noreferrer"
             aria-label="Ver ofertas para Barcelona (se abre en nueva ventana)"
           >
-            <span class="icon location" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5Z"/>
-              </svg>
-            </span>  
-            <span class="city-text">{$i18n['offers.barcelona']}</span>
+            {$i18n['offers.barcelona']}
           </a>
         </li>
       </ul>
@@ -213,7 +213,7 @@
       <div class="social" role="list">
         {#each SOCIAL_LINKS as social}
           <a 
-            class="icon {social.icon === 'facebook' ? 'fb' : 'ig'}"
+            class="icon {social.icon}"
             href={social.href}
             target="_blank" 
             rel="noopener noreferrer"
@@ -223,8 +223,12 @@
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
               {#if social.icon === 'facebook'}
                 <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 4.99 3.66 9.13 8.44 9.93v-7.03H8v-2.9h2.44V9.41c0-2.42 1.43-3.77 3.63-3.77 1.05 0 2.15.18 2.15.18v2.37h-1.21c-1.2 0-1.57.75-1.57 1.52v1.82H16l-.39 2.9h-2.6v7.03c4.78-.8 8.44-4.94 8.44-9.93Z"/>
-              {:else}
+              {:else if social.icon === 'instagram'}
                 <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7Zm10 2c1.65 0 3 1.35 3 3v10c0 1.65-1.35 3-3 3H7c-1.65 0-3-1.35-3-3V7c0-1.65 1.35-3 3-3h10Zm-5 3.5A5.5 5.5 0 1 0 17.5 13 5.51 5.51 0 0 0 12 7.5Zm0 2A3.5 3.5 0 1 1 8.5 13 3.5 3.5 0 0 1 12 9.5Zm4.75-2.88a1 1 0 1 0 1 1 1 1 0 0 0-1-1Z"/>
+              {:else if social.icon === 'x'}
+                <path d="M3 3h4.6l4.3 6 4.7-6H21l-7.3 9.3L21 21h-4.6l-4.7-6.6L6.5 21H3l7.6-9.8L3 3Z"/>
+              {:else if social.icon === 'youtube'}
+                <path d="M23 8s-.2-1.4-.8-2a3.1 3.1 0 0 0-2.1-.8C17.2 5 12 5 12 5s-5.2 0-8.1.2a3.1 3.1 0 0 0-2.1.8c-.6.6-.8 2-.8 2S1 9.7 1 11.5v1C1 14.3 1 16 1 16s.2 1.4.8 2c.6.6 1.9.8 1.9.8C6.6 19 12 19 12 19s5.2 0 8.1-.2a3.1 3.1 0 0 0 2.1-.8c.6-.6.8-2 .8-2s0-1.7 0-3.5v-1C23 9.7 23 8 23 8ZM10 15V9l6 3-6 3Z"/>
               {/if}
             </svg>
           </a>
@@ -306,17 +310,17 @@
     --footer-text: #64748b;
     --footer-heading: #0f172a;
     --footer-link: #475569;
-    --footer-link-hover: #10b981;
+    --footer-link-hover: #2563eb;
     --footer-radius: 12px;
     --footer-spacing: 1.5rem;
     --footer-transition: all 0.2s ease;
   }
 
-  .ftr {
+  .footer {
     background: var(--footer-bg);
     border-top: 1px solid var(--footer-border);
     color: var(--footer-text);
-    margin-top: clamp(2rem, 4vw, 3rem);
+    margin-top: clamp(1rem, 2vw, 1.5rem);
   }
 
   .wrap {
@@ -328,9 +332,9 @@
   /* Navigation and Brand Section */
   .top {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: clamp(1rem, 2.5vw, 1.75rem);
-    padding: clamp(1.5rem, 4vw, 2rem) 0;
+    padding: clamp(1rem, 2.5vw, 1.5rem) 0;
     align-items: start;
   }
 
@@ -338,6 +342,24 @@
     height: clamp(90px, 14vw, 140px);
     width: auto;
     display: block;
+    /* Mejoras de calidad para el logo del footer */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: auto;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    /* Anti-aliasing mejorado */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Filtros para mejor nitidez */
+    filter: contrast(1.08) saturate(1.04) brightness(1.01);
+    object-fit: contain;
+    object-position: center;
+    /* Optimización del contenedor */
+    will-change: transform;
   }
 
   h4 {
@@ -410,16 +432,32 @@
   }
 
   /* Icon Colors - Simple and consistent */
-  .icon.fb {
+  .icon.facebook {
     color: #1877f2;
   }
 
-  .icon.ig {
+  .icon.instagram {
     color: #d6249f;
   }
 
+  .icon.x {
+    color: #000000;
+  }
+
+  .icon.youtube {
+    color: #ff0000;
+  }
+
+  .icon.x {
+    color: #000000;
+  }
+
+  .icon.youtube {
+    color: #ff0000;
+  }
+
   .icon.phone {
-    color: #10b981;
+    color: #2563eb;
   }
 
   .icon.mail {
@@ -488,7 +526,7 @@
   }
 
   :global(.map-popup strong) {
-    color: var(--footer-heading);
+    color: #2563eb;
     font-weight: 600;
   }
 
@@ -510,7 +548,7 @@
 
   .contact-link:hover,
   .contact-link:focus {
-    background: rgba(16, 185, 129, 0.05);
+    background: rgba(37, 99, 235, 0.05);
     padding-left: 0.5rem;
     transform: none;
   }
@@ -523,37 +561,22 @@
     font-weight: 400;
   }
 
-  /* City Links - Same style as contact links */
-  .city-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
-    border-radius: var(--footer-radius);
-    transition: var(--footer-transition);
-  }
 
-  .city-link:hover,
-  .city-link:focus {
-    background: rgba(16, 185, 129, 0.05);
-    padding-left: 0.5rem;
-    transform: none;
-  }
 
   /* Contact and Map Section */
   .contact {
     border-top: 1px solid var(--footer-border);
-    padding: clamp(1.5rem, 4vw, 2rem) 0;
+    padding: clamp(1.5rem, 3vw, 2rem) 0;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    gap: clamp(1rem, 3vw, 1.75rem);
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 3vw, 2rem);
     align-items: start;
   }
 
   /* Copyright and Legal Section */
   .bottom {
     border-top: 1px solid var(--footer-border);
-    padding: clamp(0.75rem, 2vw, 1rem) 0;
+    padding: clamp(0.5rem, 1.5vw, 0.75rem) 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -582,7 +605,7 @@
 
   .policy a:hover,
   .policy a:focus {
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(37, 99, 235, 0.1);
     color: var(--footer-link-hover);
     transform: none;
   }
@@ -595,8 +618,8 @@
     }
 
     .contact {
-      grid-template-columns: 1fr 1.8fr;
-      gap: 1.5rem;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
     }
   }
 
@@ -619,6 +642,8 @@
 
     .brand img {
       height: 120px;
+      /* Mantener calidad en pantallas medianas */
+      filter: contrast(1.06) saturate(1.03) brightness(1.005);
     }
 
     /* Social section spans full width */
@@ -633,8 +658,8 @@
     }
 
     .contact {
-      grid-template-columns: 1fr 1.5fr;
-      gap: 1.25rem;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 1.5rem;
     }
 
     .map-inner {
@@ -658,6 +683,10 @@
 
     .brand img {
       height: 110px;
+      /* Optimización extra para móviles */
+      filter: contrast(1.1) saturate(1.06) brightness(1.02);
+      -webkit-transform: translateZ(0) scale(1);
+      transform: translateZ(0) scale(1);
     }
 
     .top .col {
@@ -685,6 +714,15 @@
     .city-link {
       justify-content: center;
       text-align: center;
+    }
+
+    h4 {
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    li + li {
+      margin-top: 0.25rem;
     }
 
     .social {
@@ -722,13 +760,33 @@
 
     .top {
       grid-template-columns: 1fr;
-      gap: 2rem;
+      gap: 1.75rem;
       text-align: center;
       justify-items: center;
     }
 
+    .brand {
+      order: 1;
+    }
+
     .brand img {
       height: 100px;
+      /* Calidad optimizada para pantallas pequeñas */
+      filter: contrast(1.12) saturate(1.08) brightness(1.03);
+      -webkit-transform: translateZ(0) scale(1.01);
+      transform: translateZ(0) scale(1.01);
+    }
+
+    /* Navigation sections in compact grid */
+    .top .col:not(:last-child) {
+      order: 2;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .top .col:last-child {
+      order: 3;
+      margin-top: 0.5rem;
     }
 
     /* Ensure all navigation links are centered */
@@ -737,81 +795,7 @@
       flex-direction: column;
       align-items: center;
     }
-.top .col ul {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;
-}
 
-.city-link,
-.top .col ul a {
-  justify-content: center;
-  text-align: center;
-  display: flex;
-  align-items: center;
-}.top .col ul {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;
-}
-
-.city-link,
-.top .col ul a {
-  justify-content: center;
-  text-align: center;
-  display: flex;
-  align-items: center;
-}.top .col ul {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;
-}
-
-.city-link,
-.top .col ul a {
-  justify-content: center;
-  text-align: center;
-  display: flex;
-  align-items: center;
-}.top .col ul {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;
-}
-
-.city-link,
-.top .col ul a {
-  justify-content: center;
-  text-align: center;
-  display: flex;
-  align-items: center;
-}.top .col ul {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.top .col li {
-  justify-content: center;
-}
-
-.city-link {
-  justify-content: center;
-  text-align: center;
-}.top .col ul {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.top .col li {
-  justify-content: center;
-}
-
-.city-link {
-  justify-content: center;
-  text-align: center;
-}
     .top .col li {
       justify-content: center;
       width: 100%;
@@ -836,7 +820,7 @@
 
     h4 {
       font-size: 0.8125rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.875rem;
     }
 
     .social {
@@ -850,6 +834,10 @@
 
     .contact-text,
     .city-text {
+      font-size: 0.8125rem;
+    }
+
+    a {
       font-size: 0.8125rem;
     }
   }
@@ -871,6 +859,10 @@
 
     .brand img {
       height: 90px;
+      /* Máxima optimización para pantallas muy pequeñas */
+      filter: contrast(1.15) saturate(1.1) brightness(1.04);
+      -webkit-transform: translateZ(0) scale(1.02);
+      transform: translateZ(0) scale(1.02);
     }
 
     .map-inner {
@@ -892,5 +884,30 @@
       padding: 0.375rem 0.75rem;
       font-size: 0.75rem;
     }
+  }
+
+  /* Pantallas de alta densidad (Retina, 4K) para el footer */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .brand img {
+      /* Optimización especial para pantallas Retina */
+      image-rendering: -webkit-optimize-contrast;
+      filter: contrast(1.05) saturate(1.02) brightness(1.01);
+      -webkit-transform: translateZ(0) scale(1.001);
+      transform: translateZ(0) scale(1.001);
+    }
+  }
+
+  /* Mejoras adicionales para SVG en el footer */
+  .brand img[src$=".svg"] {
+    /* Optimización específica para SVG */
+    shape-rendering: geometricPrecision;
+    /* Transición suave para interacciones */
+    transition: filter 0.2s ease, transform 0.2s ease;
+  }
+
+  .brand img[src$=".svg"]:hover {
+    /* Efecto hover sutil para el logo */
+    filter: contrast(1.1) saturate(1.05) brightness(1.02);
+    transform: translateZ(0) scale(1.02);
   }
 </style>

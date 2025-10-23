@@ -5,6 +5,8 @@
   import { initLang } from '$lib/i18n';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
+  
+
 
   // Props del servidor
   export let data: { user?: any };

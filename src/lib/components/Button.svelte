@@ -34,7 +34,7 @@
 
 <style>
   .btn {
-    border: 1px solid var(--accent);
+    border: 1px solid #2563eb;
     border-radius: 8px;
     font-weight: 600;
     color: #000;
@@ -49,7 +49,7 @@
     box-shadow: 0 2px 6px rgba(0,0,0,.08);
   }
   .btn:hover {
-    background: #f7f7f7;
+    background: #f7f9fc;
     box-shadow: 0 4px 10px rgba(0,0,0,.12);
   }
   .btn:active {

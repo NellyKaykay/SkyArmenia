@@ -26,6 +26,7 @@
         src="https://ca-times.brightspotcdn.com/dims4/default/1b5cd92/2147483647/strip/true/crop/1600x534+0+201/resize/2000x667!/format/webp/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F8b%2F6d%2F8a82b3f44b62a048a080602302fb%2Fyerevan-republic-square-at-night-yerevan-armenia.jpg"
         alt="Ereván"
         loading="lazy"
+        decoding="async"
       />
       <div class="offer-body">
         <h3>{t('offers.yerevan', 'Ereván')}</h3>
@@ -36,9 +37,10 @@
     <!-- Card 2 -->
     <div class="offer-card">
       <img
-        src="https://images.unsplash.com/photo-1628612773214-0d5a10cfcae8?q=80&w=1200&auto=format&fit=crop"
+        src="https://images.unsplash.com/photo-1628612773214-0d5a10cfcae8?q=95&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         alt="Barcelona"
         loading="lazy"
+        decoding="async"
       />
       <div class="offer-body">
         <h3>{t('offers.barcelona', 'Barcelona')}</h3>
@@ -80,6 +82,23 @@
     height: 200px;
     object-fit: cover;
     display: block;
+    /* Mejoras de calidad profesionales para imágenes */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: auto;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    /* Anti-aliasing mejorado */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Filtros para mejor nitidez y contraste */
+    filter: contrast(1.08) saturate(1.05) brightness(1.02);
+    object-position: center;
+    /* Optimización para hardware acceleration */
+    will-change: transform;
+    transform-style: preserve-3d;
   }
 
   .offer-body {
@@ -93,4 +112,53 @@
   }
 
   
+  /* Responsive design para OffersGrid */
+  @media (max-width: 768px) {
+    .offers-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .offer-card img {
+      height: 180px;
+      /* Optimización adicional para móviles */
+      filter: contrast(1.10) saturate(1.08) brightness(1.03);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .offers { padding: 24px 0; }
+    .offers-title { font-size: 18px; margin-bottom: 16px; }
+    
+    .offer-card img {
+      height: 160px;
+      /* Filtros más agresivos para pantallas pequeñas */
+      filter: contrast(1.12) saturate(1.10) brightness(1.04);
+    }
+    
+    .offer-body {
+      padding: 14px;
+    }
+    
+    .offer-body h3 {
+      font-size: 16px;
+    }
+  }
+
+  /* Pantallas de alta densidad (Retina, 4K) */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .offer-card img {
+      /* Optimización especial para pantallas Retina */
+      image-rendering: -webkit-optimize-contrast;
+      filter: contrast(1.06) saturate(1.03) brightness(1.01);
+      -webkit-transform: translateZ(0) scale(1.001);
+      transform: translateZ(0) scale(1.001);
+    }
+  }
+
+  /* Hover effects mejorados */
+  .offer-card:hover img {
+    filter: contrast(1.12) saturate(1.08) brightness(1.04);
+    transform: translateZ(0) scale(1.02);
+  }
 </style>

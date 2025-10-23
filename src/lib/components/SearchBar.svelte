@@ -180,7 +180,6 @@
   <div>
     <label class="label" for="origin">{t('form.origin','Origen')}</label>
     <select id="origin" bind:value={origin}>
-      <option value="EVN"></option>
       <option value="BCN">Barcelona (BCN)</option>
       <option value="EVN">Yerevan (EVN)</option>
     </select>
@@ -189,7 +188,6 @@
   <div>
     <label class="label" for="destination">{t('form.destination','Destino')}</label>
     <select id="destination" bind:value={destination}>
-      <option value="EVN"></option>
       <option value="EVN">Yerevan (EVN)</option>
       <option value="BCN">Barcelona (BCN)</option>
     </select>

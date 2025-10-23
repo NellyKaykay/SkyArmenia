@@ -1,3 +1,16 @@
-# allow crawling everything by default
+# SkyArmenia - Vuelos Barcelona-Yerevan
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://skyarmenia.com/sitemap.xml
+
+# Páginas restringidas
+Disallow: /api/
+Disallow: /admin/
+Disallow: /account/
+Disallow: /_app/
+Disallow: /auth/callback/
+
+# Crawl-delay para respeto al servidor
+Crawl-delay: 1

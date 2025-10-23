@@ -1,3 +1,18 @@
+<svelte:head>
+  <title>Crear Cuenta - SkyArmenia | Vuelos Barcelona-Yerevan</title>
+  <meta name="description" content="Crea tu cuenta gratuita en SkyArmenia para reservar vuelos Barcelona-Yerevan con las mejores ofertas. Registro rápido y seguro.">
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Crear Cuenta - SkyArmenia">
+  <meta property="og:description" content="Crea tu cuenta gratuita en SkyArmenia para acceder a las mejores ofertas de vuelos Barcelona-Yerevan.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://skyarmenia.com/signup">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://skyarmenia.com/signup">
+</svelte:head>
+
 <!-- Registro profesional - SkyArmenia -->
 <script lang="ts">
   import { onMount } from 'svelte';
@@ -188,10 +203,6 @@
     return value === key ? (fallback ?? key) : value;
   };
 </script>
-
-<svelte:head>
-  <meta name="robots" content="noindex" />
-</svelte:head>
 
 <!-- Fondo carousel -->
 <div class="carousel-bg">

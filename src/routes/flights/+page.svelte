@@ -1,3 +1,43 @@
+<svelte:head>
+  <title>Vuelos Barcelona-Yerevan - Buscar y Comparar | SkyArmenia</title>
+  <meta name="description" content="Busca y compara vuelos baratos de Barcelona a Yerevan. Encuentra las mejores ofertas de aerolíneas con SkyArmenia, tu agencia de viajes especialista en Armenia.">
+  <meta name="keywords" content="vuelos Barcelona Yerevan, vuelos baratos Armenia, BCN EVN, aerolíneas Armenia, vuelos directos">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Vuelos Barcelona-Yerevan - Buscar y Comparar | SkyArmenia">
+  <meta property="og:description" content="Busca y compara vuelos baratos de Barcelona a Yerevan. Encuentra las mejores ofertas de aerolíneas con SkyArmenia.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://skyarmenia.com/flights">
+  <meta property="og:image" content="https://skyarmenia.com/logo-skyarmenia.svg">
+  
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vuelos Barcelona-Yerevan - Buscar y Comparar | SkyArmenia">
+  <meta name="twitter:description" content="Busca y compara vuelos baratos de Barcelona a Yerevan con SkyArmenia.">
+  <meta name="twitter:image" content="https://skyarmenia.com/logo-skyarmenia.svg">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://skyarmenia.com/flights">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SearchResultsPage",
+      "name": "Vuelos Barcelona-Yerevan",
+      "description": "Página de búsqueda de vuelos entre Barcelona y Yerevan",
+      "mainEntity": {
+        "@type": "WebSearchBox",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://skyarmenia.com/flights?origin={origin}&destination={destination}"
+        },
+        "query-input": "required name=origin,destination"
+      }
+    }
+  </script>
+</svelte:head>
+
 <script lang="ts">
   let origin = 'BCN';
   let destination = 'EVN';

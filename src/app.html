@@ -1,13 +1,79 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		
-		<!-- Favicon -->
+		<!-- SEO Meta Tags -->
+		<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+		<meta name="googlebot" content="index, follow" />
+		<meta name="bingbot" content="index, follow" />
+		<meta name="author" content="SkyArmenia" />
+		<meta name="generator" content="SvelteKit" />
+		<meta name="format-detection" content="telephone=yes" />
+		
+		<!-- Favicon optimizado -->
 		<link rel="icon" href="/logo-skyarmenia.svg" type="image/svg+xml">
 		<link rel="shortcut icon" href="/logo-skyarmenia.svg">
-		<meta name="theme-color" content="#38b6ff">
+		<link rel="apple-touch-icon" href="/logo-skyarmenia.svg">
+		<meta name="theme-color" content="#2563eb">
+		<meta name="msapplication-TileColor" content="#2563eb">
+		<meta name="msapplication-navbutton-color" content="#2563eb">
+		<meta name="apple-mobile-web-app-status-bar-style" content="default">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		
+		<!-- Performance hints -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+		<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+		<link rel="dns-prefetch" href="https://unpkg.com">
+		
+		<!-- Structured Data Schema.org -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "TravelAgency",
+			"name": "SkyArmenia",
+			"description": "Agencia de viajes especializada en vuelos entre España y Armenia. Encuentra las mejores ofertas para volar a Yerevan desde Barcelona.",
+			"url": "https://skyarmenia.com",
+			"logo": "https://skyarmenia.com/logo-skyarmenia.svg",
+			"contactPoint": {
+				"@type": "ContactPoint",
+				"telephone": "+34-644-39-39-49",
+				"contactType": "customer service",
+				"availableLanguage": ["Spanish", "Armenian", "English"]
+			},
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Carrer de Còrsega, 203, Entlo. C",
+				"addressLocality": "Barcelona",
+				"postalCode": "08036",
+				"addressCountry": "ES"
+			},
+			"sameAs": [
+				"https://facebook.com/skyarmenia",
+				"https://instagram.com/skyarmenia",
+				"https://x.com/skyarmenia",
+				"https://youtube.com/@skyarmenia"
+			],
+			"serviceArea": {
+				"@type": "Place",
+				"name": "España y Armenia"
+			},
+			"hasOfferCatalog": {
+				"@type": "OfferCatalog",
+				"name": "Vuelos a Armenia",
+				"itemListElement": [
+					{
+						"@type": "Offer",
+						"itemOffered": {
+							"@type": "Flight",
+							"name": "Vuelos Barcelona - Yerevan"
+						}
+					}
+				]
+			}
+		}
+		</script>
 		
 		%sveltekit.head%
 	</head>

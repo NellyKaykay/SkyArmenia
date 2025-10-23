@@ -1,3 +1,32 @@
+<svelte:head>
+  <title>Política de Privacidad - SkyArmenia | Vuelos Barcelona-Yerevan</title>
+  <meta name="description" content="Política de privacidad de SkyArmenia. Cómo protegemos tus datos personales en las reservas de vuelos Barcelona-Yerevan. GDPR compliant.">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Política de Privacidad - SkyArmenia">
+  <meta property="og:description" content="Política de privacidad de SkyArmenia - Protección de datos en vuelos Barcelona-Yerevan.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://skyarmenia.com/privacy">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://skyarmenia.com/privacy">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Política de Privacidad",
+      "description": "Política de privacidad y protección de datos de SkyArmenia",
+      "publisher": {
+        "@type": "Organization",
+        "name": "SkyArmenia"
+      }
+    }
+  </script>
+</svelte:head>
+
 <!-- Política de Privacidad Profesional - SkyArmenia -->
 <script lang="ts">
   import { onMount } from 'svelte';

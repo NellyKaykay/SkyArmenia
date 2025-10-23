@@ -83,6 +83,48 @@
   $: showEmptyState = appState.data && !hasResults;
 </script>
 
+<!-- SEO Meta Tags -->
+<svelte:head>
+  <title>SkyArmenia - Vuelos a Armenia | Barcelona ⇄ Yerevan | Mejores Precios</title>
+  <meta name="description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona. Especialistas en rutas Barcelona-Yerevan. Compara precios, horarios y aerolíneas. ¡Reserva tu vuelo hoy!" />
+  <meta name="keywords" content="vuelos armenia, vuelos yerevan, vuelos barcelona armenia, vuelos baratos armenia, billete avion armenia, sky armenia, barcelona yerevan" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://skyarmenia.com/" />
+  <meta property="og:title" content="SkyArmenia - Vuelos a Armenia | Mejores Precios Barcelona ⇄ Yerevan" />
+  <meta property="og:description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona. Especialistas en rutas Barcelona-Yerevan. Compara precios y reserva tu vuelo hoy." />
+  <meta property="og:image" content="https://skyarmenia.com/logo-skyarmenia.svg" />
+  <meta property="og:site_name" content="SkyArmenia" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:locale:alternate" content="hy_AM" />
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://skyarmenia.com/" />
+  <meta name="twitter:title" content="SkyArmenia - Vuelos a Armenia | Mejores Precios" />
+  <meta name="twitter:description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona. Especialistas en rutas Barcelona-Yerevan." />
+  <meta name="twitter:image" content="https://skyarmenia.com/logo-skyarmenia.svg" />
+  <meta name="twitter:site" content="@skyarmenia" />
+  <meta name="twitter:creator" content="@skyarmenia" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://skyarmenia.com/" />
+  
+  <!-- Alternate languages -->
+  <link rel="alternate" hreflang="es" href="https://skyarmenia.com/?lang=es" />
+  <link rel="alternate" hreflang="en" href="https://skyarmenia.com/?lang=en" />
+  <link rel="alternate" hreflang="hy" href="https://skyarmenia.com/?lang=hy" />
+  <link rel="alternate" hreflang="x-default" href="https://skyarmenia.com/" />
+  
+  <!-- Additional SEO -->
+  <meta name="geo.region" content="ES-CT" />
+  <meta name="geo.placename" content="Barcelona" />
+  <meta name="geo.position" content="41.3851;2.1734" />
+  <meta name="ICBM" content="41.3851, 2.1734" />
+</svelte:head>
+
 <BgCarousel images={CONFIG.heroImages} intervalMs={5000}>
   <div class="hero-wrap">
     <h1 class="hero-title">{t('hero.title', 'Find the best flights')}</h1>

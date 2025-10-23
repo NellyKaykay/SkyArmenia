@@ -1,3 +1,18 @@
+<svelte:head>
+  <title>Iniciar Sesión - SkyArmenia | Vuelos Barcelona-Yerevan</title>
+  <meta name="description" content="Inicia sesión en SkyArmenia para acceder a tu cuenta y gestionar tus reservas de vuelos Barcelona-Yerevan. Acceso seguro a tu área personal.">
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Iniciar Sesión - SkyArmenia">
+  <meta property="og:description" content="Accede a tu cuenta SkyArmenia para gestionar tus vuelos Barcelona-Yerevan.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://skyarmenia.com/login">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://skyarmenia.com/login">
+</svelte:head>
+
 <!-- Login profesional - SkyArmenia -->
 <script lang="ts">
   import { onMount } from 'svelte';
@@ -140,10 +155,6 @@
     return value === key ? (fallback ?? key) : value;
   };
 </script>
-
-<svelte:head>
-  <meta name="robots" content="noindex" />
-</svelte:head>
 
 <!-- Fondo carousel -->
 <div class="carousel-bg">

@@ -1,3 +1,32 @@
+<svelte:head>
+  <title>Términos y Condiciones - SkyArmenia | Vuelos Barcelona-Yerevan</title>
+  <meta name="description" content="Términos y condiciones de uso de SkyArmenia. Política de reservas, cancelaciones y condiciones legales para vuelos Barcelona-Yerevan.">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Términos y Condiciones - SkyArmenia">
+  <meta property="og:description" content="Términos y condiciones de uso de SkyArmenia para reservas de vuelos Barcelona-Yerevan.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://skyarmenia.com/terms">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://skyarmenia.com/terms">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Términos y Condiciones",
+      "description": "Términos y condiciones de uso de SkyArmenia",
+      "publisher": {
+        "@type": "Organization",
+        "name": "SkyArmenia"
+      }
+    }
+  </script>
+</svelte:head>
+
 <!-- Términos y Condiciones Profesionales - SkyArmenia -->
 <script lang="ts">
   import { onMount } from 'svelte';

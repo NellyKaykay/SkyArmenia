@@ -264,7 +264,7 @@
   /* Responsive design */
   @media (max-width: 900px) {
     .logo { 
-      height: 120px;
+      height: 80px;
       /* Mantener calidad en pantallas medianas */
       filter: contrast(1.08) saturate(1.03);
     }
@@ -273,7 +273,7 @@
 
   @media (max-width: 600px) {
     .logo { 
-      height: 120px;
+      height: 60px;
       /* Optimización extra para móviles */
       filter: contrast(1.12) saturate(1.08) brightness(1.02);
       -webkit-transform: translateZ(0) scale(1);
@@ -336,7 +336,7 @@
   }
 
   /* Mejoras adicionales para SVG */
-  .logo[src$=".svg"] {
+  .logo[src$=".png"] {
     /* Optimización específica para SVG */
     shape-rendering: geometricPrecision;    
   }
@@ -346,7 +346,7 @@
 <div class="header" class:is-scrolled={scrolled}>
   <div class="container header-inner">
     <a href={homeHref} class="brand" aria-label="SkyArmenia Home">
-      <img src="/logo-skyarmenia.svg" alt="SkyArmenia" class="logo" />
+      <img src="/logo-skyarmenia.png" alt="SkyArmenia" class="logo" />
     </a>
 
     <div class="ctrls">

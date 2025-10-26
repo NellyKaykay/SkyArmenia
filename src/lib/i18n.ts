@@ -149,11 +149,11 @@ const dict: Record<Lang, Dict> = {
     /* Passengers */
     'passengers.title': 'Passengers',
     'passengers.adults': 'Adults',
-    'passengers.adults.hint': 'from 12 years old',
+    'passengers.adults.hint': 'Adults-from 12 years old',
     'passengers.children': 'Children',
-    'passengers.children.hint': 'from 2 to 11 years old',
+    'passengers.children.hint': 'Childrens-from 2 to 11 years old',
     'passengers.infants': 'Infants',
-    'passengers.infants.hint': 'under 2 years old'
+    'passengers.infants.hint': 'Infants-under 2 years old'
   },
 
   es: {
@@ -171,11 +171,11 @@ const dict: Record<Lang, Dict> = {
     'opts.oneway': 'Solo ida',
     'opts.bags': 'Maletas',
 
-    'form.passengers': 'Pasajeros',
+    'form.passengers': 'Viajeros',
     'form.origin': 'Origen',
     'form.destination': 'Destino',
-    'form.depart': 'Salida',
-    'form.return': 'Regreso',
+    'form.depart': 'Ida',
+    'form.return': 'Vuelta',
     'form.search': 'Buscar vuelos',
     'form.email': 'Email',
     'form.password': 'Contraseña',
@@ -238,11 +238,11 @@ const dict: Record<Lang, Dict> = {
     /* Passengers */
     'passengers.title': 'Pasajeros',
     'passengers.adults': 'Adultos',
-    'passengers.adults.hint': 'desde 12 años',
+    'passengers.adults.hint': 'Adultos-desde 12 años',
     'passengers.children': 'Niños',
-    'passengers.children.hint': 'de 2 a 11 años',
+    'passengers.children.hint': 'Niños-de 2 a 11 años',
     'passengers.infants': 'Bebés',
-    'passengers.infants.hint': 'menores de 2 años'
+    'passengers.infants.hint': 'Bebes-menores de 2 años'
   },
 
   ru: {
@@ -338,7 +338,7 @@ const dict: Record<Lang, Dict> = {
     'nav.login': 'Մուտք',
     'nav.logout': 'Ելք',
     'nav.signup': 'Գրանցվել',
-    'nav.profile': 'Պրոֆիլ',
+    'nav.profile': 'Հաշիվ',
     'nav.about': 'Մեր մասին',
     'nav.events': 'Իրադարձություններ',
     'nav.flights': 'Թռիչքներ',
@@ -353,9 +353,9 @@ const dict: Record<Lang, Dict> = {
     'form.origin': 'Սկիզբ',
     'form.destination': 'Դեպի',
     'form.depart': 'Մեկնում',
-    'form.return': 'Վերադարձ',
+    'form.return': 'Ժամանում',
     'form.search': 'Որոնել',
-    'form.email': 'Email',
+    'form.email': 'Էլ․ փոստ',
     'form.password': 'Գաղտնաբառ',
 
     'offers.title': 'Ուղիղ չվերթներ',
@@ -394,7 +394,7 @@ const dict: Record<Lang, Dict> = {
     'auth.signup.name': 'Անուն',
     'auth.signup.email': 'Էլ. փոստ',
     'auth.signup.password': 'Գաղտնաբառ',
-    'auth.signup.submit': 'Ստեղծել հաշիվ',
+    'auth.signup.submit': 'Գրանցվել',
     'auth.signup.haveAccount': 'Արդեն ունե՞ք հաշիվ',
     'auth.signup.loginLink': 'Մուտք',
 
@@ -413,13 +413,13 @@ const dict: Record<Lang, Dict> = {
     'auth.error.generic': 'Սխալ տեղի ունեցավ. կրկին փորձեք',
 
     /* Passengers */
-    'passengers.title': 'Ուղևորներ',
+    'passengers.title': 'Ուղևոր',
     'passengers.adults': 'Մեծահասակներ',
-    'passengers.adults.hint': 'սկսած 12 տարեկանից',
-    'passengers.children': 'Երեխաներ',
-    'passengers.children.hint': '2–11 տարեկան',
-    'passengers.infants': 'Մանկահասակներ',
-    'passengers.infants.hint': 'մինչև 2 տարեկան'
+    'passengers.adults.hint': 'Մեծահասակներ-սկսած 12 տարեկանից',
+    'passengers.children': 'Երեխա',
+    'passengers.children.hint': 'Երեխա-2–11 տարեկան',
+    'passengers.infants': 'Նորածին',
+    'passengers.infants.hint': 'Նորածին-մինչև 2 տարեկան'
   }
 };
 

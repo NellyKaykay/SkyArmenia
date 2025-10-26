@@ -170,7 +170,7 @@
   <!-- Navigation and Brand Section -->
   <div class="wrap top">
     <div class="brand">
-      <img src="/logo-skyarmenia.svg" alt="SkyArmenia - Agencia de Viajes" />
+      <img src="/logo-skyarmenia.png" alt="SkyArmenia" />
     </div>
 
     <nav class="col" aria-labelledby="footer-links-heading">
@@ -339,7 +339,7 @@
   }
 
   .brand img {
-    height: clamp(90px, 14vw, 140px);
+    height: clamp(60px, 14vw, 80px);
     width: auto;
     display: block;
     /* Mejoras de calidad para el logo del footer */
@@ -641,7 +641,7 @@
     }
 
     .brand img {
-      height: 120px;
+      height: 50px;
       /* Mantener calidad en pantallas medianas */
       filter: contrast(1.06) saturate(1.03) brightness(1.005);
     }
@@ -682,7 +682,7 @@
     }
 
     .brand img {
-      height: 110px;
+      height: 50px;
       /* Optimización extra para móviles */
       filter: contrast(1.1) saturate(1.06) brightness(1.02);
       -webkit-transform: translateZ(0) scale(1);
@@ -770,7 +770,7 @@
     }
 
     .brand img {
-      height: 100px;
+      height: 40px;
       /* Calidad optimizada para pantallas pequeñas */
       filter: contrast(1.12) saturate(1.08) brightness(1.03);
       -webkit-transform: translateZ(0) scale(1.01);
@@ -858,7 +858,7 @@
     }
 
     .brand img {
-      height: 90px;
+      height: 40px;
       /* Máxima optimización para pantallas muy pequeñas */
       filter: contrast(1.15) saturate(1.1) brightness(1.04);
       -webkit-transform: translateZ(0) scale(1.02);
@@ -898,14 +898,14 @@
   }
 
   /* Mejoras adicionales para SVG en el footer */
-  .brand img[src$=".svg"] {
+  .brand img[src$=".png"] {
     /* Optimización específica para SVG */
     shape-rendering: geometricPrecision;
     /* Transición suave para interacciones */
     transition: filter 0.2s ease, transform 0.2s ease;
   }
 
-  .brand img[src$=".svg"]:hover {
+  .brand img[src$=".png"]:hover {
     /* Efecto hover sutil para el logo */
     filter: contrast(1.1) saturate(1.05) brightness(1.02);
     transform: translateZ(0) scale(1.02);

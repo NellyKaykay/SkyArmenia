@@ -94,7 +94,7 @@
   <meta property="og:url" content="https://skyarmenia.com/" />
   <meta property="og:title" content="SkyArmenia - Vuelos a Armenia | Mejores Precios Barcelona ⇄ Yerevan" />
   <meta property="og:description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona. Especialistas en rutas Barcelona-Yerevan. Compara precios y reserva tu vuelo hoy." />
-  <meta property="og:image" content="https://skyarmenia.com/logo-skyarmenia.svg" />
+  <meta property="og:image" content="https://skyarmenia.com/logo-skyarmenia.png" />
   <meta property="og:site_name" content="SkyArmenia" />
   <meta property="og:locale" content="es_ES" />
   <meta property="og:locale:alternate" content="en_US" />
@@ -105,7 +105,7 @@
   <meta name="twitter:url" content="https://skyarmenia.com/" />
   <meta name="twitter:title" content="SkyArmenia - Vuelos a Armenia | Mejores Precios" />
   <meta name="twitter:description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona. Especialistas en rutas Barcelona-Yerevan." />
-  <meta name="twitter:image" content="https://skyarmenia.com/logo-skyarmenia.svg" />
+  <meta name="twitter:image" content="https://skyarmenia.com/logo-skyarmenia.png" />
   <meta name="twitter:site" content="@skyarmenia" />
   <meta name="twitter:creator" content="@skyarmenia" />
   
@@ -308,6 +308,7 @@
     margin-top: 1.5rem;
     min-height: 3rem; /* Evita saltos de layout */
   }
+  
 
   /* Estados de búsqueda */
   .status {

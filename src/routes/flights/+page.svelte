@@ -8,13 +8,13 @@
   <meta property="og:description" content="Busca y compara vuelos baratos de Barcelona a Yerevan. Encuentra las mejores ofertas de aerolíneas con SkyArmenia.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://skyarmenia.com/flights">
-  <meta property="og:image" content="https://skyarmenia.com/logo-skyarmenia.svg">
+  <meta property="og:image" content="https://skyarmenia.com/logo-skyarmenia.png">
   
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Vuelos Barcelona-Yerevan - Buscar y Comparar | SkyArmenia">
   <meta name="twitter:description" content="Busca y compara vuelos baratos de Barcelona a Yerevan con SkyArmenia.">
-  <meta name="twitter:image" content="https://skyarmenia.com/logo-skyarmenia.svg">
+  <meta name="twitter:image" content="https://skyarmenia.com/logo-skyarmenia.png">
   
   <!-- Canonical URL -->
   <link rel="canonical" href="https://skyarmenia.com/flights">

@@ -164,7 +164,7 @@
 <div class="login-wrap">
   <div class="modal">
     <div class="brand">
-      <img src="/logo-skyarmenia.svg" alt="SkyArmenia" class="logo" loading="eager" decoding="async" />
+      <img src="/logo-skyarmenia.png" alt="SkyArmenia" class="logo" loading="eager" decoding="async" />
     </div>
 
     <section 

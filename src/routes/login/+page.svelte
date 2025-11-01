@@ -163,10 +163,6 @@
 
 <div class="login-wrap">
   <div class="modal">
-    <div class="brand">
-      <img src="/logo-skyarmenia.png" alt="SkyArmenia" class="logo" loading="eager" decoding="async" />
-    </div>
-
     <section 
       class="login-pane" 
       in:fly="{{ y: 30, duration: CONFIG.ui.animationDuration, easing: quintOut }}"
@@ -417,8 +413,9 @@
     --form-fz-title: clamp(20px, 3.4vw, 24px);
   }
 
-  .brand { display: grid; place-items: center; text-align: center; }
-  .logo  { height: clamp(86px, 16vw, 140px); width: auto; margin-bottom: 0; }
+
+
+  /* ================================
 
   /* .pane removed: unused selector — styles consolidated elsewhere */
 

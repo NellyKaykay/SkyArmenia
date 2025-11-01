@@ -261,8 +261,8 @@ const dict: Record<Lang, Dict> = {
     'opts.bags': 'Багаж',
 
     'form.passengers': 'Пассажиры',
-    'form.origin': 'Отправление',
-    'form.destination': 'Назначение',
+    'form.origin': 'Из',
+    'form.destination': 'Куда',
     'form.depart': 'Вылет',
     'form.return': 'Обратный рейс',
     'form.search': 'Найти рейсы',

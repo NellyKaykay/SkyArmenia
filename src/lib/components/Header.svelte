@@ -273,50 +273,48 @@
 
   @media (max-width: 600px) {
     .logo { 
-      height: 60px;
+      height: 50px;
       /* Optimización extra para móviles */
       filter: contrast(1.12) saturate(1.08) brightness(1.02);
       -webkit-transform: translateZ(0) scale(1);
       transform: translateZ(0) scale(1);
     }
     .header-inner {
-      flex-direction: column; 
-      align-items: center;
       padding: 8px 16px; 
-      gap: 2px; 
-      min-height: unset;
+      gap: 8px; 
+      min-height: 60px;
+      /* Mantener layout horizontal como desktop */
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
     }
     .brand { 
-      /* Centrado perfecto en móvil */
+      /* Logo más compacto pero visible */
       display: flex;
       align-items: center;
-      justify-content: center;
+      flex-shrink: 0;
     }
     .ctrls { 
-      width: 100%;
       display: flex;
-      gap: 12px; 
-      justify-content: flex-end; 
+      gap: 8px; 
       align-items: center;
+      flex-shrink: 0;
     }
     .lang-selector { 
       flex: 0 0 auto; 
-      min-width: 50px;
-      max-width: 60px;
     }
     .lang { 
-      width: 100%;
       min-width: 50px;
-      padding: 3px 4px 3px 22px;
-      min-height: 28px;
-      font-size: 11px;
-      border: none;
-      background: transparent;
+      padding: 4px 6px 4px 26px;
+      min-height: 32px;
+      font-size: 12px;
+      border: 1px solid var(--header-border);
+      background: var(--header-bg);
     }
     .globe-icon {
       width: 14px;
       height: 14px;
-      left: 3px;
+      left: 6px;
     }
     .dropdown {
       flex-shrink: 0;

@@ -137,7 +137,6 @@
       bind:depart={searchParams.depart}
       bind:ret={searchParams.ret}
       bind:adults={searchParams.adults}
-      bind:bags={searchParams.bags}
       endpoint={CONFIG.searchEndpoint}
       debug={CONFIG.isDebugMode}
       updateUrl={true}

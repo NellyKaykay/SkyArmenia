@@ -329,7 +329,7 @@
               font-size: 1rem; 
               display: block; 
               width: 100%; 
-              max-width: 400px; 
+              max-width: 450px; 
               margin: 0 auto; 
               cursor: pointer; 
               font-family: inherit;
@@ -393,7 +393,8 @@
   .modal {
     position: relative; z-index: 2;
     width: 100%;
-    max-width: 320px;            /* Tamaño más corto */
+    max-width: 450px;            /* Ampliado a 450px para mayor consistencia */
+    min-width: 320px;            /* Ancho mínimo para consistencia */
     margin-inline: auto;
     place-self: center;
 
@@ -402,7 +403,7 @@
     border: 1px solid rgba(255,255,255,.7);
     border-radius: 16px;
     box-shadow: 0 16px 48px rgba(0,0,0,.12);
-    padding: clamp(14px, 3vw, 20px);
+    padding: clamp(16px, 3vw, 24px);
 
     /* Variables que hereda <Form>, IDÉNTICAS a signup */
     --form-max: 100%;
@@ -453,12 +454,7 @@
     --error: #ef4444;
     --error-bg: #fef2f2;
     --error-border: #fecaca;
-    --success: #10b981;
-    --warning: #f59e0b;
     --background: rgba(255, 255, 255, 0.95);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.2);
     --radius-sm: 6px;
     --radius-md: 12px;
     --radius-lg: 16px;
@@ -476,28 +472,28 @@
 
   .form-header {
     text-align: center;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 0.75rem;    /* Reducido de var(--spacing-md) */
   }
 
   .form-title {
     font-size: clamp(1.25rem, 3.5vw, 1.75rem);
     font-weight: 700;
     color: var(--text-primary);
-    margin: 0 0 var(--spacing-sm);
+    margin: 0 0 0.25rem;       /* Reducido de var(--spacing-sm) */
     line-height: 1.2;
   }
 
   .login-form {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: 0.75rem;              /* Reducido de var(--spacing-md) a 0.75rem */
   }
 
   /* Campos de Formulario */
   .field-group {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: 0.375rem;             /* Reducido de var(--spacing-sm) a 0.375rem */
   }
 
   .field-label {
@@ -592,12 +588,12 @@
   .alert {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-md);
+    gap: 0.5rem;
+    padding: 1rem;
     border-radius: var(--radius-md);
     font-size: 0.9rem;
     font-weight: 500;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 1rem;
   }
 
   .alert-error {
@@ -632,7 +628,7 @@
   /* Opciones y Enlaces */
   .form-options {
     text-align: right;
-    margin-top: calc(var(--spacing-sm) * -1);
+    margin-top: -0.25rem;      /* Reducido espacio negativo */
   }
 
   .forgot-link {
@@ -649,13 +645,13 @@
   }
 
   .submit-section {
-    margin-top: var(--spacing-md);
+    margin-top: 0.75rem;       /* Reducido de var(--spacing-md) */
   }
 
   .form-footer {
     text-align: center;
-    margin-top: var(--spacing-lg);
-    padding-top: var(--spacing-md);
+    margin-top: 1rem;          /* Reducido de var(--spacing-lg) */
+    padding-top: 0.75rem;      /* Reducido de var(--spacing-md) */
     border-top: 1px solid var(--border-light);
   }
 
@@ -669,7 +665,7 @@
     color: var(--primary);
     text-decoration: none;
     font-weight: 600;
-    margin-left: var(--spacing-xs);
+    margin-left: 0.25rem;
     transition: all 0.2s ease;
   }
 
@@ -683,27 +679,30 @@
   /* Large Desktop */
   @media (min-width: 1200px) {
     .modal {
-      max-width: 350px;
-      padding: var(--spacing-xl);
+      max-width: 480px;        /* Ampliado a 480px */
+      min-width: 480px;        /* Forzar ancho fijo */
+      padding: 1.5rem;         /* Reducido de var(--spacing-xl) */
     }
   }
 
   /* Desktop */
   @media (max-width: 1024px) {
     .modal {
-      max-width: 320px;
+      max-width: 450px;        /* Ampliado a 450px */
+      min-width: 400px;        /* Forzar ancho consistente */
     }
   }
 
   /* Tablets */
   @media (max-width: 768px) {
     .login-wrap {
-      padding: var(--spacing-md) var(--spacing-sm);
+      padding: 1rem 0.5rem;
     }
     
     .modal {
       max-width: 100%;
-      margin: var(--spacing-sm);
+      min-width: 300px;        /* Ancho mínimo para tablets */
+      margin: 0.5rem;
     }
 
     .form-input {
@@ -715,53 +714,154 @@
   /* Mobile Large */
   @media (max-width: 640px) {
     .modal {
+      min-width: 280px;        /* Ancho mínimo para móviles grandes */
       padding: var(--spacing-md);
       border-radius: var(--radius-md);
     }
 
     .form-title {
-      font-size: 1.25rem;
+      font-size: 1.25rem;      /* Reducido de 1.5rem */
+    }
+
+    .login-form {
+      gap: 0.5rem;             /* Reducido espacios entre campos */
+    }
+
+    .field-group {
+      gap: 0.25rem;            /* Reducido espacios internos */
+    }
+
+    .field-label {
+      font-size: 0.8rem;       /* Etiquetas más pequeñas */
+    }
+
+    .forgot-link {
+      font-size: 0.8rem;       /* Texto olvidado más pequeño */
+    }
+
+    .submit-section {
+      margin-top: 0.25rem;     /* Muy poco espacio antes del botón */
+      margin-bottom: 0.25rem;  /* Poco espacio después del botón */
+    }
+
+    .login-btn {
+      font-size: 0.9rem !important;   /* Texto botón más pequeño */
+      min-height: 2.25rem !important; /* Botón más compacto */
+      padding: 0.5rem 1rem !important;
+    }
+
+    .form-footer {
+      margin-top: 0.5rem !important;  /* Reducido espacio después */
+      padding-top: 0.5rem !important;
     }
   }
 
   /* Mobile Standard */
   @media (max-width: 480px) {
     .login-wrap {
-      padding: var(--spacing-sm);
+      padding: 0.5rem;
     }
 
     .modal {
-      padding: var(--spacing-sm);
+      min-width: 260px;        /* Ancho mínimo para móviles estándar */
+      padding: 0.5rem;
       margin: 0;
       border-radius: var(--radius-md);
       box-shadow: 0 10px 28px rgba(0,0,0,.14);
     }
 
     .form-input {
-      height: 2.5rem;
-      padding: 0 0.875rem;
-      padding-right: 2.75rem;
-      font-size: 0.9rem;
+      height: 2.25rem;         /* Reducido de 2.5rem */
+      padding: 0 0.75rem;      /* Reducido padding */
+      padding-right: 2.5rem;   /* Ajustado para icono */
+      font-size: 0.85rem;      /* Reducido de 0.9rem */
     }
 
     .login-form {
-      gap: var(--spacing-md);
+      gap: 0.5rem;             /* Reducido de 1rem */
     }
 
     .field-group {
-      gap: calc(var(--spacing-sm) * 0.75);
+      gap: 0.25rem;            /* Reducido de 0.375rem */
+    }
+
+    .field-label {
+      font-size: 0.75rem;      /* Etiquetas más pequeñas */
+    }
+
+    .form-title {
+      font-size: 1.125rem;     /* Título más pequeño */
+    }
+
+    .forgot-link {
+      font-size: 0.75rem;      /* Texto olvidado más pequeño */
+    }
+
+    .submit-section {
+      margin-top: 0.2rem;      /* Espacio mínimo antes */
+      margin-bottom: 0.2rem;   /* Espacio mínimo después */
+    }
+
+    .login-btn {
+      font-size: 0.85rem !important;  /* Texto más pequeño */
+      min-height: 2rem !important;    /* Botón más compacto */
+      padding: 0.375rem 0.75rem !important;
+    }
+
+    .form-footer {
+      margin-top: 0.375rem !important; /* Reducido espacio después */
+      padding-top: 0.375rem !important;
     }
   }
 
   /* Mobile Small */
   @media (max-width: 360px) {
     .modal {
-      padding: var(--spacing-sm) var(--spacing-md);
+      min-width: 240px;        /* Ancho mínimo para móviles pequeños */
+      padding: 0.375rem 0.75rem; /* Padding más compacto */
     }
 
     .form-input {
-      height: 2.25rem;
-      font-size: 0.875rem;
+      height: 2rem;            /* Más compacto */
+      font-size: 0.8rem;       /* Texto más pequeño */
+      padding: 0 0.625rem;
+      padding-right: 2.25rem;
+    }
+
+    .login-form {
+      gap: 0.375rem;           /* Espacios muy reducidos */
+    }
+
+    .field-group {
+      gap: 0.2rem;             /* Espacios mínimos */
+    }
+
+    .field-label {
+      font-size: 0.7rem;       /* Etiquetas muy pequeñas */
+    }
+
+    .form-title {
+      font-size: 1rem;         /* Título muy pequeño */
+    }
+
+    .forgot-link {
+      font-size: 0.7rem;       /* Texto olvidado muy pequeño */
+    }
+
+    .submit-section {
+      margin-top: 0.125rem;    /* Espacio ultra mínimo antes */
+      margin-bottom: 0.125rem; /* Espacio ultra mínimo después */
+    }
+
+    .login-btn {
+      font-size: 0.8rem !important;   /* Texto muy pequeño */
+      min-height: 1.875rem !important; /* Botón muy compacto */
+      padding: 0.25rem 0.5rem !important;
+    }
+
+    .form-footer {
+      margin-top: 0.25rem !important;  /* Espacio muy reducido después */
+      padding-top: 0.25rem !important;
     }
   }
 

@@ -459,7 +459,7 @@
               font-size: 1rem; 
               display: block; 
               width: 100%; 
-              max-width: 400px; 
+              max-width: 450px; 
               margin: 0 auto; 
               cursor: pointer; 
               font-family: inherit;
@@ -523,7 +523,8 @@
   .modal {
     position: relative; z-index: 2;
     width: 100%;
-    max-width: 320px;            /* Tamaño más corto */
+    max-width: 450px;            /* Ampliado a 450px para mayor consistencia */
+    min-width: 320px;            /* Ancho mínimo para consistencia */
     margin-inline: auto;
     place-self: center;
 
@@ -532,7 +533,7 @@
     border: 1px solid rgba(255,255,255,.7);
     border-radius: 16px;
     box-shadow: 0 16px 48px rgba(0,0,0,.12);
-    padding: clamp(14px, 3vw, 20px);
+    padding: clamp(16px, 3vw, 24px);
 
     /* Variables que hereda <Form>, IDÉNTICAS a login */
     --form-max: 100%;
@@ -577,28 +578,28 @@
 
   .form-header {
     text-align: center;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 0.75rem;    /* Reducido de var(--spacing-md) */
   }
 
   .form-title {
     font-size: clamp(1.25rem, 3.5vw, 1.75rem);
     font-weight: 700;
     color: var(--text-primary);
-    margin: 0 0 var(--spacing-sm);
+    margin: 0 0 0.25rem;       /* Reducido de var(--spacing-sm) */
     line-height: 1.2;
   }
 
   .login-form {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: 0.75rem;              /* Reducido de var(--spacing-md) a 0.75rem */
   }
 
   /* Campos de Formulario */
   .field-group {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: 0.375rem;             /* Reducido de var(--spacing-sm) a 0.375rem */
   }
 
   .field-label {
@@ -693,7 +694,7 @@
   .terms-wrapper {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: 0.375rem;             /* Reducido de var(--spacing-sm) */
   }
 
   .terms-content {
@@ -783,13 +784,13 @@
   }
 
   .submit-section {
-    margin-top: var(--spacing-md);
+    margin-top: 0.75rem;       /* Reducido de var(--spacing-md) */
   }
 
   .form-footer {
     text-align: center;
-    margin-top: var(--spacing-lg);
-    padding-top: var(--spacing-md);
+    margin-top: 1rem;          /* Reducido de var(--spacing-lg) */
+    padding-top: 0.75rem;      /* Reducido de var(--spacing-md) */
     border-top: 1px solid var(--border-light);
   }
 
@@ -817,27 +818,30 @@
   /* Large Desktop */
   @media (min-width: 1200px) {
     .modal {
-      max-width: 350px;
-      padding: var(--spacing-xl);
+      max-width: 480px;        /* Ampliado a 480px */
+      min-width: 480px;        /* Forzar ancho fijo */
+      padding: 1.5rem;         /* Reducido de var(--spacing-xl) */
     }
   }
 
   /* Desktop */
   @media (max-width: 1024px) {
     .modal {
-      max-width: 320px;
+      max-width: 450px;        /* Ampliado a 450px */
+      min-width: 400px;        /* Forzar ancho consistente */
     }
   }
 
   /* Tablets */
   @media (max-width: 768px) {
     .login-wrap {
-      padding: var(--spacing-md) var(--spacing-sm);
+      padding: 1rem 0.5rem;
     }
     
     .modal {
       max-width: 100%;
-      margin: var(--spacing-sm);
+      min-width: 300px;        /* Ancho mínimo para tablets */
+      margin: 0.5rem;
     }
 
     .form-input {
@@ -849,41 +853,77 @@
   /* Mobile Large */
   @media (max-width: 640px) {
     .modal {
+      min-width: 280px;        /* Ancho mínimo para móviles grandes */
       padding: var(--spacing-md);
       border-radius: var(--radius-md);
     }
 
     .form-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;      /* Reducido de 1.5rem */
+    }
+
+    .login-form {
+      gap: 0.5rem;             /* Reducido espacios entre campos */
+    }
+
+    .field-group {
+      gap: 0.25rem;            /* Reducido espacios internos */
+    }
+
+    .terms-wrapper {
+      gap: 0.25rem;            /* Espacios términos */
+    }
+
+    .field-label {
+      font-size: 0.8rem;       /* Etiquetas más pequeñas */
+    }
+
+    .submit-section {
+      margin-top: 0.5rem;      /* Reducido espacio antes del botón */
+    }
+
+    .signup-btn {
+      font-size: 0.9rem !important;   /* Texto botón más pequeño */
+      min-height: 2.25rem !important; /* Botón más compacto */
+      padding: 0.5rem 1rem !important;
     }
   }
 
   /* Mobile Standard */
   @media (max-width: 480px) {
     .login-wrap {
-      padding: var(--spacing-sm);
+      padding: 0.5rem;
     }
 
     .modal {
-      padding: var(--spacing-sm);
+      min-width: 260px;        /* Ancho mínimo para móviles estándar */
+      padding: 0.5rem;
       margin: 0;
       border-radius: var(--radius-md);
       box-shadow: 0 10px 28px rgba(0,0,0,.14);
     }
 
+    .form-title {
+      font-size: 1.125rem;     /* Reducido de default */
+    }
+
     .form-input {
-      height: 2.5rem;
+      height: 2.25rem;         /* Más compacto */
       padding: 0 0.875rem;
       padding-right: 2.75rem;
-      font-size: 0.9rem;
+      font-size: 0.85rem;      /* Texto más pequeño */
     }
 
     .login-form {
-      gap: var(--spacing-md);
+      gap: 0.5rem;             /* Reducido espacios */
     }
 
     .field-group {
-      gap: calc(var(--spacing-sm) * 0.75);
+      gap: 0.25rem;            /* Reducido espacios internos */
+    }
+
+    .terms-wrapper {
+      gap: 0.25rem;
     }
 
     .terms-content {
@@ -898,21 +938,68 @@
     .terms-error {
       margin-left: 1.5rem;
     }
+
+    .field-label {
+      font-size: 0.75rem;      /* Etiquetas más pequeñas */
+    }
+
+    .submit-section {
+      margin-top: 0.375rem;    /* Espacio muy reducido */
+    }
+
+    .signup-btn {
+      font-size: 0.85rem !important;  /* Texto más pequeño */
+      min-height: 2rem !important;    /* Botón más compacto */
+      padding: 0.375rem 0.75rem !important;
+    }
   }
 
   /* Mobile Small */
   @media (max-width: 360px) {
     .modal {
-      padding: var(--spacing-sm) var(--spacing-md);
+      min-width: 240px;        /* Ancho mínimo para móviles pequeños */
+      padding: 0.375rem 0.75rem; /* Padding más compacto */
+    }
+
+    .form-title {
+      font-size: 1rem;         /* Título compacto */
     }
 
     .form-input {
-      height: 2.25rem;
-      font-size: 0.875rem;
+      height: 2rem;            /* Máxima compactación */
+      font-size: 0.8rem;       /* Texto más pequeño */
+      padding: 0 0.75rem;
+      padding-right: 2.5rem;
+    }
+
+    .login-form {
+      gap: 0.375rem;           /* Espacios muy reducidos */
+    }
+
+    .field-group {
+      gap: 0.2rem;             /* Espacios mínimos */
+    }
+
+    .terms-wrapper {
+      gap: 0.2rem;
+    }
+
+    .field-label {
+      font-size: 0.7rem;       /* Etiquetas muy pequeñas */
     }
 
     .terms-label {
-      font-size: 0.85rem;
+      font-size: 0.7rem;       /* Términos compactos */
+    }
+
+    .submit-section {
+      margin-top: 0.25rem;     /* Espacio mínimo */
+    }
+
+    .signup-btn {
+      font-size: 0.8rem !important;   /* Texto muy pequeño */
+      min-height: 1.875rem !important; /* Botón muy compacto */
+      padding: 0.25rem 0.5rem !important;
     }
   }
 

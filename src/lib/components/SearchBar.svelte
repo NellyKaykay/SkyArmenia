@@ -555,7 +555,7 @@
     0 2px 4px -1px rgba(0, 0, 0, 0.06),
     0 20px 25px -5px rgba(0, 0, 0, 0.1);
   padding: 16px;
-  z-index: 1300;
+  z-index: 1350;
   animation: slideInUp 0.2s ease-out;
   transform-origin: bottom center;
 }
@@ -734,7 +734,7 @@
     appearance: none;
   }
 
-  /* Solución definitiva: popup centrado en pantalla */
+  /* En móvil: popup centrado en pantalla */
   .pax-pop {
     position: fixed !important;
     top: 50% !important;
@@ -747,7 +747,7 @@
     max-height: calc(100vh - 40px);
     padding: 16px;
     overflow-y: auto;
-    animation: slideInUp 0.2s ease-out;
+    animation: slideInUp 0.2s ease-out !important;
     z-index: 9999;
     box-shadow: 
       0 10px 40px rgba(0, 0, 0, 0.3),

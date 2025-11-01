@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
-  import { i18n } from '$lib/i18n';
+  import { i18n, lang } from '$lib/i18n';
 
   /* Props (solo como valores iniciales) */
   export let trip: 'oneway' | 'round' = 'round';
@@ -117,22 +117,22 @@
     }
   };
 
-  // Función para obtener el idioma actual del calendario
+  // Función para obtener el idioma actual del calendario conectado con i18n
   function getCurrentLocale() {
-    // Por ahora usar español por defecto para probar
-    // Después se puede conectar con el sistema de i18n
-    const lang = 'es'; // Temporalmente fijo para debugging
+    // Obtener idioma actual del store i18n usando get()
+    const currentLang = $lang || 'es';
     
     // Mapear idiomas disponibles
     const langMap: { [key: string]: keyof typeof locales } = {
       'es': 'es',
       'ru': 'ru', 
       'hy': 'hy',
-      'am': 'hy' // armenio también
+      'en': 'es' // inglés usa español para el calendario
     };
     
-    console.log('Locale seleccionado:', langMap[lang] || 'es', locales[langMap[lang] || 'es']);
-    return locales[langMap[lang] || 'es'];
+    const selectedLocale = langMap[currentLang] || 'es';
+    console.log('Idioma actual:', currentLang, 'Locale calendario:', selectedLocale);
+    return locales[selectedLocale];
   }
 
   function initPickers() {
@@ -184,6 +184,11 @@
   }
   onMount(initPickers);
   $: if (fpRet) { fpRet.set('clickOpens', trip !== 'oneway'); fpRet.set('minDate', depart || 'today'); }
+  
+  // Reactividad: reinicializar calendarios cuando cambie el idioma
+  $: if ($lang && fpDepart && fpRet) {
+    initPickers();
+  }
 
   /* ===== Pasajeros ===== */
   let paxOpen = false;
@@ -276,7 +281,7 @@
        on:click={() => (paxOpen = !paxOpen)}>
        <span class="pax-trigger-left">
          {#if totalPax === 1 && childrenC === 0 && infantsC === 0}
-           {t('pax.adult_single','1 Adulto')}
+           {t('passengers.single','1 Adulto')}
          {:else}
            {adultsC > 0 ? `${adultsC}A` : ''}{childrenC > 0 ? ` ${childrenC}N` : ''}{infantsC > 0 ? ` ${infantsC}B` : ''}
          {/if}
@@ -297,39 +302,39 @@
         <!-- Adults -->
         <div class="row">
           <div class="left">
-            <div class="title">{t('pax.adults','Adultos')}</div>
-            <div class="sub">{t('pax.adults.hint','desde 12 años')}</div>
+            <div class="title">{t('passengers.adults','Adultos')}</div>
+            <div class="sub">{t('passengers.adults.hint','desde 12 años')}</div>
           </div>
           <div class="right">
-            <button type="button" class="square" disabled={adultsC <= 1} on:click={(e)=>dec('adults',e)} aria-label={t('pax.remove_adult','Quitar adulto')}>−</button>
+            <button type="button" class="square" disabled={adultsC <= 1} on:click={(e)=>dec('adults',e)} aria-label="Quitar adulto">−</button>
             <div class="count" aria-live="polite">{adultsC}</div>
-            <button type="button" class="square" disabled={adultsC >= 9} on:click={(e)=>inc('adults',e)} aria-label={t('pax.add_adult','Añadir adulto')}>+</button>
+            <button type="button" class="square" disabled={adultsC >= 9} on:click={(e)=>inc('adults',e)} aria-label="Añadir adulto">+</button>
           </div>
         </div>
 
         <!-- Children -->
         <div class="row">
           <div class="left">
-            <div class="title">{t('pax.children','Niños')}</div>
-            <div class="sub">{t('pax.children.hint','de 2 a 11 años')}</div>
+            <div class="title">{t('passengers.children','Niños')}</div>
+            <div class="sub">{t('passengers.children.hint','de 2 a 11 años')}</div>
           </div>
           <div class="right">
-            <button type="button" class="square" disabled={childrenC <= 0} on:click={(e)=>dec('children',e)} aria-label={t('pax.remove_child','Quitar niño')}>−</button>
+            <button type="button" class="square" disabled={childrenC <= 0} on:click={(e)=>dec('children',e)} aria-label="Quitar niño">−</button>
             <div class="count" aria-live="polite">{childrenC}</div>
-            <button type="button" class="square" disabled={childrenC >= 9} on:click={(e)=>inc('children',e)} aria-label={t('pax.add_child','Añadir niño')}>+</button>
+            <button type="button" class="square" disabled={childrenC >= 9} on:click={(e)=>inc('children',e)} aria-label="Añadir niño">+</button>
           </div>
         </div>
 
         <!-- Infants -->
         <div class="row">
           <div class="left">
-            <div class="title">{t('pax.infants','Bebés')}</div>
-            <div class="sub">{t('pax.infants.hint','menores de 2 años')}</div>
+            <div class="title">{t('passengers.infants','Bebés')}</div>
+            <div class="sub">{t('passengers.infants.hint','menores de 2 años')}</div>
           </div>
           <div class="right">
-            <button type="button" class="square" disabled={infantsC <= 0} on:click={(e)=>dec('infants',e)} aria-label={t('pax.remove_infant','Quitar bebé')}>−</button>
+            <button type="button" class="square" disabled={infantsC <= 0} on:click={(e)=>dec('infants',e)} aria-label="Quitar bebé">−</button>
             <div class="count" aria-live="polite">{infantsC}</div>
-            <button type="button" class="square" disabled={infantsC >= adultsC || infantsC >= 9} on:click={(e)=>inc('infants',e)} aria-label={t('pax.add_infant','Añadir bebé')}>+</button>
+            <button type="button" class="square" disabled={infantsC >= adultsC || infantsC >= 9} on:click={(e)=>inc('infants',e)} aria-label="Añadir bebé">+</button>
           </div>
         </div>
 

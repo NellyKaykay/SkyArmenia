@@ -148,12 +148,17 @@ const dict: Record<Lang, Dict> = {
 
     /* Passengers */
     'passengers.title': 'Passengers',
+    'passengers.single': '1 Adult',
     'passengers.adults': 'Adults',
-    'passengers.adults.hint': 'Adults-from 12 years old',
+    'passengers.adults.hint': 'from 12 years old',
     'passengers.children': 'Children',
-    'passengers.children.hint': 'Childrens-from 2 to 11 years old',
+    'passengers.children.hint': 'from 2 to 11 years old',
     'passengers.infants': 'Infants',
-    'passengers.infants.hint': 'Infants-under 2 years old'
+    'passengers.infants.hint': 'under 2 years old',
+    
+    /* Common */
+    'common.ok': 'OK',
+    'common.close': 'Close'
   },
 
   es: {
@@ -237,12 +242,17 @@ const dict: Record<Lang, Dict> = {
 
     /* Passengers */
     'passengers.title': 'Pasajeros',
+    'passengers.single': '1 Adulto',
     'passengers.adults': 'Adultos',
-    'passengers.adults.hint': 'Adultos-desde 12 años',
+    'passengers.adults.hint': 'desde 12 años',
     'passengers.children': 'Niños',
-    'passengers.children.hint': 'Niños-de 2 a 11 años',
+    'passengers.children.hint': 'de 2 a 11 años',
     'passengers.infants': 'Bebés',
-    'passengers.infants.hint': 'Bebes-menores de 2 años'
+    'passengers.infants.hint': 'menores de 2 años',
+    
+    /* Common */
+    'common.ok': 'OK',
+    'common.close': 'Cerrar'
   },
 
   ru: {
@@ -326,12 +336,17 @@ const dict: Record<Lang, Dict> = {
 
     /* Passengers */
     'passengers.title': 'Пассажиры',
+    'passengers.single': '1 Взрослый',
     'passengers.adults': 'Взрослые',
     'passengers.adults.hint': 'от 12 лет',
     'passengers.children': 'Дети',
     'passengers.children.hint': 'от 2 до 11 лет',
     'passengers.infants': 'Младенцы',
-    'passengers.infants.hint': 'до 2 лет'
+    'passengers.infants.hint': 'до 2 лет',
+    
+    /* Common */
+    'common.ok': 'ОК',
+    'common.close': 'Закрыть'
   },
 
   hy: {
@@ -413,13 +428,18 @@ const dict: Record<Lang, Dict> = {
     'auth.error.generic': 'Սխալ տեղի ունեցավ. կրկին փորձեք',
 
     /* Passengers */
-    'passengers.title': 'Ուղևոր',
+    'passengers.title': 'Ուղևորներ',
+    'passengers.single': '1 Մեծահասակ',
     'passengers.adults': 'Մեծահասակներ',
-    'passengers.adults.hint': 'Մեծահասակներ-սկսած 12 տարեկանից',
-    'passengers.children': 'Երեխա',
-    'passengers.children.hint': 'Երեխա-2–11 տարեկան',
-    'passengers.infants': 'Նորածին',
-    'passengers.infants.hint': 'Նորածին-մինչև 2 տարեկան'
+    'passengers.adults.hint': 'սկսած 12 տարեկանից',
+    'passengers.children': 'Երեխաներ',
+    'passengers.children.hint': '2–11 տարեկան',
+    'passengers.infants': 'Նորածիններ',
+    'passengers.infants.hint': 'մինչև 2 տարեկան',
+    
+    /* Common */
+    'common.ok': 'ԼԱՎ',
+    'common.close': 'Փակել'
   }
 };
 

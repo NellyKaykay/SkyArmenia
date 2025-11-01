@@ -127,7 +127,7 @@
 
   /* Logo y marca */
   .logo { 
-    height: 140px; 
+    height: 100px; 
     width: auto; 
     display: block;
     /* Mejoras de calidad para el logo */

@@ -316,17 +316,23 @@
     --footer-transition: all 0.2s ease;
   }
 
-  .footer {
+  .ftr {
     background: var(--footer-bg);
     border-top: 1px solid var(--footer-border);
     color: var(--footer-text);
     margin-top: clamp(1rem, 2vw, 1.5rem);
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .wrap {
     max-width: 1200px;
     margin: 0 auto;
-    padding-inline: clamp(1rem, 4vw, 1.5rem);
+    padding-inline: 1rem;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   /* Navigation and Brand Section */
@@ -336,6 +342,8 @@
     gap: clamp(1rem, 2.5vw, 1.75rem);
     padding: clamp(1rem, 2.5vw, 1.5rem) 0;
     align-items: start;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .brand img {
@@ -571,6 +579,8 @@
     grid-template-columns: 1fr 1fr;
     gap: clamp(1.5rem, 3vw, 2rem);
     align-items: start;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   /* Copyright and Legal Section */
@@ -625,7 +635,7 @@
 
   @media (max-width: 768px) {
     .wrap {
-      padding-inline: 1.25rem;
+      padding-inline: 0.75rem;
     }
 
     .top {
@@ -755,7 +765,7 @@
 
   @media (max-width: 480px) {
     .wrap {
-      padding-inline: 1rem;
+      padding-inline: 0.5rem;
     }
 
     .top {

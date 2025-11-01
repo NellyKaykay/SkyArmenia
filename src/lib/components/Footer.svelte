@@ -327,6 +327,15 @@
     box-sizing: border-box;
   }
 
+  /* Force all footer children to respect container bounds */
+  .ftr * {
+    box-sizing: border-box;
+  }
+  
+  .ftr .wrap * {
+    max-width: 100%;
+  }
+
   .wrap {
     max-width: 1200px;
     margin: 0 auto;
@@ -417,6 +426,13 @@
     transform: translateX(2px);
   }
 
+  /* Specific fixes for contact section columns */
+  .contact .col {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   .social {
     margin-top: 0.5rem;
     display: flex;
@@ -479,11 +495,15 @@
   /* Interactive Map */
   .map {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
 
   .map-inner {
     position: relative;
     width: 100%;
+    max-width: 100%;
     height: 0;
     padding-top: 45%;
     min-height: 240px;
@@ -492,6 +512,7 @@
     border: 1px solid var(--footer-border);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
     transition: var(--footer-transition);
+    box-sizing: border-box;
   }
 
   .map-inner:hover,
@@ -552,6 +573,9 @@
     padding: 0.5rem 0;
     border-radius: var(--footer-radius);
     transition: var(--footer-transition);
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   .contact-link:hover,
@@ -567,6 +591,9 @@
     line-height: 1.5;
     font-size: 0.875rem;
     font-weight: 400;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
 
 
@@ -574,13 +601,15 @@
   /* Contact and Map Section */
   .contact {
     border-top: 1px solid var(--footer-border);
-    padding: clamp(1.5rem, 3vw, 2rem) 0;
+    padding: 1.5rem 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(1.5rem, 3vw, 2rem);
+    gap: 1.5rem;
     align-items: start;
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
   }
 
   /* Copyright and Legal Section */
@@ -629,7 +658,15 @@
 
     .contact {
       grid-template-columns: 1fr 1.2fr;
-      gap: 2rem;
+      gap: 1.5rem;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    
+    .contact .col,
+    .contact .map {
+      min-width: 0;
+      max-width: 100%;
     }
   }
 

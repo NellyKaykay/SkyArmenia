@@ -119,9 +119,9 @@
 
   // Función para obtener el idioma actual del calendario
   function getCurrentLocale() {
-    // Detectar idioma desde i18n o usar español por defecto
-    const lang = typeof window !== 'undefined' ? 
-      (window.navigator.language || 'es').substring(0, 2) : 'es';
+    // Por ahora usar español por defecto para probar
+    // Después se puede conectar con el sistema de i18n
+    const lang = 'es'; // Temporalmente fijo para debugging
     
     // Mapear idiomas disponibles
     const langMap: { [key: string]: keyof typeof locales } = {
@@ -131,6 +131,7 @@
       'am': 'hy' // armenio también
     };
     
+    console.log('Locale seleccionado:', langMap[lang] || 'es', locales[langMap[lang] || 'es']);
     return locales[langMap[lang] || 'es'];
   }
 
@@ -138,6 +139,7 @@
     fpDepart?.destroy?.(); fpRet?.destroy?.();
     
     const currentLocale = getCurrentLocale();
+    console.log('Inicializando calendario con locale:', currentLocale);
     
     const baseOpts: flatpickr.Options.Options = {
       dateFormat: 'Y-m-d',
@@ -709,6 +711,8 @@
 @media (max-width: 640px) {
   .search-bar {
     grid-template-columns: 1fr 1fr;
+  }
+
   /* Backdrop para responsive */
   .pax-backdrop-mobile {
     display: block;
@@ -723,11 +727,6 @@
     padding: 0;
     margin: 0;
     appearance: none;
-  }
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9998;
   }
 
   /* Solución definitiva: popup centrado en pantalla */

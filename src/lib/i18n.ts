@@ -309,15 +309,15 @@ const dict: Record<Lang, Dict> = {
     'auth.login.password': 'Пароль',
     'auth.login.submit': 'Войти',
     'auth.login.forgot': 'Забыли пароль?',
-    'auth.login.noAccount': 'Нет аккаунта?',
+    'auth.login.noAccount': 'Нет счета?',
     'auth.login.signupLink': 'Зарегистрироваться',
 
-    'auth.signup.title': 'Создать аккаунт',
+    'auth.signup.title': 'Создать счет',
     'auth.signup.name': 'Имя',
     'auth.signup.email': 'Электронная почта',
     'auth.signup.password': 'Пароль',
     'auth.signup.submit': 'Зарегистрироваться',
-    'auth.signup.haveAccount': 'Уже есть аккаунт?',
+    'auth.signup.haveAccount': 'Уже есть счет?',
     'auth.signup.loginLink': 'Войти',
 
     'auth.password.show': 'Показать пароль',
@@ -360,7 +360,7 @@ const dict: Record<Lang, Dict> = {
     'nav.contact': 'Կապ',
 
     'hero.title': 'Գտիր լավագույն ավիատոմսերը',
-    'opts.round': 'Դարձի հետ',
+    'opts.round': 'Երկկողմանի',
     'opts.oneway': 'Միակողմանի',
     'opts.bags': 'Ուղեբեռ',
 
@@ -425,7 +425,7 @@ const dict: Record<Lang, Dict> = {
     'auth.error.invalid_credentials': 'Սխալ էլ. փոստ կամ գաղտնաբառ',
     'auth.error.email_not_confirmed': 'Ստուգեք էլ. փոստը նախքան մուտքը',
     'auth.error.too_many_requests': 'Չափազանց շատ փորձեր. կրկնեք ավելի ուշ',
-    'auth.error.generic': 'Սխալ տեղի ունեցավ. կրկին փորձեք',
+    'auth.error.generic': 'Սխալ, կրկին փորձեք',
 
     /* Passengers */
     'passengers.title': 'Ուղևորներ',
@@ -438,7 +438,7 @@ const dict: Record<Lang, Dict> = {
     'passengers.infants.hint': 'մինչև 2 տարեկան',
     
     /* Common */
-    'common.ok': 'ԼԱՎ',
+    'common.ok': 'Մուտք',
     'common.close': 'Փակել'
   }
 };

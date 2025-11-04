@@ -127,7 +127,7 @@
 
   /* Logo y marca */
   .logo { 
-    height: 100px; 
+    height: 65px; 
     width: auto; 
     display: block;
     /* Mejoras de calidad para el logo */
@@ -264,7 +264,7 @@
   /* Responsive design */
   @media (max-width: 900px) {
     .logo { 
-      height: 80px;
+      height: 55px;
       /* Mantener calidad en pantallas medianas */
       filter: contrast(1.08) saturate(1.03);
     }
@@ -273,7 +273,7 @@
 
   @media (max-width: 600px) {
     .logo { 
-      height: 50px;
+      height: 40px;
       /* Optimización extra para móviles */
       filter: contrast(1.12) saturate(1.08) brightness(1.02);
       -webkit-transform: translateZ(0) scale(1);
@@ -320,6 +320,19 @@
       flex-shrink: 0;
     }
    
+  }
+
+  @media (max-width: 400px) {
+    .logo { 
+      height: 35px;
+      /* Máxima optimización para pantallas muy pequeñas */
+      filter: contrast(1.15) saturate(1.1) brightness(1.04);
+      -webkit-transform: translateZ(0) scale(1.02);
+      transform: translateZ(0) scale(1.02);
+    }
+    .header-inner {
+      min-height: 55px;
+    }
   }
 
   /* Pantallas de alta densidad (Retina, 4K) */

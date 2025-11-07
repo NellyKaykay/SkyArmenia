@@ -338,11 +338,10 @@
   }
 
   .wrap {
-    max-width: 1200px;
+    width: min(1200px, calc(100% - 2rem));
     margin: 0 auto;
     padding-inline: 1rem;
     box-sizing: border-box;
-    width: 100%;
   }
 
   /* Navigation Section with 5 columns */
@@ -768,6 +767,11 @@
 
   /* Responsive Design - Professional 5-tier system */
   @media (max-width: 1200px) {
+    .wrap {
+      width: min(1200px, calc(100% - 1.5rem));
+      padding-inline: 0.75rem;
+    }
+
     .top {
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
       gap: 1.2rem;
@@ -792,7 +796,8 @@
 
   @media (max-width: 768px) {
     .wrap {
-      padding-inline: 0.75rem;
+      width: min(100%, calc(100% - 1rem));
+      padding-inline: 0.5rem;
     }
 
     .top {
@@ -985,7 +990,8 @@
 
   @media (max-width: 480px) {
     .wrap {
-      padding-inline: 0.5rem;
+      width: calc(100% - 0.5rem);
+      padding-inline: 0.25rem;
     }
 
     .top {

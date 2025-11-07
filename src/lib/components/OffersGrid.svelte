@@ -23,7 +23,7 @@
     <!-- Card 1 -->
     <div class="offer-card">
       <img
-        src="https://ca-times.brightspotcdn.com/dims4/default/1b5cd92/2147483647/strip/true/crop/1600x534+0+201/resize/2000x667!/format/webp/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F8b%2F6d%2F8a82b3f44b62a048a080602302fb%2Fyerevan-republic-square-at-night-yerevan-armenia.jpg"
+        src="/offers/yerevan.jpg"
         alt="Ereván"
         loading="lazy"
         decoding="async"
@@ -37,7 +37,7 @@
     <!-- Card 2 -->
     <div class="offer-card">
       <img
-        src="https://images.unsplash.com/photo-1628612773214-0d5a10cfcae8?q=95&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        src="/offers/barcelona.jpg"
         alt="Barcelona"
         loading="lazy"
         decoding="async"

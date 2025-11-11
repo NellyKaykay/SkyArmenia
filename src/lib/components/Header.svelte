@@ -264,16 +264,16 @@
   /* Responsive design */
   @media (max-width: 900px) {
     .logo { 
-      height: 55px;
+      height: 70px;  /* Aumentado de 55px a 70px */
       /* Mantener calidad en pantallas medianas */
       filter: contrast(1.08) saturate(1.03);
     }
-    .header-inner { min-height: 68px; }
+    .header-inner { min-height: 75px; }  /* Ajustado para acomodar logo más grande */
   }
 
   @media (max-width: 600px) {
     .logo { 
-      height: 40px;
+      height: 60px;  /* Aumentado de 40px a 60px */
       /* Optimización extra para móviles */
       filter: contrast(1.12) saturate(1.08) brightness(1.02);
       -webkit-transform: translateZ(0) scale(1);
@@ -282,7 +282,7 @@
     .header-inner {
       padding: 8px 16px; 
       gap: 8px; 
-      min-height: 60px;
+      min-height: 70px;  /* Ajustado para acomodar logo más grande */
       /* Mantener layout horizontal como desktop */
       flex-direction: row;
       justify-content: space-between;
@@ -324,14 +324,14 @@
 
   @media (max-width: 400px) {
     .logo { 
-      height: 35px;
+      height: 50px;  /* Aumentado de 35px a 50px */
       /* Máxima optimización para pantallas muy pequeñas */
       filter: contrast(1.15) saturate(1.1) brightness(1.04);
       -webkit-transform: translateZ(0) scale(1.02);
       transform: translateZ(0) scale(1.02);
     }
     .header-inner {
-      min-height: 55px;
+      min-height: 60px;  /* Ajustado para acomodar logo más grande */
     }
   }
 

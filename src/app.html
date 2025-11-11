@@ -12,15 +12,41 @@
 		<meta name="generator" content="SvelteKit" />
 		<meta name="format-detection" content="telephone=yes" />
 		
+		<!-- Open Graph Meta Tags -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="SkyArmenia" />
+		<meta property="og:title" content="SkyArmenia - Vuelos entre España y Armenia" />
+		<meta property="og:description" content="Encuentra las mejores ofertas de vuelos entre España y Armenia. Compara precios y reserva tu viaje." />
+		<meta property="og:url" content="https://skyarmenia.com" />
+		<meta property="og:image" content="https://skyarmenia.com/og-image.png" />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="SkyArmenia - Vuelos entre España y Armenia" />
+		<meta property="og:locale" content="es_ES" />
+		
+		<!-- Twitter Card Meta Tags -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content="@skyarmenia" />
+		<meta name="twitter:creator" content="@skyarmenia" />
+		<meta name="twitter:title" content="SkyArmenia - Vuelos entre España y Armenia" />
+		<meta name="twitter:description" content="Encuentra las mejores ofertas de vuelos entre España y Armenia. Compara precios y reserva tu viaje." />
+		<meta name="twitter:image" content="https://skyarmenia.com/og-image.png" />
+		<meta name="twitter:image:alt" content="SkyArmenia - Vuelos entre España y Armenia" />
+		
 		<!-- Favicon optimizado -->
-		<link rel="icon" href="/logo-skyarmenia.png" type="image/png">
-		<link rel="shortcut icon" href="/logo-skyarmenia.png">
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<link rel="icon" href="/icon.svg" type="image/svg+xml">
 		<link rel="apple-touch-icon" href="/logo-skyarmenia.png">
-		<meta name="theme-color" content="#2563eb">
-		<meta name="msapplication-TileColor" content="#2563eb">
-		<meta name="msapplication-navbutton-color" content="#2563eb">
+		<meta name="theme-color" content="#38b6ff">
+		<meta name="msapplication-TileColor" content="#38b6ff">
+		<meta name="msapplication-navbutton-color" content="#38b6ff">
 		<meta name="apple-mobile-web-app-status-bar-style" content="default">
 		<meta name="apple-mobile-web-app-capable" content="yes">
+		
+		<!-- Sitemap -->
+		<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 		
 		<!-- Performance hints -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -31,11 +57,18 @@
 		<script type="application/ld+json">
 		{
 			"@context": "https://schema.org",
-			"@type": ["Organization", "SearchAction"],
+			"@type": "Organization",
 			"name": "SkyArmenia",
-			"description": "Vuelos entre España y Armenia. Encuentra las mejores ofertas.",
+			"alternateName": "Sky Armenia",
+			"description": "Vuelos entre España y Armenia. Encuentra las mejores ofertas de vuelos con SkyArmenia.",
 			"url": "https://skyarmenia.com",
-			"logo": "https://skyarmenia.com/logo-skyarmenia.png",
+			"logo": {
+				"@type": "ImageObject",
+				"url": "https://skyarmenia.com/logo-skyarmenia.png",
+				"width": 400,
+				"height": 400
+			},
+			"image": "https://skyarmenia.com/og-image.png",
 			"contactPoint": {
 				"@type": "ContactPoint",
 				"telephone": "+34-644-39-39-49",
@@ -71,6 +104,14 @@
 						}
 					}
 				]
+			},
+			"potentialAction": {
+				"@type": "SearchAction",
+				"target": {
+					"@type": "EntryPoint",
+					"urlTemplate": "https://skyarmenia.com/flights?q={search_term_string}"
+				},
+				"query-input": "required name=search_term_string"
 			}
 		}
 		</script>

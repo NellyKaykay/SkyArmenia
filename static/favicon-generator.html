@@ -1,35 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Favicon Generator</title>
+    <title>Favicon Generator - SkyArmenia</title>
 </head>
 <body>
-    <canvas id="canvas" width="32" height="32"></canvas>
+    <h2>SkyArmenia Favicon Generator</h2>
+    <p>Generando favicon en múltiples tamaños...</p>
+    
+    <!-- Canvas para 16x16 -->
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    <br><label>16x16</label>
+    
+    <!-- Canvas para 32x32 -->
+    <canvas id="canvas32" width="32" height="32"></canvas>
+    <br><label>32x32</label>
+    
+    <!-- Canvas para 48x48 -->
+    <canvas id="canvas48" width="48" height="48"></canvas>
+    <br><label>48x48</label>
+    
+    <br><br>
+    <button onclick="downloadFavicon()">Descargar favicon.ico</button>
+    
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            
+            // Fondo blanco
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Color azul de SkyArmenia
+            ctx.fillStyle = '#38b6ff';
+            
+            // Escalar elementos según el tamaño
+            const scale = size / 32;
+            
+            // Dibujar tiles simplificados
+            const tileSize = 6 * scale;
+            const tileY = 8 * scale;
+            ctx.fillRect(4 * scale, tileY, tileSize, tileSize);
+            ctx.fillRect(12 * scale, tileY, tileSize, tileSize);
+            ctx.fillRect(20 * scale, tileY, tileSize, tileSize);
+            
+            // Dibujar forma de avión simple
+            ctx.beginPath();
+            ctx.moveTo(8 * scale, 18 * scale);
+            ctx.lineTo(16 * scale, 20 * scale);
+            ctx.lineTo(24 * scale, 18 * scale);
+            ctx.lineTo(20 * scale, 22 * scale);
+            ctx.lineTo(12 * scale, 22 * scale);
+            ctx.closePath();
+            ctx.fill();
+        }
         
-        // Fondo blanco
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, 32, 32);
+        // Dibujar en todos los tamaños
+        drawIcon(document.getElementById('canvas16'), 16);
+        drawIcon(document.getElementById('canvas32'), 32);
+        drawIcon(document.getElementById('canvas48'), 48);
         
-        // Color azul de SkyArmenia
-        ctx.fillStyle = '#38b6ff';
-        
-        // Dibujar tiles simplificados
-        ctx.fillRect(4, 8, 6, 6);
-        ctx.fillRect(12, 8, 6, 6);
-        ctx.fillRect(20, 8, 6, 6);
-        
-        // Dibujar forma de avión simple
-        ctx.beginPath();
-        ctx.moveTo(8, 18);
-        ctx.lineTo(16, 20);
-        ctx.lineTo(24, 18);
-        ctx.lineTo(20, 22);
-        ctx.lineTo(12, 22);
-        ctx.closePath();
-        ctx.fill();
+        function downloadFavicon() {
+            // Por ahora usar el canvas de 32x32 como base
+            const canvas = document.getElementById('canvas32');
+            const link = document.createElement('a');
+            link.download = 'favicon.ico';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
     </script>
 </body>
 </html>

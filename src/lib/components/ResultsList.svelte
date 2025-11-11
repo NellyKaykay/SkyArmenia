@@ -10,12 +10,14 @@
     return v === k ? (fallback ?? k) : v;
   };
 
-  // Aplana ofertas de todos los proveedores
+  // Aplana ofertas de todos los proveedores (excluyendo FlyOne)
   $: flatOffers =
     (data?.results && Array.isArray(data.results))
-      ? data.results.flatMap((r: any) =>
-          (r?.offers || []).map((of: any) => ({ ...of, _provider: r.provider }))
-        )
+      ? data.results
+          .filter((r: any) => r.provider !== 'flyone')
+          .flatMap((r: any) =>
+            (r?.offers || []).map((of: any) => ({ ...of, _provider: r.provider }))
+          )
       : [];
 
   // Estado expandido por id

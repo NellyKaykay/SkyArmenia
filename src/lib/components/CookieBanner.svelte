@@ -3,6 +3,7 @@
   import { i18n } from '$lib/i18n';
 
   let showBanner = false;
+  let showSettingsPanel = false;
   let cookiePreferences = {
     necessary: true, // Siempre true, no se puede desactivar
     analytics: false,
@@ -72,11 +73,7 @@
   }
 
   function showSettings() {
-    // Toggle para mostrar configuración avanzada
-    const settings = document.querySelector('.cookie-settings');
-    if (settings) {
-      settings.classList.toggle('show');
-    }
+    showSettingsPanel = !showSettingsPanel;
   }
 </script>
 
@@ -89,7 +86,7 @@
         {t('cookies.description', 'Utilizamos cookies para mejorar tu experiencia de navegación, analizar el tráfico del sitio y personalizar el contenido. Puedes gestionar tus preferencias de cookies a continuación.')}
       </p>
       
-      <div class="cookie-settings">
+      <div class="cookie-settings" class:show={showSettingsPanel}>
         <div class="cookie-option">
           <label>
             <input type="checkbox" bind:checked={cookiePreferences.necessary} disabled>

@@ -115,6 +115,24 @@ const dict: Record<Lang, Dict> = {
     'footer.terms': 'Terms',
     'footer.cookies': 'Cookies',
 
+    /* Cookies */
+    'cookies.title': '🍪 Cookie Settings',
+    'cookies.description': 'We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. You can manage your cookie preferences below.',
+    'cookies.necessary': 'Necessary Cookies',
+    'cookies.necessary.desc': 'Essential for the website to function properly',
+    'cookies.necessary.only': 'Only Necessary',
+    'cookies.functional': 'Functional Cookies',
+    'cookies.functional.desc': 'Improve functionality and personalization',
+    'cookies.analytics': 'Analytics Cookies',
+    'cookies.analytics.desc': 'Help us understand how you use the website',
+    'cookies.marketing': 'Marketing Cookies',
+    'cookies.marketing.desc': 'Personalize ads based on your interests',
+    'cookies.settings': 'Configure',
+    'cookies.save': 'Save Preferences',
+    'cookies.accept.all': 'Accept All',
+    'cookies.policy': 'Learn more about our cookie policy',
+    'cookies.anchor': 'cookies',
+
     /* Auth */
     'auth.login.title': 'Sign in',
     'auth.login.email': 'Email',
@@ -208,6 +226,24 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Privacidad',
     'footer.terms': 'Términos',
     'footer.cookies': 'Cookies',
+
+    /* Cookies */
+    'cookies.title': '🍪 Configuración de Cookies',
+    'cookies.description': 'Utilizamos cookies para mejorar tu experiencia de navegación, analizar el tráfico del sitio y personalizar el contenido. Puedes gestionar tus preferencias de cookies a continuación.',
+    'cookies.necessary': 'Cookies Necesarias',
+    'cookies.necessary.desc': 'Esenciales para el funcionamiento del sitio web',
+    'cookies.necessary.only': 'Solo Necesarias',
+    'cookies.functional': 'Cookies Funcionales',
+    'cookies.functional.desc': 'Mejoran la funcionalidad y personalización',
+    'cookies.analytics': 'Cookies de Análisis',
+    'cookies.analytics.desc': 'Nos ayudan a entender cómo usas el sitio web',
+    'cookies.marketing': 'Cookies de Marketing',
+    'cookies.marketing.desc': 'Personalizan anuncios según tus intereses',
+    'cookies.settings': 'Configurar',
+    'cookies.save': 'Guardar Preferencias',
+    'cookies.accept.all': 'Aceptar Todas',
+    'cookies.policy': 'Más información sobre nuestra política de cookies',
+    'cookies.anchor': 'cookies',
 
     /* Auth */
     'auth.login.title': 'Iniciar sesión',
@@ -303,6 +339,24 @@ const dict: Record<Lang, Dict> = {
     'footer.terms': 'Условия',
     'footer.cookies': 'Cookies',
 
+    /* Cookies */
+    'cookies.title': '🍪 Настройки Cookies',
+    'cookies.description': 'Мы используем cookies для улучшения вашего опыта просмотра, анализа трафика сайта и персонализации контента. Вы можете управлять настройками cookies ниже.',
+    'cookies.necessary': 'Необходимые Cookies',
+    'cookies.necessary.desc': 'Необходимы для работы сайта',
+    'cookies.necessary.only': 'Только необходимые',
+    'cookies.functional': 'Функциональные Cookies',
+    'cookies.functional.desc': 'Улучшают функциональность и персонализацию',
+    'cookies.analytics': 'Аналитические Cookies',
+    'cookies.analytics.desc': 'Помогают понять, как вы используете сайт',
+    'cookies.marketing': 'Маркетинговые Cookies',
+    'cookies.marketing.desc': 'Персонализируют рекламу по вашим интересам',
+    'cookies.settings': 'Настроить',
+    'cookies.save': 'Сохранить настройки',
+    'cookies.accept.all': 'Принять все',
+    'cookies.policy': 'Узнать больше о нашей политике cookies',
+    'cookies.anchor': 'cookies',
+
     /* Auth */
     'auth.login.title': 'Войти',
     'auth.login.email': 'Электронная почта',
@@ -395,6 +449,24 @@ const dict: Record<Lang, Dict> = {
     'footer.privacy': 'Գաղտնիություն',
     'footer.terms': 'Պայմաններ',
     'footer.cookies': 'Cookie-ներ',
+
+    /* Cookies */
+    'cookies.title': '🍪 Cookie-ների կարգավորումներ',
+    'cookies.description': 'Մենք օգտագործում ենք cookie-ներ՝ ձեր զննարկման փորձառությունը բարելավելու, կայքի թրաֆիկը վերլուծելու և բովանդակությունը անհատականացնելու համար: Դուք կարող եք կառավարել ձեր cookie-ների նախապատվությունները ստորև:',
+    'cookies.necessary': 'Անհրաժեշտ Cookie-ներ',
+    'cookies.necessary.desc': 'Անհրաժեշտ են կայքի նորմալ աշխատանքի համար',
+    'cookies.necessary.only': 'Միայն անհրաժեշտները',
+    'cookies.functional': 'Գործառական Cookie-ներ',
+    'cookies.functional.desc': 'Բարելավում են գործառույթը և անհատականացումը',
+    'cookies.analytics': 'Վերլուծական Cookie-ներ',
+    'cookies.analytics.desc': 'Օգնում են հասկանալ, թե ինչպես եք օգտագործում կայքը',
+    'cookies.marketing': 'Մարքեթինգային Cookie-ներ',
+    'cookies.marketing.desc': 'Անհատականացնում են գովազդը ձեր հետաքրքրությունների հիման վրա',
+    'cookies.settings': 'Կարգավորել',
+    'cookies.save': 'Պահպանել նախապատվությունները',
+    'cookies.accept.all': 'Ընդունել բոլորը',
+    'cookies.policy': 'Իմացեք ավելին մեր cookie-ների քաղաքականության մասին',
+    'cookies.anchor': 'cookies',
 
     /* Auth */
     'auth.login.title': 'Մուտք',

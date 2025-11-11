@@ -133,13 +133,20 @@
         <section class="policy-section">
           <h2>8. Cookies y Tecnologías Similares</h2>
           <p>
-            Utilizamos únicamente cookies técnicas necesarias para el funcionamiento del servicio 
-            (autenticación de usuarios, preferencias de idioma). No empleamos cookies de análisis 
-            o marketing por defecto.
+            Utilizamos diferentes tipos de cookies para mejorar su experiencia en nuestro sitio web:
+          </p>
+          <ul class="cookie-types-list">
+            <li><strong>Cookies necesarias:</strong> Esenciales para el funcionamiento básico del sitio (autenticación, preferencias de idioma). Estas cookies no se pueden desactivar.</li>
+            <li><strong>Cookies funcionales:</strong> Mejoran la funcionalidad del sitio recordando sus preferencias y configuraciones.</li>
+            <li><strong>Cookies de análisis:</strong> Nos ayudan a entender cómo los visitantes interactúan con nuestro sitio web mediante la recopilación y presentación de información de forma anónima.</li>
+            <li><strong>Cookies de marketing:</strong> Se utilizan para mostrar anuncios más relevantes para usted y sus intereses.</li>
+          </ul>
+          <p>
+            Puede gestionar sus preferencias de cookies en cualquier momento a través del banner de cookies que aparece en su primera visita o contactando con nosotros.
           </p>
           <p>
-            Para más información, consulte nuestra 
-            <a href="/cookies" target="_blank" rel="noopener noreferrer" class="policy-link">Política de Cookies</a>.
+            Para más información detallada, consulte nuestra 
+            <a href="#cookies" class="policy-link">sección de cookies completa</a> más abajo.
           </p>
         </section>
 
@@ -176,6 +183,100 @@
             prácticas, mejoras del servicio o nuevos requisitos legales. La fecha de la última 
             actualización se indicará claramente al final de este documento.
           </p>
+        </section>
+
+        <section class="policy-section" id="cookies">
+          <h2>12. Política Detallada de Cookies</h2>
+          
+          <h3>¿Qué son las cookies?</h3>
+          <p>
+            Las cookies son pequeños archivos de texto que se almacenan en su dispositivo cuando visita un sitio web. 
+            Nos permiten reconocerle y recordar sus preferencias para mejorar su experiencia de navegación.
+          </p>
+
+          <h3>Tipos de cookies que utilizamos:</h3>
+          
+          <div class="cookie-category">
+            <h4>🔐 Cookies Estrictamente Necesarias</h4>
+            <p><strong>Base legal:</strong> Interés legítimo</p>
+            <p><strong>Finalidad:</strong> Estas cookies son esenciales para que el sitio web funcione correctamente.</p>
+            <ul class="cookie-details-list">
+              <li><strong>Autenticación:</strong> Recordar si ha iniciado sesión</li>
+              <li><strong>Seguridad:</strong> Proteger contra ataques y verificar la autenticidad</li>
+              <li><strong>Preferencias básicas:</strong> Idioma seleccionado</li>
+            </ul>
+            <p><em>No puede desactivar estas cookies ya que el sitio no funcionaría correctamente sin ellas.</em></p>
+          </div>
+
+          <div class="cookie-category">
+            <h4>⚙️ Cookies Funcionales</h4>
+            <p><strong>Base legal:</strong> Consentimiento</p>
+            <p><strong>Finalidad:</strong> Mejorar la funcionalidad y personalización del sitio.</p>
+            <ul class="cookie-details-list">
+              <li><strong>Personalización:</strong> Recordar sus configuraciones y preferencias</li>
+              <li><strong>Funciones avanzadas:</strong> Habilitar características mejoradas del sitio</li>
+              <li><strong>Experiencia de usuario:</strong> Adaptar el contenido a sus necesidades</li>
+            </ul>
+          </div>
+
+          <div class="cookie-category">
+            <h4>📊 Cookies de Análisis</h4>
+            <p><strong>Base legal:</strong> Consentimiento</p>
+            <p><strong>Finalidad:</strong> Ayudarnos a entender cómo los visitantes interactúan con nuestro sitio web.</p>
+            <ul class="cookie-details-list">
+              <li><strong>Google Analytics:</strong> Estadísticas de uso del sitio (anonimizadas)</li>
+              <li><strong>Rendimiento:</strong> Identificar áreas de mejora del sitio</li>
+              <li><strong>Comportamiento:</strong> Entender patrones de navegación</li>
+            </ul>
+            <p><em>Todos los datos se recopilan de forma anónima y agregada.</em></p>
+          </div>
+
+          <div class="cookie-category">
+            <h4>🎯 Cookies de Marketing</h4>
+            <p><strong>Base legal:</strong> Consentimiento</p>
+            <p><strong>Finalidad:</strong> Mostrar anuncios relevantes y medir la efectividad de nuestras campañas.</p>
+            <ul class="cookie-details-list">
+              <li><strong>Remarketing:</strong> Mostrar anuncios relevantes en otros sitios</li>
+              <li><strong>Segmentación:</strong> Personalizar la publicidad según sus intereses</li>
+              <li><strong>Conversiones:</strong> Medir la efectividad de nuestros anuncios</li>
+            </ul>
+          </div>
+
+          <h3>Cómo gestionar las cookies</h3>
+          <p>
+            Puede controlar y gestionar las cookies de varias maneras:
+          </p>
+          <ul class="management-list">
+            <li><strong>Banner de cookies:</strong> Utilice nuestro banner para personalizar sus preferencias</li>
+            <li><strong>Configuración del navegador:</strong> La mayoría de navegadores le permiten gestionar cookies en su configuración</li>
+            <li><strong>Herramientas de terceros:</strong> Puede usar extensiones de navegador para bloquear cookies</li>
+            <li><strong>Contacto directo:</strong> Escriba a ${COMPANY_EMAIL} para solicitudes específicas</li>
+          </ul>
+
+          <h3>Cookies de terceros</h3>
+          <p>
+            Algunos proveedores de servicios pueden establecer cookies en nuestro sitio:
+          </p>
+          <ul class="third-party-list">
+            <li><strong>Google Analytics:</strong> Para análisis de sitio web (cuando esté habilitado)</li>
+            <li><strong>Google Fonts:</strong> Para cargar fuentes del sitio web</li>
+            <li><strong>Leaflet/OpenStreetMap:</strong> Para la funcionalidad de mapas</li>
+          </ul>
+
+          <h3>Retirada del consentimiento</h3>
+          <p>
+            Puede retirar su consentimiento para cookies no esenciales en cualquier momento:
+          </p>
+          <ul class="withdrawal-list">
+            <li>Eliminando las cookies de su navegador</li>
+            <li>Cambiando la configuración de su navegador</li>
+            <li>Contactando con nosotros en ${COMPANY_EMAIL}</li>
+          </ul>
+          <p><em>La retirada del consentimiento no afectará a la legalidad del procesamiento anterior.</em></p>
+
+          <div class="cookie-update">
+            <p><strong>Última actualización de la política de cookies:</strong> ${TODAY}</p>
+          </div>
         </section>
       `
     },
@@ -749,6 +850,68 @@
   .policy-content :global(.rights-list li strong) {
     color: #1e293b;
     font-weight: 600;
+  }
+
+  /* Cookie-specific styles */
+  .policy-content :global(.cookie-types-list),
+  .policy-content :global(.cookie-details-list),
+  .policy-content :global(.management-list),
+  .policy-content :global(.third-party-list),
+  .policy-content :global(.withdrawal-list) {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+  }
+
+  .policy-content :global(.cookie-types-list li),
+  .policy-content :global(.management-list li),
+  .policy-content :global(.third-party-list li),
+  .policy-content :global(.withdrawal-list li) {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.75rem 0;
+    border-left: 4px solid #e2e8f0;
+    transition: all 0.2s ease;
+  }
+
+  .policy-content :global(.cookie-details-list li) {
+    background: #fefefe;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border-left: 3px solid #f1f5f9;
+    font-size: 0.95rem;
+  }
+
+  .policy-content :global(.cookie-category) {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid #e2e8f0;
+  }
+
+  .policy-content :global(.cookie-category h4) {
+    color: #1e293b;
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .policy-content :global(.cookie-update) {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 2rem 0 0;
+    text-align: center;
+  }
+
+  .policy-content :global(.cookie-update p) {
+    margin: 0;
+    color: #0369a1;
+    font-weight: 500;
   }
 
   /* Link styles */

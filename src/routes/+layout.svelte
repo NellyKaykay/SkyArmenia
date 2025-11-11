@@ -5,6 +5,7 @@
   import { initLang } from '$lib/i18n';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
+  import CookieBanner from '$lib/components/CookieBanner.svelte';
   
 
 
@@ -32,6 +33,9 @@
 
   <!-- Footer -->
   <Footer />
+
+  <!-- Cookie Banner (GDPR/RGPD) -->
+  <CookieBanner />
 </div>
 
 <style>

@@ -355,7 +355,13 @@
   }
 
   /* ===== Rail Ida/Vuelta — pequeño & en línea ===== */
-.trip-rail { display: inline-flex; gap: 8px; margin: 4px 0 8px; }
+.trip-rail {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 8px 0;
+  padding: 0;
+}
 
  /* ===== Form Base ===== */
 .label { 
@@ -366,23 +372,28 @@
   font-weight: 500;
 }
 
+
 .trip-select {
-  border: 1.5px solid var(--accent, #38b6ff);
-  border-radius: 8px;
-  padding: 6px 16px;
+  border: 1.5px solid var(--border, #e5e7eb);
+  border-radius: 6px;
+  padding: 4px 8px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #222;
   background: #fff;
   outline: none;
   transition: border 0.15s;
   cursor: pointer;
-  min-width: 150px;
+  min-width: 90px;
+  height: 32px;
 }
-.trip-select:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px #38b6ff33;
+
+.trip-select:focus,
+.trip-select:active {
+  border-color: var(--border, #e5e7eb);
+  box-shadow: none;
 }
+
 .search-bar {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr auto;
@@ -683,7 +694,18 @@
   .search-bar {
     grid-template-columns: 1fr 1fr;
   }
-
+  .trip-rail {
+    grid-column: 1 / -1;
+    margin-bottom: 8px;
+    margin-top: 0;
+    justify-content: flex-start;
+  }
+  .trip-select {
+    min-width: 80px;
+    font-size: 0.92rem;
+    padding: 3px 6px;
+    height: 28px;
+  }
   /* Backdrop para responsive */
   .pax-backdrop-mobile {
     display: block;
@@ -699,7 +721,6 @@
     margin: 0;
     appearance: none;
   }
-
   /* En móvil: popup centrado en pantalla */
   .pax-pop {
     position: fixed !important;
@@ -708,10 +729,10 @@
     right: auto !important;
     bottom: auto !important;
     transform: translate(-50%, -50%) !important;
-    width: 280px;
-    max-width: calc(100vw - 40px);
+    width: 260px;
+    max-width: calc(100vw - 20px);
     max-height: calc(100vh - 40px);
-    padding: 16px;
+    padding: 10px !important;
     overflow-y: auto;
     animation: slideInUp 0.2s ease-out !important;
     z-index: 9999;
@@ -719,54 +740,14 @@
       0 10px 40px rgba(0, 0, 0, 0.3),
       0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
-  
-
-  
-  /* Elementos más compactos en responsive */
-  .pax-pop {
-    width: 280px !important;
-    max-width: calc(100vw - 20px) !important;
-    padding: 12px !important;
-  }
-
-  .left .title {
-    font-size: 13px;
-  }
-  
-  .left .sub {
-    font-size: 11px;
-  }
-  
-  .square {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-  }
-  
-  .count {
-    font-size: 14px;
-    min-width: 22px;
-  }
-  
-  .right {
-    gap: 8px;
-  }
-  
-  .row {
-    padding: 8px 0;
-    gap: 10px;
-  }
-
-  .pax-actions {
-    margin-top: 10px;
-    padding-top: 10px;
-  }
-
-  .pax-ok {
-    height: 32px;
-    padding: 0 16px;
-    font-size: 13px;
-  }
+  .left .title { font-size: 12px; }
+  .left .sub { font-size: 10px; }
+  .square { width: 24px; height: 24px; font-size: 13px; }
+  .count { font-size: 13px; min-width: 18px; }
+  .right { gap: 6px; }
+  .row { padding: 6px 0; gap: 8px; }
+  .pax-actions { margin-top: 8px; padding-top: 8px; }
+  .pax-ok { height: 28px; padding: 0 10px; font-size: 12px; }
 }
 
 

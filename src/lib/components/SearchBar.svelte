@@ -1,9 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
   import { i18n, lang } from '$lib/i18n';
-
   /* Props (solo como valores iniciales) */
   export let trip: 'oneway' | 'round' = 'round';
+
   export let origin = 'BCN';
   export let destination = 'EVN';
   export let depart = '';
@@ -221,23 +221,14 @@
   }
 </script>
 
-<!-- ===== Rail Ida/Vuelta — más pequeño y en línea ===== -->
-<div class="trip-rail" aria-label="Tipo de viaje">
-  <button type="button"
-    class="rail-btn" aria-pressed={trip==='round'}
-    on:click={() => trip='round'}
-    on:keydown={(e)=> (e.key==='Enter'||e.key===' ') && (e.preventDefault(), trip='round')}>
-    <span class="dot" data-active={trip==='round'}></span>
-    <span class="rail-text">{t('opts.round','Ida y vuelta')}</span>
-  </button>
 
-  <button type="button"
-    class="rail-btn" aria-pressed={trip==='oneway'}
-    on:click={() => trip='oneway'}
-    on:keydown={(e)=> (e.key==='Enter'||e.key===' ') && (e.preventDefault(), trip='oneway')}>
-    <span class="dot" data-active={trip==='oneway'}></span>
-    <span class="rail-text">{t('opts.oneway','Solo ida')}</span>
-  </button>
+<!-- ===== Rail Ida/Vuelta — desplegable ===== -->
+<div class="trip-rail" aria-label="Tipo de viaje">
+  <label for="trip-select" class="label" style="margin-right:8px;">{t('form.triptype','Tipo de viaje')}</label>
+  <select id="trip-select" bind:value={trip} class="trip-select">
+    <option value="round">{t('opts.round','Ida y vuelta')}</option>
+    <option value="oneway">{t('opts.oneway','Solo ida')}</option>
+  </select>
 </div>
 
 <!-- ===== Barra de búsqueda ===== -->
@@ -352,8 +343,7 @@
     </svg>
   </button>
   <button type="submit" class="search-text-btn">{t('form.search','Buscar')}</button>
-
-</form>
+  </form>
 
 <style>
   /* ===== Variables CSS ===== */
@@ -366,18 +356,6 @@
 
   /* ===== Rail Ida/Vuelta — pequeño & en línea ===== */
 .trip-rail { display: inline-flex; gap: 8px; margin: 4px 0 8px; }
-.rail-btn {
-  display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px;
-  background: transparent; border: 0; cursor: pointer; border-radius: 999px;
-  font-size: 12px;
-}
-.rail-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.dot {
-  width: 12px; height: 12px; border-radius: 999px;
-  border: 1.5px solid var(--accent); background: #fff;
-}
-.dot[data-active="true"] { background: var(--accent); }
-.rail-text { color: #fff; font-weight: 600; font-size: 12px; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
 
  /* ===== Form Base ===== */
 .label { 
@@ -388,46 +366,34 @@
   font-weight: 500;
 }
 
-.search-bar {
-  display: grid; 
-  gap: 20px; 
-  align-items: end; 
-  background: #ffffff;
-  padding: 16px; 
-  border-radius: 8px; 
-  box-shadow: 0 6px 12px rgba(39,6,160,.15);
-  grid-template-columns: repeat(5, minmax(150px,1fr)) auto;
-}
-
-.picker, select, input {
-  width: 100%; 
-  height: 44px; 
-  border: 1px solid var(--border); 
-  border-radius: 6px; 
-  padding: 0 12px; 
+.trip-select {
+  border: 1.5px solid var(--accent, #38b6ff);
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #222;
   background: #fff;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-
-.picker:focus, select:focus, input:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  transition: border 0.15s;
+  cursor: pointer;
+  min-width: 150px;
 }
-
-.search-icon-btn {
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-  width: 44px; 
-  height: 44px; 
-  border-radius: 6px; 
-  border: 1px solid var(--border);
-  color: #000; 
-  cursor: pointer; 
+.trip-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px #38b6ff33;
+}
+.search-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr auto;
+  gap: 16px;
+  align-items: end;
   background: #fff;
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 16px 20px 12px 20px;
+  border: 1.5px solid var(--border, #e5e7eb);
+  margin-bottom: 12px;
 }
 
 .search-icon-btn:hover {
@@ -836,4 +802,6 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
 }
+
 </style>
+

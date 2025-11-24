@@ -223,22 +223,22 @@
 
 
 <!-- ===== Rail Ida/Vuelta — desplegable ===== -->
-<div class="trip-rail" aria-label="Tipo de viaje">
-  <label for="trip-select" class="label" style="margin-right:8px;">{t('form.triptype','Tipo de viaje')}</label>
-  <select id="trip-select" bind:value={trip} class="trip-select">
-    <option value="round">{t('opts.round','Ida y vuelta')}</option>
-    <option value="oneway">{t('opts.oneway','Solo ida')}</option>
-  </select>
-</div>
 
 <!-- ===== Barra de búsqueda ===== -->
 <form class="search-bar" on:submit={onSubmit}>
   <div>
-    <label class="label" for="origin">{t('form.origin','Origen')}</label>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <label class="label" for="origin">{t('form.origin','Origen')}</label>
+      <select id="trip-select" bind:value={trip} class="trip-select trip-inline">
+        <option value="round">{t('opts.round','Ida y vuelta')}</option>
+        <option value="oneway">{t('opts.oneway','Solo ida')}</option>
+      </select>
+    </div>
     <select id="origin" bind:value={origin}>
       <option value="BCN">Barcelona (BCN)</option>
       <option value="EVN">Yerevan (EVN)</option>
     </select>
+  <!-- cierre correcto del bloque ciudad+selector -->
   </div>
 
   <div>
@@ -354,14 +354,7 @@
     --ink: #0b1220;
   }
 
-  /* ===== Rail Ida/Vuelta — pequeño & en línea ===== */
-.trip-rail {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin: 0 0 8px 0;
-  padding: 0;
-}
+/* ===== Rail Ida/Vuelta — pequeño & en línea ===== */
 
  /* ===== Form Base ===== */
 .label { 
@@ -693,12 +686,6 @@
 @media (max-width: 640px) {
   .search-bar {
     grid-template-columns: 1fr 1fr;
-  }
-  .trip-rail {
-    grid-column: 1 / -1;
-    margin-bottom: 8px;
-    margin-top: 0;
-    justify-content: flex-start;
   }
   .trip-select {
     min-width: 80px;

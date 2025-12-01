@@ -171,7 +171,7 @@
 {#if !isAuth}
 <footer class="ftr" aria-label="Información de contacto y enlaces">
   <!-- Navigation Section -->
-  <div class="wrap top">
+  <div class="container top">
     <nav class="col" aria-labelledby="footer-links-heading">
       <h4 id="footer-links-heading">{$i18n['footer.links']}</h4>
       <ul role="list">
@@ -285,7 +285,7 @@
 
 
   <!-- Copyright and Legal Links -->
-  <div class="wrap bottom">
+  <div class="container bottom">
     <div class="copy" role="complementary" aria-label="Información de derechos de autor">
       © {new Date().getFullYear()} SkyArmenia — {$i18n['footer.rights']}
     </div>
@@ -323,7 +323,7 @@
     color: var(--footer-text);
     margin-top: clamp(1rem, 2vw, 1.5rem);
     width: 100%;
-    max-width: 100vw;
+    /* max-width: 100vw;  Eliminado para evitar overflow */
     overflow-x: hidden;
     box-sizing: border-box;
   }
@@ -337,7 +337,16 @@
     max-width: 100%;
   }
 
+  /* .wrap ya no se usa, se mantiene por compatibilidad si algún otro componente la usa */
   .wrap {
+    width: min(1200px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding-inline: 1rem;
+    box-sizing: border-box;
+  }
+
+  /* Usar la misma .container que el layout principal */
+  .container {
     width: min(1200px, calc(100% - 2rem));
     margin: 0 auto;
     padding-inline: 1rem;

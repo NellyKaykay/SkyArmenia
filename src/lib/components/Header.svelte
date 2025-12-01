@@ -356,7 +356,7 @@
 <!-- Header restaurado con código profesional -->
 <div class="header" class:is-scrolled={scrolled}>
   <div class="container header-inner">
-    <a href={homeHref} class="brand" aria-label="SkyArmenia Home">
+    <a href={homeHref} class="brand" aria-label="SkyArmenia Home" on:click|preventDefault={() => { window.dispatchEvent(new CustomEvent('reset-searchbar')); window.location.href = homeHref; }}>
       <img src="/logo-skyarmenia.png" alt="SkyArmenia" class="logo" />
     </a>
 

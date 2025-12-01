@@ -28,15 +28,25 @@
   }
 
   // Estado del formulario de búsqueda
-  let searchParams = {
-    trip: 'round' as 'oneway' | 'round',
-    origin: 'BCN',
-    destination: 'EVN', 
-    depart: '',
-    ret: '',
-    adults: 1,
-    bags: 0
-  };
+  function getDefaultSearchParams() {
+    return {
+      trip: 'round' as 'oneway' | 'round',
+      origin: 'BCN',
+      destination: 'EVN',
+      depart: '',
+      ret: '',
+      adults: 1,
+      bags: 0
+    };
+  }
+  let searchParams = getDefaultSearchParams();
+
+  // Resetear el searchbar si se hace click en el logo
+  if (typeof window !== 'undefined') {
+    window.addEventListener('reset-searchbar', () => {
+      searchParams = getDefaultSearchParams();
+    });
+  }
 
   // Estado de la aplicación
   let appState = {

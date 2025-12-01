@@ -221,26 +221,25 @@
   }
 </script>
 
-
-<!-- ===== Rail Ida/Vuelta — desplegable ===== -->
-
+<!-- TRIP SELECT ABAJO A LA IZQUIERDA (LEVEL STYLE) -->
+<div class="trip-bar-bottom">
+  <select id="trip-select" bind:value={trip} class="trip-select trip-inline">
+    <option value="round">{t('opts.round','Ida y vuelta')}</option>
+    <option value="oneway">{t('opts.oneway','Solo ida')}</option>
+  </select>
+</div>
 <!-- ===== Barra de búsqueda ===== -->
 <form class="search-bar" on:submit={onSubmit}>
+  <!-- ORIGEN -->
   <div>
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <label class="label" for="origin">{t('form.origin','Origen')}</label>
-      <select id="trip-select" bind:value={trip} class="trip-select trip-inline">
-        <option value="round">{t('opts.round','Ida y vuelta')}</option>
-        <option value="oneway">{t('opts.oneway','Solo ida')}</option>
-      </select>
-    </div>
+    <label class="label" for="origin">{t('form.origin','Origen')}</label>
     <select id="origin" bind:value={origin}>
       <option value="BCN">Barcelona (BCN)</option>
       <option value="EVN">Yerevan (EVN)</option>
     </select>
-  <!-- cierre correcto del bloque ciudad+selector -->
   </div>
 
+  <!-- DESTINO -->
   <div>
     <label class="label" for="destination">{t('form.destination','Destino')}</label>
     <select id="destination" bind:value={destination}>
@@ -249,17 +248,19 @@
     </select>
   </div>
 
+  <!-- SALIDA -->
   <div>
     <label class="label" for="depart">{t('form.depart','Salida')}</label>
     <input id="depart" type="text" bind:this={departEl} bind:value={depart} />
   </div>
 
+  <!-- REGRESO -->
   <div>
     <label class="label" for="return">{t('form.return','Regreso')}</label>
     <input id="return" type="text" bind:this={retEl} bind:value={ret} disabled={trip==='oneway'} />
   </div>
 
-  <!-- ===== Pasajeros ===== -->
+  <!-- PASAJEROS -->
   <div class="pax-field" use:outside={() => (paxOpen = false)}>
      <label class="label" for="pax">{t('form.passengers','Pasajeros')}</label>
      
@@ -268,8 +269,14 @@
      <input type="hidden" name="children" bind:value={childrenC} />
      <input type="hidden" name="infants" bind:value={infantsC} />
      
-     <button type="button" class="picker pax-trigger" aria-haspopup="dialog" aria-expanded={paxOpen} aria-labelledby="pax-label"
-       on:click={() => (paxOpen = !paxOpen)}>
+     <button
+       type="button"
+       class="picker pax-trigger"
+       aria-haspopup="dialog"
+       aria-expanded={paxOpen}
+       aria-labelledby="pax-label"
+       on:click={() => (paxOpen = !paxOpen)}
+     >
        <span class="pax-trigger-left">
          {#if totalPax === 1 && childrenC === 0 && infantsC === 0}
            {t('passengers.single','1 Adulto')}
@@ -286,10 +293,22 @@
 
      {#if paxOpen}
       <!-- Backdrop solo para responsive -->
-      <button type="button" class="pax-backdrop-mobile" aria-label={t('common.close','Cerrar')} on:click={() => (paxOpen = false)}></button>
-      <div class="pax-pop" role="dialog" aria-modal="true" aria-labelledby="pax-label"
-           tabindex="-1" on:keydown={onDialogKeydown}
-           on:click|stopPropagation>
+      <button
+        type="button"
+        class="pax-backdrop-mobile"
+        aria-label={t('common.close','Cerrar')}
+        on:click={() => (paxOpen = false)}
+      ></button>
+
+      <div
+        class="pax-pop"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pax-label"
+        tabindex="-1"
+        on:keydown={onDialogKeydown}
+        on:click|stopPropagation
+      >
         <!-- Adults -->
         <div class="row">
           <div class="left">
@@ -297,9 +316,25 @@
             <div class="sub">{t('passengers.adults.hint','desde 12 años')}</div>
           </div>
           <div class="right">
-            <button type="button" class="square" disabled={adultsC <= 1} on:click={(e)=>dec('adults',e)} aria-label="Quitar adulto">−</button>
+            <button
+              type="button"
+              class="square"
+              disabled={adultsC <= 1}
+              on:click={(e)=>dec('adults',e)}
+              aria-label="Quitar adulto"
+            >
+              
+            </button>
             <div class="count" aria-live="polite">{adultsC}</div>
-            <button type="button" class="square" disabled={adultsC >= 9} on:click={(e)=>inc('adults',e)} aria-label="Añadir adulto">+</button>
+            <button
+              type="button"
+              class="square"
+              disabled={adultsC >= 9}
+              on:click={(e)=>inc('adults',e)}
+              aria-label="Añadir adulto"
+            >
+              
+            </button>
           </div>
         </div>
 
@@ -310,9 +345,24 @@
             <div class="sub">{t('passengers.children.hint','de 2 a 11 años')}</div>
           </div>
           <div class="right">
-            <button type="button" class="square" disabled={childrenC <= 0} on:click={(e)=>dec('children',e)} aria-label="Quitar niño">−</button>
+            <button
+              type="button"
+              class="square"
+              disabled={childrenC <= 0}
+              on:click={(e)=>dec('children',e)}
+              aria-label="Quitar niño"
+            >
+                       </button>
             <div class="count" aria-live="polite">{childrenC}</div>
-            <button type="button" class="square" disabled={childrenC >= 9} on:click={(e)=>inc('children',e)} aria-label="Añadir niño">+</button>
+            <button
+              type="button"
+              class="square"
+              disabled={childrenC >= 9}
+              on:click={(e)=>inc('children',e)}
+              aria-label="Añadir niño"
+            >
+              
+            </button>
           </div>
         </div>
 
@@ -323,453 +373,508 @@
             <div class="sub">{t('passengers.infants.hint','menores de 2 años')}</div>
           </div>
           <div class="right">
-            <button type="button" class="square" disabled={infantsC <= 0} on:click={(e)=>dec('infants',e)} aria-label="Quitar bebé">−</button>
+            <button
+              type="button"
+              class="square"
+              disabled={infantsC <= 0}
+              on:click={(e)=>dec('infants',e)}
+              aria-label="Quitar bebé"
+            >
+              
+            </button>
             <div class="count" aria-live="polite">{infantsC}</div>
-            <button type="button" class="square" disabled={infantsC >= adultsC || infantsC >= 9} on:click={(e)=>inc('infants',e)} aria-label="Añadir bebé">+</button>
+            <button
+              type="button"
+              class="square"
+              disabled={infantsC >= adultsC || infantsC >= 9}
+              on:click={(e)=>inc('infants',e)}
+              aria-label="Añadir bebé"
+            >
+              
+            </button>
           </div>
         </div>
 
         <div class="pax-actions">
-          <button type="button" class="pax-ok" on:click={() => (paxOpen = false)}>{t('common.ok','OK')}</button>
+          <button
+            type="button"
+            class="pax-ok"
+            on:click={() => (paxOpen = false)}
+          >
+            {t('common.ok','OK')}
+          </button>
         </div>
       </div>
      {/if}
   </div>
 
+  <!-- BOTÓN BUSCAR ICONO (DESKTOP) -->
   <button type="submit" class="search-icon-btn" aria-label={t('form.search','Buscar')}>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="ico" aria-hidden="true">
       <path d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"
         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </button>
-  <button type="submit" class="search-text-btn">{t('form.search','Buscar')}</button>
-  </form>
+
+  <!-- BOTÓN TEXTO (MÓVIL) -->
+  <button type="submit" class="search-text-btn">
+    {t('form.search','Buscar')}
+  </button>
+</form>
+
+
+
 
 <style>
   /* ===== Variables CSS ===== */
-  :root {
-    --accent: #2563eb;
-    --border: #e5e7eb;
-    --muted: #6b7280;
-    --ink: #0b1220;
+  :root{ 
+    --bg:#ffffff;        /* fondo blanco */
+    --panel:#f5faff;     /* blanco con un toque celeste muy suave */
+    --text:#000000;      /* texto negro */
+    --muted:#4b5563;     /* gris medio */
+    --accent:#38b6ff;    /* celeste argentino */
+    --accent-2:#38b6ff;  /* mismo celeste para consistencia */
+    --border:#e5e7eb;    /* gris claro para bordes (corregido) */
+    --shadow: 0 1px 3px rgba(0,0,0,0.1); /* sombra estándar */
+    --radius: 8px;       /* radio de borde estándar */
   }
 
-/* ===== Rail Ida/Vuelta — pequeño & en línea ===== */
+ 
 
- /* ===== Form Base ===== */
-.label { 
-  font-size: 12px; 
-  color: var(--muted); 
-  display: block; 
-  margin-bottom: 4px; 
-  font-weight: 500;
-}
-
-
-.trip-select {
-  border: 1.5px solid var(--border, #e5e7eb);
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #222;
-  background: #fff;
-  outline: none;
-  transition: border 0.15s;
-  cursor: pointer;
-  min-width: 90px;
-  height: 32px;
-}
-
-.trip-select:focus,
-.trip-select:active {
-  border-color: var(--border, #e5e7eb);
-  box-shadow: none;
-}
-
-.search-bar {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr auto;
-  gap: 16px;
-  align-items: end;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  padding: 16px 20px 12px 20px;
-  border: 1.5px solid var(--border, #e5e7eb);
-  margin-bottom: 12px;
-}
-
-.search-icon-btn:hover {
-  border-color: var(--accent);
-  background: #f8fafc;
-}
-
-.search-icon-btn .ico { width: 20px; height: 20px; }
-
-/* Flatpickr: puntito azul lunes/viernes */
-:global(.flatpickr-day.pos-rel) { position: relative; }
-:global(.flatpickr-day.monfri::after) {
-  content: ""; position: absolute; left: 50%; transform: translateX(-50%);
-  bottom: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
-}
-
-/* Flatpickr: mejores estilos y posicionamiento */
-:global(.flatpickr-calendar) {
-  z-index: 1200 !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  border-radius: 12px !important;
-}
-
-:global(.flatpickr-months) {
-  border-radius: 12px 12px 0 0 !important;
-}
-
-/* Flatpickr: mes, año y días de la semana en bold */
-:global(.flatpickr-current-month) {
-  font-weight: 700 !important;
-}
-
-:global(.flatpickr-current-month .flatpickr-monthDropdown-months) {
-  font-weight: 700 !important;
-}
-
-:global(.flatpickr-current-month .numInputWrapper) {
-  font-weight: 700 !important;
-}
-
-:global(.flatpickr-current-month .cur-year) {
-  font-weight: 700 !important;
-}
-
-:global(.flatpickr-weekdays) {
-  font-weight: 700 !important;
-}
-
-:global(.flatpickr-weekday) {
-  font-weight: 700 !important;
-  color: #374151 !important;
-}
-
-/* Flatpickr responsive: centrar calendario */
-@media (max-width: 640px) {
-  :global(.flatpickr-calendar) {
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    max-width: 90vw !important;
-    margin: 0 auto !important;
-    z-index: 1200 !important;
+  /* ===== Form Base ===== */
+  .label { 
+    font-size: 12px; 
+    color: var(--muted); 
+    display: block; 
+    margin-bottom: 4px; 
+    font-weight: 500;
   }
-}
 
-/* ===== Pasajeros CSS Profesional ===== */
-.pax-field { 
-  position: relative; 
-  z-index: 10;
-}
-
-.pax-trigger {
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between;
-  width: 100%; 
-  height: 44px; 
-  padding: 0 12px;
-  border: 1px solid var(--border, #e5e7eb); 
-  border-radius: 6px; 
-  background: #fff; 
-  color: var(--ink, #0b1220);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  z-index: 1;
-}
-
-.pax-trigger:hover {
-  border-color: var(--accent, #2563eb);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.pax-trigger-left { 
-  font-weight: 600; 
-  color: var(--ink, #0b1220);
-  flex: 1;
-  text-align: left;
-}
-
-.pax-trigger-right { 
-  color: var(--muted, #6b7280);
-  display: flex;
-  align-items: center;
-  transition: transform 0.2s ease;
-}
-
-.pax-trigger[aria-expanded="true"] .pax-trigger-right {
-  transform: rotate(180deg);
-}
-
-/* ----- Popup arriba del SearchBar (como calendario) ----- */
-.pax-pop {
-  position: absolute; 
-  bottom: calc(100% + 8px); 
-  right: 0;
-  width: 280px; 
-  max-width: min(280px, 85vw);
-  background: #ffffff; 
-  border: 1px solid rgba(0, 0, 0, 0.08); 
-  border-radius: 12px;
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  z-index: 1350;
-  animation: slideInUp 0.2s ease-out;
-  transform-origin: bottom center;
-}
-
-
-
-
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes slideInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-
-
-/* ----- Filas de Pasajeros Compactas ----- */
-.row { 
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between; 
-  padding: 10px 0; 
-  border-bottom: 1px solid #f8fafc;
-  gap: 12px;
-}
-
-.row:last-child { 
-  border-bottom: none; 
-  padding-bottom: 8px;
-}
-
-.left { 
-  flex: 1;
-  display: flex; 
-  flex-direction: column; 
-  gap: 2px; 
-}
-
-.left .title { 
-  font-weight: 700; 
-  font-size: 14px; 
-  line-height: 1.2; 
-  color: #1e293b;
-  font-family: inherit;
-}
-
-.left .sub { 
-  font-size: 12px; 
-  color: #64748b; 
-  line-height: 1.2;
-  font-weight: 400;
-  font-family: inherit;
-}
-
-.right { 
-  display: flex; 
-  align-items: center; 
-  gap: 10px; 
-  flex-shrink: 0;
-}
-
-.square {
-  width: 30px; 
-  height: 30px; 
-  border-radius: 6px; 
-  display: inline-flex; 
-  align-items: center; 
-  justify-content: center;
-  background: #ffffff; 
-  color: var(--accent); 
-  border: 1.5px solid var(--accent); 
-  font-weight: 700; 
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.square:hover {
-  background: var(--accent);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
-}
-
-.square:active { 
-  transform: translateY(0); 
-}
-
-.square:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.count { 
-  min-width: 24px; 
-  text-align: center; 
-  font-weight: 700; 
-  font-size: 16px;
-  color: #1e293b;
-}
-
-.pax-actions { 
-  display: flex; 
-  justify-content: flex-end; 
-  margin-top: 12px; 
-  padding-top: 12px;
-  border-top: 1px solid #f1f5f9;
-}
-
-.pax-ok { 
-  height: 36px; 
-  padding: 0 20px; 
-  border-radius: 8px; 
-  border: 1.5px solid var(--accent);
-  background: var(--accent);
-  color: white;
-  font-weight: 600; 
-  font-size: 14px;
-  cursor: pointer; 
-  font-family: inherit;
-  transition: all 0.2s ease;
-}
-
-.pax-ok:hover {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
-}
-
-/* Backdrop móvil oculto por defecto */
-.pax-backdrop-mobile {
-  display: none;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  background: transparent;
-  appearance: none;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 640px) {
   .search-bar {
-    grid-template-columns: 1fr 1fr;
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr 1fr 1fr 1.1fr auto;
+    gap: 16px;
+    align-items: end;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 16px 20px 12px 20px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 8px;
   }
+
+  .search-bar select,
+  .search-bar input[type="text"] {
+    width: 100%;
+    height: 44px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    padding: 0 10px;
+    font-size: 14px;
+    color: #111827;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .search-bar select:focus,
+  .search-bar input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56,182,255,0.15);
+  }
+
+  /* Trip select arriba (clase original, por si la usas en otro lado) */
   .trip-select {
-    min-width: 80px;
-    font-size: 0.92rem;
-    padding: 3px 6px;
-    height: 28px;
+    border: 1.5px solid var(--border, #e5e7eb);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #222;
+    background: #fff;
+    outline: none;
+    transition: border 0.15s;
+    cursor: pointer;
+    min-width: 90px;
+    height: 32px;
   }
-  /* Backdrop para responsive */
-  .pax-backdrop-mobile {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9998;
-    border: 0;
-    padding: 0;
-    margin: 0;
-    appearance: none;
+  .trip-select:focus,
+  .trip-select:active {
+    border-color: var(--border, #e5e7eb);
+    box-shadow: none;
   }
-  /* En móvil: popup centrado en pantalla */
-  .pax-pop {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: translate(-50%, -50%) !important;
-    width: 260px;
-    max-width: calc(100vw - 20px);
-    max-height: calc(100vh - 40px);
-    padding: 10px !important;
-    overflow-y: auto;
-    animation: slideInUp 0.2s ease-out !important;
-    z-index: 9999;
-    box-shadow: 
-      0 10px 40px rgba(0, 0, 0, 0.3),
-      0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-  .left .title { font-size: 12px; }
-  .left .sub { font-size: 10px; }
-  .square { width: 24px; height: 24px; font-size: 13px; }
-  .count { font-size: 13px; min-width: 18px; }
-  .right { gap: 6px; }
-  .row { padding: 6px 0; gap: 8px; }
-  .pax-actions { margin-top: 8px; padding-top: 8px; }
-  .pax-ok { height: 28px; padding: 0 10px; font-size: 12px; }
-}
 
-
-/* ===== Botón "Buscar" solo para responsive ===== */
-.search-text-btn { display: none; }
-
-/* Solo visible en móviles */
-@media (max-width: 640px) {
-  .search-icon-btn { display: none !important; }
-  .search-text-btn {
+  .search-icon-btn {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    height: 44px;
+    width: 44px;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 44px;
-    border-radius: 8px;
-    border: 1px solid var(--accent);
-    background: #ffffff;
-    color: #000;
-    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .search-icon-btn:hover {
+    border-color: var(--accent);
+    background: #f8fafc;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+
+  .search-icon-btn .ico { width: 20px; height: 20px; }
+
+  /* Flatpickr: puntito azul lunes/viernes */
+  :global(.flatpickr-day.pos-rel) { position: relative; }
+  :global(.flatpickr-day.monfri::after) {
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+    bottom: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  }
+
+  /* Flatpickr: mejores estilos y posicionamiento */
+  :global(.flatpickr-calendar) {
+    z-index: 1200 !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 12px !important;
+  }
+
+  :global(.flatpickr-months) {
+    border-radius: 12px 12px 0 0 !important;
+  }
+
+  /* Flatpickr: mes, año y días de la semana en bold */
+  :global(.flatpickr-current-month) {
+    font-weight: 700 !important;
+  }
+
+  :global(.flatpickr-current-month .flatpickr-monthDropdown-months) {
+    font-weight: 700 !important;
+  }
+
+  :global(.flatpickr-current-month .numInputWrapper) {
+    font-weight: 700 !important;
+  }
+
+  :global(.flatpickr-current-month .cur-year) {
+    font-weight: 700 !important;
+  }
+
+  :global(.flatpickr-weekdays) {
+    font-weight: 700 !important;
+  }
+
+  :global(.flatpickr-weekday) {
+    font-weight: 700 !important;
+    color: #374151 !important;
+  }
+
+  /* Flatpickr responsive: centrar calendario */
+  @media (max-width: 640px) {
+    :global(.flatpickr-calendar) {
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      max-width: 90vw !important;
+      margin: 0 auto !important;
+      z-index: 1200 !important;
+    }
+  }
+
+  /* ===== Pasajeros CSS Profesional ===== */
+  .pax-field { 
+    position: relative; 
+    z-index: 10;
+  }
+
+  .pax-trigger {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    width: 100%; 
+    height: 44px; 
+    padding: 0 12px;
+    border: 1px solid var(--border, #e5e7eb); 
+    border-radius: 6px; 
+    background: #fff; 
+    color: var(--ink, #0b1220);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pax-trigger:hover {
+    border-color: var(--accent, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  .pax-trigger-left { 
+    font-weight: 600; 
+    color: var(--ink, #0b1220);
+    flex: 1;
+    text-align: left;
+  }
+
+  .pax-trigger-right { 
+    color: var(--muted, #6b7280);
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  .pax-trigger[aria-expanded="true"] .pax-trigger-right {
+    transform: rotate(180deg);
+  }
+
+  /* Popup arriba del SearchBar */
+  .pax-pop {
+    position: absolute; 
+    bottom: calc(100% + 8px); 
+    right: 0;
+    width: 280px; 
+    max-width: min(280px, 85vw);
+    background: #ffffff; 
+    border: 1px solid rgba(0, 0, 0, 0.08); 
+    border-radius: 12px;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06),
+      0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    z-index: 1350;
+    animation: slideInUp 0.2s ease-out;
+    transform-origin: bottom center;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Filas pasajeros */
+  .row { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 10px 0; 
+    border-bottom: 1px solid #f8fafc;
+    gap: 12px;
+  }
+
+  .row:last-child { 
+    border-bottom: none; 
+    padding-bottom: 8px;
+  }
+
+  .left { 
+    flex: 1;
+    display: flex; 
+    flex-direction: column; 
+    gap: 2px; 
+  }
+
+  .left .title { 
+    font-weight: 700; 
+    font-size: 14px; 
+    line-height: 1.2; 
+    color: #1e293b;
     font-family: inherit;
+  }
+
+  .left .sub { 
+    font-size: 12px; 
+    color: #64748b; 
+    line-height: 1.2;
+    font-weight: 400;
+    font-family: inherit;
+  }
+
+  .right { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    flex-shrink: 0;
+  }
+
+  .square {
+    width: 30px; 
+    height: 30px; 
+    border-radius: 6px; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center;
+    background: #ffffff; 
+    color: var(--accent); 
+    border: 1.5px solid var(--accent); 
+    font-weight: 700; 
     font-size: 16px;
     cursor: pointer;
-    grid-column: 1 / -1;
-    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    transition: all 0.15s ease;
+  }
+
+  .square:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+  }
+
+  .square:active { 
+    transform: translateY(0); 
+  }
+
+  .square:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .count { 
+    min-width: 24px; 
+    text-align: center; 
+    font-weight: 700; 
+    font-size: 16px;
+    color: #1e293b;
+  }
+
+  .pax-actions { 
+    display: flex; 
+    justify-content: flex-end; 
+    margin-top: 12px; 
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .pax-ok { 
+    height: 36px; 
+    padding: 0 20px; 
+    border-radius: 8px; 
+    border: 1.5px solid var(--accent);
+    background: var(--accent);
+    color: white;
+    font-weight: 600; 
+    font-size: 14px;
+    cursor: pointer; 
+    font-family: inherit;
     transition: all 0.2s ease;
   }
-  .search-text-btn:hover {
-    background: #f7f9ff;
+
+  .pax-ok:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
     transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
   }
-  .search-text-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  }
-}
 
+  /* Backdrop móvil oculto por defecto */
+  .pax-backdrop-mobile {
+    display: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    appearance: none;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 640px) {
+    .search-bar {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Backdrop para responsive */
+    .pax-backdrop-mobile {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      appearance: none;
+    }
+    /* En móvil: popup centrado en pantalla */
+    .pax-pop {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      right: auto !important;
+      bottom: auto !important;
+      transform: translate(-50%, -50%) !important;
+      width: 260px;
+      max-width: calc(100vw - 20px);
+      max-height: calc(100vh - 40px);
+      padding: 10px !important;
+      overflow-y: auto;
+      animation: slideInUp 0.2s ease-out !important;
+      z-index: 9999;
+      box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .left .title { font-size: 12px; }
+    .left .sub { font-size: 10px; }
+    .square { width: 24px; height: 24px; font-size: 13px; }
+    .count { font-size: 13px; min-width: 18px; }
+    .right { gap: 6px; }
+    .row { padding: 6px 0; gap: 8px; }
+    .pax-actions { margin-top: 8px; padding-top: 8px; }
+    .pax-ok { height: 28px; padding: 0 10px; font-size: 12px; }
+  }
+
+
+  /* ===== Botón "Buscar" solo para responsive ===== */
+  .search-text-btn { display: none; }
+
+  /* Solo visible en móviles */
+  @media (max-width: 640px) {
+    .search-icon-btn { display: none !important; }
+    .search-text-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+      background: #ffffff;
+      color: #000;
+      font-weight: 600;
+      font-family: inherit;
+      font-size: 16px;
+      cursor: pointer;
+      grid-column: 1 / -1;
+      box-shadow: 0 2px 6px rgba(0,0,0,.08);
+      transition: all 0.2s ease;
+    }
+    .search-text-btn:hover {
+      background: #f7f9ff;
+      transform: translateY(-1px);
+    }
+    .search-text-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+  }
+
+  /* ===== TRIP SELECT ABAJO (LEVEL) ===== */
+  .trip-bar-bottom {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 2px;
+  }
 </style>
-

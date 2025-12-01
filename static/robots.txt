@@ -2,6 +2,7 @@
 User-agent: *
 Allow: /
 
+
 # Sitemap
 Sitemap: https://skyarmenia.com/sitemap.xml
 

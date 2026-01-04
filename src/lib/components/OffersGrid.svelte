@@ -79,7 +79,7 @@
 
   .offer-card img {
     width: 100%;
-    height: 200px;
+    height: 400px;
     object-fit: cover;
     display: block;
     /* Mejoras de calidad profesionales para imágenes */

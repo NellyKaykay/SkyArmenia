@@ -1,6 +1,7 @@
 <!-- Página principal - SkyArmenia -->
 <script lang="ts">
   import { dev } from '$app/environment';
+  import { onMount } from 'svelte';
   import { i18n } from '$lib/i18n';
   import BgCarousel from '$lib/components/BgCarousel.svelte';
   import SearchBar from '$lib/components/SearchBar.svelte';
@@ -54,6 +55,13 @@
     error: '',
     data: null as SearchResult | null
   };
+
+  // Loader minimal que aparece en la carga inicial de la página
+  let showInitialLoader = true;
+  onMount(() => {
+    // Ocultar el loader inmediatamente al montar (cuando los datos ya están listos)
+    showInitialLoader = false;
+  });
 
   // Configuración
   const CONFIG = {
@@ -134,6 +142,12 @@
   <meta name="geo.position" content="41.3851;2.1734" />
   <meta name="ICBM" content="41.3851, 2.1734" />
 </svelte:head>
+
+{#if showInitialLoader}
+  <div class="initial-loader" aria-hidden="true">
+    <div class="spinner" role="status" aria-label="Cargando"></div>
+  </div>
+{/if}
 
 <BgCarousel images={CONFIG.heroImages} intervalMs={5000}>
   <div class="hero-wrap">
@@ -411,5 +425,24 @@
     width: 1px;
     height: 1px;
     overflow: hidden;
+  }
+
+  /* Loader inicial (página principal) */
+  .initial-loader {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .initial-loader .spinner {
+    width: 28px;
+    height: 28px;
+    border: 4px solid #38b6ff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
   }
 </style>

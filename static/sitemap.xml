@@ -56,4 +56,14 @@
     <priority>0.3</priority>
   </url>
   
+  <!-- Página de Alicante -->
+  <url>
+    <loc>https://skyarmenia.com/flights?destination=ALC</loc>
+    <lastmod>2026-01-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://skyarmenia.com/flights?destination=ALC&lang=es" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://skyarmenia.com/flights?destination=ALC&lang=en" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://skyarmenia.com/flights?destination=ALC&lang=hy" />
+  </url>
 </urlset>

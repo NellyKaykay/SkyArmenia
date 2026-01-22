@@ -1,0 +1,148 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - link "SkyArmenia Home" [ref=e6] [cursor=pointer]:
+      - /url: /?lang=es
+      - img "SkyArmenia" [ref=e7]
+    - generic [ref=e8]:
+      - generic [ref=e9]: Idioma
+      - generic [ref=e10]:
+        - img
+        - combobox "Idioma" [ref=e11] [cursor=pointer]:
+          - option "EN"
+          - option "ES" [selected]
+          - option "RU"
+          - option "HY"
+      - link "Iniciar sesión" [ref=e14] [cursor=pointer]:
+        - /url: /login
+        - img [ref=e15]
+        - generic [ref=e18]: Iniciar sesión
+  - main [ref=e19]:
+    - generic [ref=e20]:
+      - status [ref=e22]
+      - generic [ref=e24]:
+        - heading "Encuentra vuelos al mejor precio" [level=1] [ref=e25]
+        - combobox [ref=e27] [cursor=pointer]:
+          - option "Ida y vuelta" [selected]
+          - option "Solo ida"
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]: Origen
+            - combobox "Origen" [ref=e31]:
+              - option "Barcelona (BCN)" [selected]
+              - option "Alicante (ALC)"
+              - option "Yerevan (EVN)"
+          - generic [ref=e32]:
+            - generic [ref=e33]: Destino
+            - combobox "Destino" [ref=e34]:
+              - option "Yerevan (EVN)" [selected]
+              - option "Alicante (ALC)"
+              - option "Barcelona (BCN)"
+          - generic [ref=e35]:
+            - generic [ref=e36]: Ida
+            - textbox "Ida" [ref=e37]
+          - generic [ref=e38]:
+            - generic [ref=e39]: Vuelta
+            - textbox "Vuelta" [ref=e40]
+          - generic [ref=e41]:
+            - generic [ref=e42]: Viajeros
+            - button "1 Adulto" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 1 Adulto
+              - img [ref=e46]
+          - button "Buscar vuelos" [ref=e48] [cursor=pointer]:
+            - img [ref=e49]
+        - status "Estado de búsqueda" [ref=e51]
+        - region "Resultados de búsqueda" [ref=e52]
+      - generic [ref=e53]:
+        - heading "Vuelos directos" [level=2] [ref=e54]
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - img "Ereván" [ref=e57]
+            - heading "Yereván" [level=3] [ref=e59]
+          - generic [ref=e60]:
+            - img "Barcelona" [ref=e61]
+            - heading "Barcelona" [level=3] [ref=e63]
+          - generic [ref=e64]:
+            - img "Alicante" [ref=e65]
+            - heading "Alicante" [level=3] [ref=e67]
+  - contentinfo "Información de contacto y enlaces" [ref=e68]:
+    - generic [ref=e69]:
+      - navigation "Enlaces" [ref=e70]:
+        - heading "Enlaces" [level=4] [ref=e71]
+        - list [ref=e72]:
+          - listitem [ref=e73]:
+            - link "Sobre nosotros" [ref=e74] [cursor=pointer]:
+              - /url: /about?lang=es
+          - listitem [ref=e75]:
+            - link "Eventos" [ref=e76] [cursor=pointer]:
+              - /url: /events?lang=es
+          - listitem [ref=e77]:
+            - link "Vuelos" [ref=e78] [cursor=pointer]:
+              - /url: /?lang=es#searchbar
+      - navigation "Ciudades" [ref=e79]:
+        - heading "Ciudades" [level=4] [ref=e80]
+        - list [ref=e81]:
+          - listitem [ref=e82]:
+            - link "Ver ofertas para Yerevan (se abre en nueva ventana)" [ref=e83] [cursor=pointer]:
+              - /url: https://share.google/NhvfbVIC9fuoQJOB9
+              - text: Yereván
+          - listitem [ref=e84]:
+            - link "Ver ofertas para Barcelona (se abre en nueva ventana)" [ref=e85] [cursor=pointer]:
+              - /url: https://share.google/oVA2anBjkd4xetgMf
+              - text: Barcelona
+          - listitem [ref=e86]:
+            - link "Ver ofertas para Alicante (se abre en nueva ventana)" [ref=e87] [cursor=pointer]:
+              - /url: https://share.google/alicante
+              - text: Alicante
+      - region "Síguenos" [ref=e88]:
+        - heading "Síguenos" [level=4] [ref=e89]
+        - list [ref=e90]:
+          - link "Visitar Facebook de SkyArmenia (se abre en nueva ventana)" [ref=e91] [cursor=pointer]:
+            - /url: https://facebook.com/skyarmenia
+            - img [ref=e92]
+          - link "Visitar Instagram de SkyArmenia (se abre en nueva ventana)" [ref=e94] [cursor=pointer]:
+            - /url: https://instagram.com/skyarmenia
+            - img [ref=e95]
+          - link "Visitar X de SkyArmenia (se abre en nueva ventana)" [ref=e97] [cursor=pointer]:
+            - /url: https://x.com/skyarmenia
+            - img [ref=e98]
+          - link "Visitar YouTube de SkyArmenia (se abre en nueva ventana)" [ref=e100] [cursor=pointer]:
+            - /url: https://youtube.com/@skyarmenia
+            - img [ref=e101]
+      - region "Contacto" [ref=e103]:
+        - heading "Contacto" [level=4] [ref=e104]
+        - list [ref=e105]:
+          - listitem [ref=e106]:
+            - link "Contactar por teléfono" [ref=e107] [cursor=pointer]:
+              - /url: tel:+34644393949
+              - img [ref=e109]
+              - generic [ref=e111]: "Móvil: +34 644 39 39 49"
+          - listitem [ref=e112]:
+            - link "Contactar por email" [ref=e113] [cursor=pointer]:
+              - /url: mailto:info@skyarmenia.com
+              - img [ref=e115]
+              - generic [ref=e117]: info@skyarmenia.com
+          - listitem [ref=e118]:
+            - link "Contactar por ubicación (se abre en nueva ventana)" [ref=e119] [cursor=pointer]:
+              - /url: https://www.google.com/maps?q=Carrer+de+C%C3%B2rsega+203,+08036+Barcelona&hl=es
+              - img [ref=e121]
+              - generic [ref=e123]:
+                - text: Carrer de Còrsega, 203, Entlo. C
+                - text: 08036 Barcelona
+      - img "Mapa interactivo mostrando la ubicación de SkyArmenia en Barcelona" [ref=e126]:
+        - generic [ref=e127]: Cargando mapa...
+    - generic [ref=e128]:
+      - complementary "Información de derechos de autor" [ref=e129]: © 2026 SkyArmenia — Todos los derechos reservados.
+      - navigation "Enlaces de políticas legales" [ref=e130]:
+        - link "Leer política de privacidad" [ref=e131] [cursor=pointer]:
+          - /url: /privacy?lang=es
+          - text: Privacidad
+        - link "Leer términos y condiciones" [ref=e132] [cursor=pointer]:
+          - /url: /terms?lang=es
+          - text: Términos
+        - link "Leer política de cookies" [ref=e133] [cursor=pointer]:
+          - /url: /cookies?lang=es
+          - text: Cookies
+```

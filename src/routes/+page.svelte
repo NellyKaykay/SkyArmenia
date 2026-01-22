@@ -103,26 +103,26 @@
 
 <!-- SEO Meta Tags -->
 <svelte:head>
-  <title>SkyArmenia - Vuelos a Armenia | Barcelona ⇄ Yerevan | Mejores Precios</title>
-  <meta name="description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona. Especialistas en rutas Barcelona-Yerevan. Compara precios, horarios y aerolíneas. ¡Reserva tu vuelo hoy!" />
-  <meta name="keywords" content="vuelos armenia, vuelos yerevan, vuelos barcelona armenia, vuelos baratos armenia, billete avion armenia, sky armenia, barcelona yerevan" />
-  
+  <title>SkyArmenia - Vuelos a Armenia | Barcelona ⇄ Yerevan ⇄ Alicante | Ereván ⇄ Alicante | Mejores Precios</title>
+  <meta name="description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona, Alicante y Ereván. Especialistas en rutas Barcelona-Yerevan, Alicante-Ereván y viceversa. Compara precios, horarios y aerolíneas. ¡Reserva tu vuelo hoy!" />
+  <meta name="keywords" content="vuelos armenia, vuelos yerevan, vuelos barcelona armenia, vuelos alicante armenia, vuelos baratos armenia, billete avion armenia, sky armenia, barcelona yerevan, alicante yerevan, alicante erevan, erevan alicante" />
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://skyarmenia.com/" />
-  <meta property="og:title" content="SkyArmenia - Vuelos a Armenia | Mejores Precios Barcelona ⇄ Yerevan" />
-  <meta property="og:description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona. Especialistas en rutas Barcelona-Yerevan. Compara precios y reserva tu vuelo hoy." />
+  <meta property="og:title" content="SkyArmenia - Vuelos a Armenia | Mejores Precios Barcelona ⇄ Yerevan ⇄ Alicante" />
+  <meta property="og:description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona, Alicante y Ereván. Especialistas en rutas Barcelona-Yerevan, Alicante-Ereván y viceversa. Compara precios y reserva tu vuelo hoy." />
   <meta property="og:image" content="https://skyarmenia.com/logo-skyarmenia.png" />
   <meta property="og:site_name" content="SkyArmenia" />
   <meta property="og:locale" content="es_ES" />
   <meta property="og:locale:alternate" content="en_US" />
   <meta property="og:locale:alternate" content="hy_AM" />
-  
+
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://skyarmenia.com/" />
-  <meta name="twitter:title" content="SkyArmenia - Vuelos a Armenia | Mejores Precios" />
-  <meta name="twitter:description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona. Especialistas en rutas Barcelona-Yerevan." />
+  <meta name="twitter:title" content="SkyArmenia - Vuelos a Armenia | Mejores Precios Barcelona ⇄ Yerevan ⇄ Alicante" />
+  <meta name="twitter:description" content="✈️ Encuentra vuelos baratos a Armenia desde Barcelona, Alicante y Ereván. Especialistas en rutas Barcelona-Yerevan, Alicante-Ereván y viceversa." />
   <meta name="twitter:image" content="https://skyarmenia.com/logo-skyarmenia.png" />
   <meta name="twitter:site" content="@skyarmenia" />
   <meta name="twitter:creator" content="@skyarmenia" />

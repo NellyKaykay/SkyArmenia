@@ -204,6 +204,16 @@
             {$i18n['offers.barcelona']}
           </a>
         </li>
+        <li role="listitem">
+          <a 
+            href="https://share.google/alicante"
+            target="_blank" 
+            rel="noopener noreferrer"
+            aria-label="Ver ofertas para Alicante (se abre en nueva ventana)"
+          >
+            {$i18n['offers.alicante']}
+          </a>
+        </li>
       </ul>
     </nav>
 

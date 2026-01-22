@@ -94,6 +94,7 @@ const dict: Record<Lang, Dict> = {
     'offers.title': 'Direct flights',
     'offers.yerevan': 'Yerevan',
     'offers.barcelona': 'Barcelona',
+    'offers.alicante': 'Alicante',
 
     'status.soon': 'Soon...',
     'status.searching': 'Searching…',
@@ -206,6 +207,7 @@ const dict: Record<Lang, Dict> = {
     'offers.title': 'Vuelos directos',
     'offers.yerevan': 'Yereván',
     'offers.barcelona': 'Barcelona',
+    'offers.alicante': 'Alicante',
 
     'status.soon': 'Pronto...',
     'status.searching': 'Buscando…',

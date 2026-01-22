@@ -47,6 +47,18 @@
         
       </div>
     </div>
+    <!-- Card 3: Alicante -->
+    <div class="offer-card">
+      <img
+        src="/offers/alicante.jpg"
+        alt="Alicante"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="offer-body">
+        <h3>{t('offers.alicante', 'Alicante')}</h3>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -79,7 +91,7 @@
 
   .offer-card img {
     width: 100%;
-    height: 400px;
+    height: 300px;
     object-fit: cover;
     display: block;
     /* Mejoras de calidad profesionales para imágenes */

@@ -1,4 +1,14 @@
 <!-- Layout principal de SkyArmenia -->
+<svelte:head>
+  <title>SkyArmenia - Vuelos entre España y Armenia</title>
+  <meta name="description" content="Encuentra las mejores ofertas de vuelos entre España y Armenia. Compara precios y reserva tu viaje con SkyArmenia." />
+  <link rel="canonical" href={`https://skyarmenia.com${typeof window !== 'undefined' ? window.location.pathname : ''}`}>
+  <!-- Open Graph -->
+  <meta property="og:title" content="SkyArmenia - Vuelos entre España y Armenia" />
+  <meta property="og:description" content="Encuentra las mejores ofertas de vuelos entre España y Armenia. Compara precios y reserva tu viaje con SkyArmenia." />
+  <meta property="og:url" content={`https://skyarmenia.com${typeof window !== 'undefined' ? window.location.pathname : ''}`} />
+  <meta property="og:image" content="https://skyarmenia.com/og-image.png" />
+</svelte:head>
 <script lang="ts">
   import '../app.css';
   import { onMount } from 'svelte';

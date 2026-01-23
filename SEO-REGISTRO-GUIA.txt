@@ -1,0 +1,11 @@
+<!--
+  Guía rápida para registrar SkyArmenia en Google Search Console y Bing Webmaster Tools
+-->
+
+1. Accede a Google Search Console y Bing Webmaster Tools con tu cuenta.
+2. Elige "Añadir propiedad" e introduce el dominio: skyarmenia.com
+3. Selecciona la verificación por meta tag o archivo HTML (ambas soportadas).
+4. Si usas meta tag, añade el código en <head> de src/app.html (ya está preparado para Google y Bing).
+5. Envía el sitemap: https://skyarmenia.com/sitemap.xml en ambas plataformas.
+
+¡Listo! Así Google y Bing podrán rastrear e indexar tu web correctamente.

@@ -161,10 +161,20 @@
 		</div>
 		<div style="display: contents">%sveltekit.body%</div>
 		<script>
-			document.addEventListener('DOMContentLoaded', function() {
+			function removeLoader() {
 				var l = document.getElementById('__sveltekit-loader__');
-				if (l) { l.style.opacity = '0'; setTimeout(function() { l.remove(); }, 300); }
+				if (l) {
+					l.style.opacity = '0';
+					setTimeout(function() { l.remove(); }, 300);
+				}
+			}
+			// Espera a que SvelteKit termine la navegación inicial
+			window.addEventListener('sveltekit:navigation-end', function handler(e) {
+				removeLoader();
+				window.removeEventListener('sveltekit:navigation-end', handler);
 			});
+			// Fallback por si SvelteKit no emite el evento (por ejemplo, error de carga)
+			setTimeout(removeLoader, 4000);
 		</script>
 	</body>
 </html>

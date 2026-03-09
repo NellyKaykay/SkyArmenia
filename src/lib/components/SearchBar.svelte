@@ -15,6 +15,8 @@
   let childrenC = 0;
   let infantsC = 0;
 
+  let cabin = '';
+
   export let endpoint = '/api/search';
   export let debug = true;
   export let updateUrl = true;
@@ -37,6 +39,7 @@
       infants: String(infantsC)
     });
     if (trip === 'round' && ret) q.set('return', ret);
+    if (cabin) q.set('cabin', cabin);
     return q.toString();
   }
 
@@ -237,6 +240,10 @@
       <option value="BCN">Barcelona (BCN)</option>
       <option value="ALC">{t('offers.alicante', 'Alicante')} (ALC)</option>
       <option value="EVN">Yerevan (EVN)</option>
+      <option value="TLV">Tel Aviv (TLV)</option>
+      <option value="LHR">London (LHR)</option>
+      <option value="MAD">Madrid (MAD)</option>
+      <option value="CDG">Paris CDG (CDG)</option>
     </select>
   </div>
 
@@ -247,6 +254,10 @@
       <option value="EVN">Yerevan (EVN)</option>
       <option value="ALC">{t('offers.alicante', 'Alicante')} (ALC)</option>
       <option value="BCN">Barcelona (BCN)</option>
+      <option value="TLV">Tel Aviv (TLV)</option>
+      <option value="LHR">London (LHR)</option>
+      <option value="MAD">Madrid (MAD)</option>
+      <option value="CDG">Paris CDG (CDG)</option>
     </select>
   </div>
 
@@ -410,6 +421,16 @@
      {/if}
   </div>
 
+  <!-- CABINA -->
+  <div>
+    <label class="label" for="cabin">{t('form.cabin','Cabin')}</label>
+    <select id="cabin" bind:value={cabin}>
+      <option value="">{t('opts.any_cabin','Any class')}</option>
+      <option value="economy">{t('opts.economy','Economy')}</option>
+      <option value="business">{t('opts.business','Business')}</option>
+    </select>
+  </div>
+
   <!-- BOTÓN BUSCAR ICONO (DESKTOP) -->
   <button type="submit" class="search-icon-btn" aria-label={t('form.search','Buscar')}>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="ico" aria-hidden="true">
@@ -454,7 +475,7 @@
 
   .search-bar {
     display: grid;
-    grid-template-columns: 1.2fr 1.2fr 1fr 1fr 1.1fr auto;
+    grid-template-columns: 1.2fr 1.2fr 1fr 1fr 1fr 0.9fr auto;
     gap: 16px;
     align-items: end;
     background: #fff;

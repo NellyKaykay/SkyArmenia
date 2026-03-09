@@ -79,11 +79,13 @@
                 <span class="provider">{providerName(of._provider ?? of.provider)}</span>
                 <span class="route">
                   {#if of.out?.segments?.length}
-                    {of.out.segments[0].origin} → {of.out.segments[0].destination}
+                    {of.out.segments[0].origin} → {of.out.segments[of.out.segments.length - 1].destination}
+                    {#if of.out.segments.length > 1}<span class="stops">({of.out.segments.length - 1} stop{of.out.segments.length > 2 ? 's' : ''})</span>{/if}
                     · {dshort(of.out.segments[0].departTime)}
                   {/if}
                   {#if of.ret?.segments?.length}
-                    · {of.ret.segments[0].origin} → {of.ret.segments[0].destination}
+                    · {of.ret.segments[0].origin} → {of.ret.segments[of.ret.segments.length - 1].destination}
+                    {#if of.ret.segments.length > 1}<span class="stops">({of.ret.segments.length - 1} stop{of.ret.segments.length > 2 ? 's' : ''})</span>{/if}
                     · {dshort(of.ret.segments[0].departTime)}
                   {/if}
                 </span>
@@ -95,8 +97,13 @@
             {#if expanded[of.id]}
               <div class="offer-detail">
                 <div class="meta">
-                  {of.cabin || 'economy'} · {t('opts.bags','Bags')}: {of.bagsIncluded ?? 0}
+                  {of.cabin || 'economy'}
+                  {#if of.fareType} · {of.fareType}{/if}
+                  · {t('opts.bags','Bags')}: {of.bagsIncluded ?? 0}
                 </div>
+                {#if of.notification}
+                  <div class="notification">{of.notification}</div>
+                {/if}
 
                 {#if of.out}
                   <div class="leg">
@@ -178,6 +185,8 @@
     display: grid; gap: 8px;
   }
   .meta { color: #555; }
+  .notification { color: #666; font-size: 0.85rem; font-style: italic; }
+  .stops { color: #888; font-size: 0.85em; margin-left: 2px; }
   .leg { display: grid; gap: 4px; }
   .seg { color: #222; }
   .fn { color: #888; margin-left: 4px; }

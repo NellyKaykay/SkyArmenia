@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   import { i18n, lang } from '$lib/i18n';
   /* Props (solo como valores iniciales) */
   export let trip: 'oneway' | 'round' = 'round';
@@ -17,13 +18,7 @@
 
   let cabin = '';
 
-  export let endpoint = '/api/search';
-  export let debug = true;
-  export let updateUrl = true;
-
-  export let loading = false;
-  export let errorText = '';
-  export let data: any = null;
+  let submitting = false;
 
   const dispatch = createEventDispatcher();
   $: t = (k: string, fb?: string) => {
@@ -44,18 +39,14 @@
   }
 
   async function doSearch() {
-    loading = true; errorText = ''; data = null; dispatch('searchstart');
+    submitting = true; dispatch('searchstart');
     try {
       const qs = buildQuery();
-      if (updateUrl) history.replaceState(null, '', `/?${qs}`);
-      const url = `${endpoint}?${qs}${debug ? '&debug=1' : ''}`;
-      const res = await fetch(url);
-      const json = await res.json();
-      if (!json.ok) { errorText = json.error || 'Error en la búsqueda'; dispatch('error', errorText); }
-      else { data = json; dispatch('results', data); }
+      // Navigate to the same page with search params — triggers +page.server.ts load()
+      await goto(`/?${qs}`, { invalidateAll: true });
     } catch (e: any) {
-      errorText = e?.message || 'Fallo de red'; dispatch('error', errorText);
-    } finally { loading = false; }
+      console.error('[SearchBar] navigation error:', e?.message);
+    } finally { submitting = false; }
   }
   function onSubmit(e: Event) { e.preventDefault(); doSearch(); }
 

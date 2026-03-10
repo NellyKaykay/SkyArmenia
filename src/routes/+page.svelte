@@ -1,6 +1,7 @@
 <!-- Página principal - SkyArmenia -->
 <script lang="ts">
   import { dev } from '$app/environment';
+  import { page, navigating } from '$app/stores';
   import { onMount } from 'svelte';
   import { i18n } from '$lib/i18n';
   import BgCarousel from '$lib/components/BgCarousel.svelte';
@@ -8,27 +9,21 @@
   import OffersGrid from '$lib/components/OffersGrid.svelte';
   import ResultsList from '$lib/components/ResultsList.svelte';
 
+  // Page data from +page.server.ts load()
+  export let data: {
+    searchResults: any;
+    searchError: string | null;
+    user?: any;
+    session?: boolean;
+  };
+
   // Helper de traducción con fallback
   $: t = (key: string, fallback?: string): string => {
     const value = $i18n[key];
     return value === key ? (fallback ?? key) : value;
   };
 
-  // Tipos de datos
-  interface SearchResult {
-    results?: Array<{
-      id?: string;
-      price?: number;
-      airline?: string;
-      departure?: string;
-      arrival?: string;
-      [key: string]: any;
-    }>;
-    error?: string;
-    [key: string]: any;
-  }
-
-  // Estado del formulario de búsqueda
+  // Estado del formulario de búsqueda — initialise from URL if present
   function getDefaultSearchParams() {
     return {
       trip: 'round' as 'oneway' | 'round',
@@ -40,7 +35,26 @@
       bags: 0
     };
   }
-  let searchParams = getDefaultSearchParams();
+
+  function paramsFromUrl() {
+    const sp = $page.url.searchParams;
+    const defaults = getDefaultSearchParams();
+    return {
+      trip: (sp.get('trip') === 'oneway' ? 'oneway' : sp.get('trip') === 'round' ? 'round' : defaults.trip) as 'oneway' | 'round',
+      origin: sp.get('origin') || defaults.origin,
+      destination: sp.get('destination') || defaults.destination,
+      depart: sp.get('depart') || defaults.depart,
+      ret: sp.get('return') || defaults.ret,
+      adults: Number(sp.get('adults')) || defaults.adults,
+      bags: Number(sp.get('bags')) || defaults.bags
+    };
+  }
+  let searchParams = paramsFromUrl();
+
+  // Keep searchParams in sync when URL changes (after goto)
+  $: if ($page.url) {
+    searchParams = paramsFromUrl();
+  }
 
   // Resetear el searchbar si se hace click en el logo
   if (typeof window !== 'undefined') {
@@ -49,17 +63,14 @@
     });
   }
 
-  // Estado de la aplicación
-  let appState = {
-    loading: false,
-    error: '',
-    data: null as SearchResult | null
-  };
+  // Search state derived from page data + navigation
+  $: isLoading = !!$navigating;
+  $: searchError = data.searchError || '';
+  $: searchData = data.searchResults;
 
   // Loader minimal que aparece en la carga inicial de la página
   let showInitialLoader = true;
   onMount(() => {
-    // Ocultar el loader inmediatamente al montar (cuando los datos ya están listos)
     showInitialLoader = false;
   });
 
@@ -70,35 +81,9 @@
     searchEndpoint: '/api/search'
   } as const;
 
-  // Manejadores de eventos
-  function handleSearchStart(): void {
-    appState = {
-      ...appState,
-      loading: true,
-      error: '',
-      data: null
-    };
-  }
-
-  function handleSearchResults(event: CustomEvent<SearchResult>): void {
-    appState = {
-      ...appState,
-      loading: false,
-      data: event.detail
-    };
-  }
-
-  function handleSearchError(event: CustomEvent<string>): void {
-    appState = {
-      ...appState,
-      loading: false,
-      error: event.detail || t('errors.search_failed', 'Error en la búsqueda')
-    };
-  }
-
   // Estados computados
-  $: hasResults = appState.data?.results && appState.data.results.length > 0;
-  $: showEmptyState = appState.data && !hasResults;
+  $: hasResults = searchData?.results && searchData.results.length > 0;
+  $: showEmptyState = searchData && !hasResults;
 </script>
 
 <!-- SEO Meta Tags -->
@@ -161,20 +146,14 @@
       bind:depart={searchParams.depart}
       bind:ret={searchParams.ret}
       bind:adults={searchParams.adults}
-      endpoint={CONFIG.searchEndpoint}
-      debug={CONFIG.isDebugMode}
-      updateUrl={true}
-      on:searchstart={handleSearchStart}
-      on:results={handleSearchResults}
-      on:error={handleSearchError}
     />
 
     <!-- Estado accesible para lectores de pantalla -->
     <div class="sr-only" aria-live="polite" role="status" aria-label="Estado de búsqueda">
-      {#if appState.loading}
+      {#if isLoading}
         {t('status.searching', 'Buscando vuelos...')}
-      {:else if appState.error}
-        {t('status.error', 'Error:')} {appState.error}
+      {:else if searchError}
+        {t('status.error', 'Error:')} {searchError}
       {:else if hasResults}
         {t('status.results', 'Resultados cargados')}
       {:else if showEmptyState}
@@ -184,18 +163,18 @@
 
     <!-- Resultados de búsqueda -->
     <section class="results-section" aria-label="Resultados de búsqueda">
-      {#if appState.loading}
+      {#if isLoading}
         <div class="status loading" role="status">
           <span class="loading-spinner" aria-hidden="true"></span>
           {t('status.searching', 'Buscando vuelos...')}
         </div>
-      {:else if appState.error}
+      {:else if searchError}
         <div class="status error" role="alert">
           <span class="error-icon" aria-hidden="true">⚠️</span>
-          {appState.error}
+          {searchError}
         </div>
       {:else if hasResults}
-        <ResultsList data={appState.data} />
+        <ResultsList data={searchData} />
       {:else if showEmptyState}
         <div class="status empty">
           <span class="empty-icon" aria-hidden="true">🔍</span>

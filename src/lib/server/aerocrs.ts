@@ -1,5 +1,10 @@
 // src/lib/server/aerocrs.ts
 // Server-only AeroCRS API v5 connector.
+import { AEROCRS_ENV } from '$env/static/private';
+
+if (AEROCRS_ENV === 'production') {
+  console.log('AeroCRS PRODUCTION MODE ACTIVE');
+}
 
 import {
 	AEROCRS_AUTH_ID,

@@ -50,6 +50,22 @@ async function confirmBooking(bookingId, passengers) {
   return a.pnrref;
 }
 
+async function ticketBooking(bookingId) {
+  const body = { aerocrs: { parms: { bookingid: bookingId } } };
+  console.log(`  ticketBooking bookingId=${bookingId}`);
+  const res = await fetch(`${BASE}/ticketBooking`, { method: 'POST', headers: HEADERS, body: JSON.stringify(body) });
+  const data = await res.json();
+  if (!data?.aerocrs?.success) throw new Error('ticketBooking failed: ' + JSON.stringify(data));
+  const a = data.aerocrs;
+  console.log(`  → ticket=${a.ticketnumber} invoice=${a.invoicenumber}`);
+  if (Array.isArray(a.passengers)) {
+    for (const p of a.passengers) {
+      console.log(`    ${p.title} ${p.firstname} ${p.lastname} → e-ticket: ${p['e-ticket']}`);
+    }
+  }
+  return a.ticketnumber;
+}
+
 function adultPax(first, last, num) {
   return {
     paxtitle: 'Mr.',
@@ -67,9 +83,9 @@ function adultPax(first, last, num) {
   };
 }
 
-function infantPax(first, last, num) {
+function childPax(first, last, num) {
   return {
-    paxtitle: 'Inf.',
+    paxtitle: 'Mr.',
     firstname: first,
     lastname: last,
     paxage: null,
@@ -78,7 +94,7 @@ function infantPax(first, last, num) {
     paxdocnumber: `AM${num}`,
     paxdocissuer: 'AM',
     paxdocexpiry: '2030/12/31',
-    paxbirthdate: '2025/01/10',
+    paxbirthdate: '2014/03/10',
     paxphone: '',
     paxemail: ''
   };
@@ -99,13 +115,15 @@ async function main() {
   console.log('\n=== BOOKING 1: OW, 1 ADT ===');
   let bid = await createBooking('OW', 1, 0, 0, OW_LEG);
   let pnr = await confirmBooking(bid, [adultPax('Armen', 'Petrosyan', '100001')]);
-  results.push({ num: 1, desc: 'OW 1 ADT', pnr });
+  let tkt = await ticketBooking(bid);
+  results.push({ num: 1, desc: 'OW 1 ADT', pnr, tkt });
 
   // 2. Return, 1 ADT
   console.log('\n=== BOOKING 2: RT, 1 ADT ===');
   bid = await createBooking('RT', 1, 0, 0, RT_LEGS);
   pnr = await confirmBooking(bid, [adultPax('Gevorg', 'Hakobyan', '100002')]);
-  results.push({ num: 2, desc: 'RT 1 ADT', pnr });
+  tkt = await ticketBooking(bid);
+  results.push({ num: 2, desc: 'RT 1 ADT', pnr, tkt });
 
   // 3. Return, 2 ADT
   console.log('\n=== BOOKING 3: RT, 2 ADT ===');
@@ -114,32 +132,35 @@ async function main() {
     adultPax('Tigran', 'Sargsyan', '100003'),
     adultPax('Anahit', 'Sargsyan', '100004')
   ]);
-  results.push({ num: 3, desc: 'RT 2 ADT', pnr });
+  tkt = await ticketBooking(bid);
+  results.push({ num: 3, desc: 'RT 2 ADT', pnr, tkt });
 
-  // 4. One-way, 1 ADT + 1 INF
-  console.log('\n=== BOOKING 4: OW, 1 ADT + 1 INF ===');
-  bid = await createBooking('OW', 1, 0, 1, OW_LEG);
+  // 4. One-way, 1 ADT + 1 CHD (child age 12, sandbox min age = 11)
+  console.log('\n=== BOOKING 4: OW, 1 ADT + 1 CHD ===');
+  bid = await createBooking('OW', 2, 0, 0, OW_LEG);
   pnr = await confirmBooking(bid, [
     adultPax('Narek', 'Hovhannisyan', '100005'),
-    infantPax('Ani', 'Hovhannisyan', '100006')
+    childPax('Ani', 'Hovhannisyan', '100006')
   ]);
-  results.push({ num: 4, desc: 'OW 1 ADT + 1 INF', pnr });
+  tkt = await ticketBooking(bid);
+  results.push({ num: 4, desc: 'OW 1 ADT + 1 CHD', pnr, tkt });
 
-  // 5. Return, 1 ADT + 1 INF
-  console.log('\n=== BOOKING 5: RT, 1 ADT + 1 INF ===');
-  bid = await createBooking('RT', 1, 0, 1, RT_LEGS);
+  // 5. Return, 1 ADT + 1 CHD (child age 12, sandbox min age = 11)
+  console.log('\n=== BOOKING 5: RT, 1 ADT + 1 CHD ===');
+  bid = await createBooking('RT', 2, 0, 0, RT_LEGS);
   pnr = await confirmBooking(bid, [
     adultPax('Davit', 'Grigoryan', '100007'),
-    infantPax('Lusine', 'Grigoryan', '100008')
+    childPax('Lusine', 'Grigoryan', '100008')
   ]);
-  results.push({ num: 5, desc: 'RT 1 ADT + 1 INF', pnr });
+  tkt = await ticketBooking(bid);
+  results.push({ num: 5, desc: 'RT 1 ADT + 1 CHD', pnr, tkt });
 
   // Summary
   console.log('\n══════════════════════════════════════════');
   console.log('  ALL 5 BOOKING REFERENCES FOR GO7');
   console.log('══════════════════════════════════════════');
   results.forEach(r => {
-    console.log(`  ${r.num}. ${r.desc.padEnd(22)} → PNR: ${r.pnr}`);
+    console.log(`  ${r.num}. ${r.desc.padEnd(22)} → PNR: ${r.pnr}  Ticket: ${r.tkt}`);
   });
   console.log('══════════════════════════════════════════\n');
 }

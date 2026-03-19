@@ -1,5 +1,5 @@
 // integration-test-bookings.mjs
-// Full integration test: Search → Resolve IDs → Create Booking → Confirm → PNR
+// Full integration test: Search → Resolve IDs → Create Booking → Confirm → Ticket → PNR
 //
 // Test Cases:
 //   1. TLV-LHR \ LHR-TLV  — Economy, non-branded fares (round-trip)
@@ -129,6 +129,33 @@ async function confirmBooking(bookingId, passengers) {
     toPay: a.topay,
     currency: a.currency,
     link: a.linktobooking || ''
+  };
+}
+
+async function ticketBooking(bookingId) {
+  const body = { aerocrs: { parms: { bookingid: bookingId } } };
+  console.log(`  [ticketBooking] POST bookingId=${bookingId}`);
+  const res = await fetch(`${BASE}/ticketBooking`, { method: 'POST', headers: HEADERS, body: JSON.stringify(body) });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`ticketBooking HTTP ${res.status}: ${text}`);
+  }
+  const data = await res.json();
+  if (!data?.aerocrs?.success) {
+    throw new Error('ticketBooking failed: ' + JSON.stringify(data));
+  }
+  const a = data.aerocrs;
+  const passengers = Array.isArray(a.passengers)
+    ? a.passengers.map(p => ({ name: `${p.title} ${p.firstname} ${p.lastname}`, eTicket: p['e-ticket'] || '' }))
+    : [];
+  console.log(`  → ticketNumber=${a.ticketnumber} invoice=${a.invoicenumber} passengers=${passengers.length}`);
+  for (const p of passengers) {
+    console.log(`    ${p.name} → e-ticket: ${p.eTicket}`);
+  }
+  return {
+    ticketNumber: String(a.ticketnumber || ''),
+    invoiceNumber: a.invoicenumber ?? null,
+    passengers
   };
 }
 
@@ -469,8 +496,11 @@ async function runBookingTest({
   const pax = makePax(paxName.first, paxName.last, paxName.docNum);
   const result = await confirmBooking(booking.bookingId, [pax]);
 
-  console.log(`\n  ✅ BOOKING COMPLETE — PNR: ${result.pnr}`);
-  return result;
+  console.log('\n--- TICKET BOOKING ---');
+  const ticket = await ticketBooking(booking.bookingId);
+
+  console.log(`\n  ✅ BOOKING COMPLETE — PNR: ${result.pnr} | Ticket: ${ticket.ticketNumber}`);
+  return { ...result, ticketNumber: ticket.ticketNumber, ticketPassengers: ticket.passengers };
 }
 
 /* ================================================================
@@ -566,8 +596,14 @@ async function main() {
     const status = typeof r.pnr === 'string' && r.pnr.startsWith('FAILED') ? '❌' : '✅';
     const pnr = r.pnr || 'N/A';
     const pay = r.toPay ? ` | toPay=${r.toPay} ${r.currency}` : '';
+    const tkt = r.ticketNumber ? ` | ticket=${r.ticketNumber}` : '';
     console.log(`  ${status} ${r.test}`);
-    console.log(`     PNR: ${pnr}${pay}`);
+    console.log(`     PNR: ${pnr}${pay}${tkt}`);
+    if (r.ticketPassengers) {
+      for (const p of r.ticketPassengers) {
+        console.log(`     E-ticket: ${p.name} → ${p.eTicket}`);
+      }
+    }
     if (r.link) console.log(`     Link: ${r.link}`);
     console.log('');
   }

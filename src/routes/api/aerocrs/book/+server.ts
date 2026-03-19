@@ -78,7 +78,11 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		return json({
 			ok: true,
-			bookingReference: result.bookingReference
+			bookingReference: result.bookingReference,
+			bookingStatus: result.bookingStatus,
+			ticketNumber: result.ticketNumber,
+			ticketNumbers: result.ticketedPassengers.map((p) => p.eTicket).filter(Boolean),
+			ticketedPassengers: result.ticketedPassengers
 		});
 	} catch (err) {
 		const message = (err as Error)?.message || 'Unknown booking error';

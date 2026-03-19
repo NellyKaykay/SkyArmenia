@@ -7,6 +7,7 @@
 //   3. createBooking        → POST /createBooking → bookingId + pnrRef
 //   4. addPassengers        → validate + map to AeroCRS passenger structure
 //   5. confirmBooking       → POST /confirmBooking → final PNR
+//   6. ticketBooking        → POST /ticketBooking → e-tickets
 //
 // AeroCRS has no separate "addPassengers" endpoint; passenger data is sent
 // inside confirmBooking.  We keep addPassengers() as a dedicated step that
@@ -45,6 +46,13 @@ export interface BookingRequest {
 	passengers: BookingPassenger[];
 }
 
+export interface TicketedPassenger {
+	title: string;
+	firstName: string;
+	lastName: string;
+	eTicket: string;
+}
+
 export interface BookingResult {
 	bookingReference: string;
 	bookingId: number;
@@ -55,6 +63,10 @@ export interface BookingResult {
 	pnrPaymentTimeLimit: string;
 	pnrTicketingTimeLimit: string;
 	status: string;
+	bookingStatus: 'ticketed' | 'pending_ticketing';
+	ticketNumber: string;
+	invoiceNumber: number | null;
+	ticketedPassengers: TicketedPassenger[];
 }
 
 /** AeroCRS passenger payload shape (exact field names from their API). */
@@ -506,7 +518,11 @@ async function confirmBooking(
 		currency: a.currency || 'USD',
 		pnrPaymentTimeLimit: a.pnrptl || '',
 		pnrTicketingTimeLimit: a.pnrttl || '',
-		status: a.status || 'UNKNOWN'
+		status: a.status || 'UNKNOWN',
+		bookingStatus: 'pending_ticketing',
+		ticketNumber: '',
+		invoiceNumber: null,
+		ticketedPassengers: []
 	};
 
 	console.log(
@@ -516,6 +532,136 @@ async function confirmBooking(
 	);
 
 	return result;
+}
+
+/* ================================================================
+   STEP 5  —  TICKET BOOKING
+   ================================================================ */
+
+/**
+ * POST /ticketBooking — issues e-tickets for a confirmed booking.
+ * Must be called after confirmBooking.
+ */
+async function ticketBooking(
+	bookingId: number
+): Promise<{ ticketNumber: string; invoiceNumber: number | null; passengers: TicketedPassenger[] }> {
+	const { baseUrl, authHeaders } = getConfig();
+	const url = `${baseUrl}/ticketBooking`;
+
+	const body = {
+		aerocrs: {
+			parms: {
+				bookingid: bookingId
+			}
+		}
+	};
+
+	console.log('');
+	console.log('[AeroCRS Booking] [ticketBooking] ─── TICKET ISSUANCE START ───');
+	console.log('[AeroCRS Booking] [ticketBooking] bookingId:', bookingId);
+	console.log('[AeroCRS Booking] [ticketBooking] POST →', url);
+	console.log('[AeroCRS Booking] [ticketBooking] request headers:', JSON.stringify({
+		accept: authHeaders.accept,
+		'content-type': authHeaders['content-type'],
+		auth_id: authHeaders.auth_id ? `${authHeaders.auth_id.substring(0, 4)}****` : '(missing)',
+		auth_password: authHeaders.auth_password ? '********' : '(missing)'
+	}));
+	console.log('[AeroCRS Booking] [ticketBooking] request payload:', JSON.stringify(body, null, 2));
+
+	let res: Response;
+	try {
+		res = await fetch(url, {
+			method: 'POST',
+			headers: authHeaders,
+			body: JSON.stringify(body)
+		});
+	} catch (networkErr) {
+		const netMsg = (networkErr as Error)?.message || 'Unknown network error';
+		console.error('[AeroCRS Booking] [ticketBooking] NETWORK ERROR — fetch() threw:', netMsg);
+		throw new Error(`ticketBooking network error: ${netMsg}`);
+	}
+
+	console.log('[AeroCRS Booking] [ticketBooking] HTTP status:', res.status, res.statusText);
+	console.log('[AeroCRS Booking] [ticketBooking] response headers:', JSON.stringify(Object.fromEntries(res.headers.entries())));
+
+	const rawBody = await res.text();
+	console.log('[AeroCRS Booking] [ticketBooking] raw response body:', rawBody);
+
+	if (!res.ok) {
+		console.error(`[AeroCRS Booking] [ticketBooking] HTTP ERROR [${res.status}] — AeroCRS rejected the request`);
+		console.error('[AeroCRS Booking] [ticketBooking] full error body:', rawBody);
+		throw new Error(`ticketBooking failed (HTTP ${res.status}): ${rawBody}`);
+	}
+
+	let data: any;
+	try {
+		data = JSON.parse(rawBody);
+	} catch (parseErr) {
+		console.error('[AeroCRS Booking] [ticketBooking] JSON PARSE ERROR — response is not valid JSON');
+		console.error('[AeroCRS Booking] [ticketBooking] raw body was:', rawBody);
+		throw new Error(`ticketBooking response is not valid JSON: ${rawBody.substring(0, 500)}`);
+	}
+
+	console.log('[AeroCRS Booking] [ticketBooking] parsed response:', JSON.stringify(data, null, 2));
+
+	// Check success flag
+	const success = data?.aerocrs?.success;
+	console.log('[AeroCRS Booking] [ticketBooking] aerocrs.success =', success, `(type: ${typeof success})`);
+
+	if (!success) {
+		const errMsg = data?.aerocrs?.error || '';
+		const apiMsg = data?.aerocrs?.message || '';
+		const apiStatus = data?.aerocrs?.status || '';
+		console.error('[AeroCRS Booking] [ticketBooking] ─── TICKETING FAILED ───');
+		console.error('[AeroCRS Booking] [ticketBooking] aerocrs.success:', success);
+		console.error('[AeroCRS Booking] [ticketBooking] aerocrs.error:', errMsg);
+		console.error('[AeroCRS Booking] [ticketBooking] aerocrs.message:', apiMsg);
+		console.error('[AeroCRS Booking] [ticketBooking] aerocrs.status:', apiStatus);
+		console.error('[AeroCRS Booking] [ticketBooking] full aerocrs object:', JSON.stringify(data?.aerocrs, null, 2));
+		const combined = errMsg || apiMsg || JSON.stringify(data);
+		throw new Error(`ticketBooking returned success=false: ${combined}`);
+	}
+
+	const a = data.aerocrs;
+
+	// Log all top-level keys from the aerocrs object for discovery
+	console.log('[AeroCRS Booking] [ticketBooking] aerocrs response keys:', Object.keys(a).join(', '));
+
+	const passengers: TicketedPassenger[] = [];
+	const rawPassengers = a.passengers;
+	console.log('[AeroCRS Booking] [ticketBooking] aerocrs.passengers type:', typeof rawPassengers, Array.isArray(rawPassengers) ? `(array, length=${rawPassengers.length})` : '');
+
+	if (Array.isArray(rawPassengers)) {
+		for (const p of rawPassengers) {
+			console.log('[AeroCRS Booking] [ticketBooking] passenger entry:', JSON.stringify(p));
+			passengers.push({
+				title: p.title || '',
+				firstName: p.firstname || '',
+				lastName: p.lastname || '',
+				eTicket: p['e-ticket'] || ''
+			});
+		}
+	} else if (rawPassengers) {
+		console.warn('[AeroCRS Booking] [ticketBooking] WARNING: passengers is not an array:', JSON.stringify(rawPassengers));
+	} else {
+		console.warn('[AeroCRS Booking] [ticketBooking] WARNING: no passengers field in response');
+	}
+
+	console.log('[AeroCRS Booking] [ticketBooking] ─── TICKET ISSUANCE RESULT ───');
+	console.log('[AeroCRS Booking] [ticketBooking] ticketnumber:', a.ticketnumber ?? '(not present)');
+	console.log('[AeroCRS Booking] [ticketBooking] invoicenumber:', a.invoicenumber ?? '(not present)');
+	console.log('[AeroCRS Booking] [ticketBooking] ticketed passengers:', passengers.length);
+	for (const tp of passengers) {
+		console.log(`[AeroCRS Booking] [ticketBooking]   → ${tp.title} ${tp.firstName} ${tp.lastName} | e-ticket: ${tp.eTicket || '(empty)'}`);
+	}
+	console.log('[AeroCRS Booking] [ticketBooking] ─── TICKET ISSUANCE END ───');
+	console.log('');
+
+	return {
+		ticketNumber: String(a.ticketnumber || ''),
+		invoiceNumber: a.invoicenumber ?? null,
+		passengers
+	};
 }
 
 /* ================================================================
@@ -530,6 +676,7 @@ async function confirmBooking(
  *   3. createBooking          → reserve seats → bookingId
  *   4. addPassengers          → validate + map to AeroCRS structure
  *   5. confirmBooking         → send passengers + confirm → PNR
+ *   6. ticketBooking          → issue e-tickets for the confirmed PNR
  *
  * AeroCRS infant handling: infants are counted as adults in the pax count.
  * The API identifies them by birthdate, not by the `infant` parameter.
@@ -628,6 +775,30 @@ export async function bookFlight(request: BookingRequest): Promise<BookingResult
 		request.passengers.find((p) => p.email)?.email || '';
 	const result = await confirmBooking(bookingId, aeroPaxList, contactEmail);
 
+	// ---- Step 6: ticket booking ----
+	// Ticketing is wrapped in try/catch so a ticketing failure does NOT lose
+	// the already-confirmed PNR. The caller gets the PNR with bookingStatus
+	// "pending_ticketing" and can retry or escalate.
+	try {
+		const ticketResult = await ticketBooking(bookingId);
+		result.ticketNumber = ticketResult.ticketNumber;
+		result.invoiceNumber = ticketResult.invoiceNumber;
+		result.ticketedPassengers = ticketResult.passengers;
+		result.bookingStatus = 'ticketed';
+	} catch (ticketErr) {
+		const ticketMsg = (ticketErr as Error)?.message || 'Unknown ticketing error';
+		console.error('');
+		console.error('[AeroCRS Booking] [ticketBooking] ════════════════════════════════════════════');
+		console.error('[AeroCRS Booking] [ticketBooking] TICKETING FAILED — PNR was created but NOT ticketed');
+		console.error('[AeroCRS Booking] [ticketBooking] ════════════════════════════════════════════');
+		console.error('[AeroCRS Booking] [ticketBooking] bookingId:', bookingId);
+		console.error('[AeroCRS Booking] [ticketBooking] PNR:', result.bookingReference);
+		console.error('[AeroCRS Booking] [ticketBooking] Error message:', ticketMsg);
+		console.error('[AeroCRS Booking] [ticketBooking] Error stack:', (ticketErr as Error)?.stack || '(no stack)');
+		console.error('');
+		// bookingStatus remains 'pending_ticketing' (set in confirmBooking)
+	}
+
 	console.log('');
 	console.log('[AeroCRS Booking] ════════════════════════════════════════════');
 	console.log('[AeroCRS Booking]  BOOKING COMPLETE');
@@ -636,7 +807,11 @@ export async function bookFlight(request: BookingRequest): Promise<BookingResult
 	console.log('[AeroCRS Booking]  Booking ID   :', result.bookingId);
 	console.log('[AeroCRS Booking]  Confirmation :', result.bookingConfirmation);
 	console.log('[AeroCRS Booking]  Status       :', result.status);
+	console.log('[AeroCRS Booking]  Booking Status:', result.bookingStatus);
 	console.log('[AeroCRS Booking]  To pay       :', result.totalPrice, result.currency);
+	console.log('[AeroCRS Booking]  Ticket #     :', result.ticketNumber || '(none)');
+	console.log('[AeroCRS Booking]  Invoice #    :', result.invoiceNumber ?? '(none)');
+	console.log('[AeroCRS Booking]  E-tickets    :', result.ticketedPassengers.length > 0 ? result.ticketedPassengers.map(p => `${p.firstName} ${p.lastName}: ${p.eTicket}`).join(', ') : '(none)');
 	console.log('[AeroCRS Booking]  Link         :', result.linkToBooking);
 	console.log('');
 

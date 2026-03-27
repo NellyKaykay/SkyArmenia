@@ -13,11 +13,7 @@
 // inside confirmBooking.  We keep addPassengers() as a dedicated step that
 // validates every field and builds the exact payload the API expects.
 
-import {
-	AEROCRS_AUTH_ID,
-	AEROCRS_AUTH_PASSWORD,
-	AEROCRS_BASE_URL
-} from '$env/static/private';
+import { getAeroCrsConfig } from '$lib/server/aerocrs-config';
 
 /* ================================================================
    TYPES
@@ -90,19 +86,10 @@ interface AeroCrsPassenger {
    ================================================================ */
 
 function getConfig() {
-	if (!AEROCRS_AUTH_ID || !AEROCRS_AUTH_PASSWORD || !AEROCRS_BASE_URL) {
-		throw new Error(
-			'AeroCRS Booking: missing environment variables (AEROCRS_AUTH_ID, AEROCRS_AUTH_PASSWORD, AEROCRS_BASE_URL)'
-		);
-	}
+	const config = getAeroCrsConfig();
 	return {
-		baseUrl: AEROCRS_BASE_URL.replace(/\/+$/, ''),
-		authHeaders: {
-			accept: 'application/json',
-			'content-type': 'application/json',
-			auth_id: AEROCRS_AUTH_ID,
-			auth_password: AEROCRS_AUTH_PASSWORD
-		}
+		baseUrl: config.baseUrl,
+		authHeaders: config.authHeaders
 	};
 }
 

@@ -1,17 +1,7 @@
 // src/lib/server/aerocrs-search.ts
 // Server-only AeroCRS flight search via getAvailability endpoint.
 // Uses GET + query params with date format yyyy/MM/dd.
-import { AEROCRS_ENV } from '$env/static/private';
-
-if (AEROCRS_ENV === 'production') {
-  console.log('AeroCRS PRODUCTION MODE ACTIVE');
-}
-
-import {
-	AEROCRS_AUTH_ID,
-	AEROCRS_AUTH_PASSWORD,
-	AEROCRS_BASE_URL
-} from '$env/static/private';
+import { getAeroCrsConfig } from '$lib/server/aerocrs-config';
 
 export interface AeroCrsSearchParams {
 	origin: string;
@@ -22,17 +12,13 @@ export interface AeroCrsSearchParams {
 }
 
 function getConfig() {
-	if (!AEROCRS_AUTH_ID || !AEROCRS_AUTH_PASSWORD || !AEROCRS_BASE_URL) {
-		throw new Error(
-			'AeroCRS: missing environment variables (AEROCRS_AUTH_ID, AEROCRS_AUTH_PASSWORD, AEROCRS_BASE_URL)'
-		);
-	}
+	const config = getAeroCrsConfig();
 	return {
-		baseUrl: AEROCRS_BASE_URL.replace(/\/+$/, ''),
+		baseUrl: config.baseUrl,
 		authHeaders: {
-			accept: 'application/json',
-			auth_id: AEROCRS_AUTH_ID,
-			auth_password: AEROCRS_AUTH_PASSWORD
+			accept: config.authHeaders.accept,
+			auth_id: config.authHeaders.auth_id,
+			auth_password: config.authHeaders.auth_password
 		}
 	};
 }

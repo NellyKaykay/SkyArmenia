@@ -13,11 +13,7 @@
 //   - Fare fields: fromCode, toCode, class, type, currency, adultFareOW, childFareOW, infantFareOW, tax1OW-tax4OW, notification
 
 import type { Provider, SearchRequest, ProviderOffer } from '$lib/providers/types';
-import {
-	AEROCRS_AUTH_ID,
-	AEROCRS_AUTH_PASSWORD,
-	AEROCRS_BASE_URL
-} from '$env/static/private';
+import { getAeroCrsConfig } from '$lib/server/aerocrs-config';
 
 /* ---------- constants ---------- */
 
@@ -31,17 +27,13 @@ const MAX_OFFERS = 30;
 /* ---------- config ---------- */
 
 function getConfig() {
-	if (!AEROCRS_AUTH_ID || !AEROCRS_AUTH_PASSWORD || !AEROCRS_BASE_URL) {
-		throw new Error(
-			'AeroCRS: missing environment variables (AEROCRS_AUTH_ID, AEROCRS_AUTH_PASSWORD, AEROCRS_BASE_URL)'
-		);
-	}
+	const config = getAeroCrsConfig();
 	return {
-		baseUrl: AEROCRS_BASE_URL.replace(/\/+$/, ''),
+		baseUrl: config.baseUrl,
 		authHeaders: {
-			accept: 'application/json',
-			auth_id: AEROCRS_AUTH_ID,
-			auth_password: AEROCRS_AUTH_PASSWORD
+			accept: config.authHeaders.accept,
+			auth_id: config.authHeaders.auth_id,
+			auth_password: config.authHeaders.auth_password
 		}
 	};
 }

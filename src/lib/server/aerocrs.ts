@@ -1,31 +1,12 @@
 // src/lib/server/aerocrs.ts
 // Server-only AeroCRS API v5 connector.
-import { AEROCRS_ENV } from '$env/static/private';
-
-if (AEROCRS_ENV === 'production') {
-  console.log('AeroCRS PRODUCTION MODE ACTIVE');
-}
-
-import {
-	AEROCRS_AUTH_ID,
-	AEROCRS_AUTH_PASSWORD,
-	AEROCRS_BASE_URL
-} from '$env/static/private';
+import { getAeroCrsConfig } from '$lib/server/aerocrs-config';
 
 function getCredentials() {
-	if (!AEROCRS_AUTH_ID || !AEROCRS_AUTH_PASSWORD || !AEROCRS_BASE_URL) {
-		throw new Error(
-			'AeroCRS: missing environment variables (AEROCRS_AUTH_ID, AEROCRS_AUTH_PASSWORD, AEROCRS_BASE_URL)'
-		);
-	}
+	const config = getAeroCrsConfig();
 	return {
-		baseUrl: AEROCRS_BASE_URL.replace(/\/+$/, ''),
-		authHeaders: {
-			'accept': 'application/json',
-			'content-type': 'application/json',
-			'auth_id': AEROCRS_AUTH_ID,
-			'auth_password': AEROCRS_AUTH_PASSWORD
-		}
+		baseUrl: config.baseUrl,
+		authHeaders: config.authHeaders
 	};
 }
 

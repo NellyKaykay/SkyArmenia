@@ -1,38 +1,42 @@
-# sv
+# ✈️ SkyArmenia — Flight Search Platform
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Full stack flight search platform that integrates external airline providers and displays real-time results in a modern web interface.
 
-## Creating a project
+## 🚀 Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+* 🔎 Flight search with real-time API integration
+* 🌍 Multi-provider architecture (FlyOne, Blackstone)
+* ⚡ Fast backend endpoints (SvelteKit + Node)
+* 🧠 Ready for AI integrations (OpenAI APIs)
+* 💾 Supabase (PostgreSQL) database integration
+* 🎨 Modern responsive UI
 
-```sh
-# create a new project in the current directory
-npx sv create
+## 🧱 Tech Stack
 
-# create a new project in my-app
-npx sv create my-app
-```
+* Frontend: SvelteKit (modern JS framework)
+* Backend: Node.js (SvelteKit endpoints)
+* Database: Supabase (PostgreSQL)
+* APIs: External flight providers (FlyOne, Blackstone)
+* Deployment: Render
 
-## Developing
+## 🧩 Architecture
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+* Modular provider system (`/src/lib/providers`)
+* API endpoints (`/api/*`)
+* Scalable backend structure for integrations
+* Ready for automation and AI workflows
 
-```sh
-npm run dev
+## 🔗 Live Features
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+* `/api/ping` → health check
+* `/api/db-check` → database connection
+* Flight search endpoint (in progress)
 
-## Building
+## 📸 Screenshots
 
-To create a production version of your app:
+(Add screenshots here later)
 
-```sh
-npm run build
-```
+## 🧑‍💻 Author
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Nelli Karapetyan
+GitHub: https://github.com/NellyKaykay

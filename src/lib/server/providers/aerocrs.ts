@@ -509,7 +509,7 @@ function buildFinalOffer(
 			segments: out.segments,
 			durationMin: out.durationMin
 		},
-		deepLink: ''
+		deepLink: 'https://bookings.blackstone.am/'
 	};
 
 	if (ret) {

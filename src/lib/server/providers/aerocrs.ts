@@ -448,7 +448,7 @@ const aerocrs: Provider = {
 			// One-way or no return flights found
 			for (const out of outOffers) {
 				if (offers.length >= MAX_OFFERS) break;
-				offers.push(buildFinalOffer(out, undefined, req, idx++) as any);
+				offers.push(buildFinalOffer(out, undefined, req.depart, idx++) as any);
 			}
 		} else {
 			// Round trip: pair by same (classCode, fareType) to avoid cartesian explosion
@@ -468,11 +468,11 @@ const aerocrs: Provider = {
 				if (matchingRets.length === 0) {
 					// No matching return — try same cabin at least
 					const sameCabinRet = retOffers.find(r => r.cabin === out.cabin);
-					offers.push(buildFinalOffer(out, sameCabinRet, req, idx++) as any);
+					offers.push(buildFinalOffer(out, sameCabinRet, req.depart, idx++) as any);
 				} else {
 					for (const ret of matchingRets) {
 						if (offers.length >= MAX_OFFERS) break;
-						offers.push(buildFinalOffer(out, ret, req, idx++) as any);
+						offers.push(buildFinalOffer(out, ret, req.depart, idx++) as any);
 					}
 				}
 			}
@@ -483,27 +483,11 @@ const aerocrs: Provider = {
 	}
 };
 
-/** Build a Blackstone booking engine deeplink pre-filled with search criteria. */
-function buildDeepLink(req: SearchRequest, isRoundTrip: boolean): string {
-	const params = new URLSearchParams({
-		from: req.origin,
-		to: req.destination,
-		date1: req.depart,
-		adt: String(req.passengers.adults),
-		chd: String(req.passengers.children ?? 0),
-		inf: String(req.passengers.infants ?? 0)
-	});
-	if (isRoundTrip && req.return) {
-		params.set('date2', req.return);
-	}
-	return `https://bookings.blackstone.am/en?${params.toString()}`;
-}
-
 /** Build the final UI-shaped offer from outbound (+ optional return) direction offers. */
 function buildFinalOffer(
 	out: DirectionOffer,
 	ret: DirectionOffer | undefined,
-	req: SearchRequest,
+	departDate: string,
 	idx: number
 ): Record<string, any> {
 	const combinedPrice = ret
@@ -514,7 +498,7 @@ function buildFinalOffer(
 		: out.price;
 
 	const offer: Record<string, any> = {
-		id: `aerocrs-${out.fltnum}-${out.classCode}-${out.fareType || 'std'}-${req.depart}-${idx}`,
+		id: `aerocrs-${out.fltnum}-${out.classCode}-${out.fareType || 'std'}-${departDate}-${idx}`,
 		provider: 'aerocrs',
 		cabin: out.cabin,
 		bagsIncluded: out.bagsIncluded,
@@ -525,7 +509,7 @@ function buildFinalOffer(
 			segments: out.segments,
 			durationMin: out.durationMin
 		},
-		deepLink: buildDeepLink(req, ret !== undefined)
+		deepLink: 'https://bookings.blackstone.am/en'
 	};
 
 	if (ret) {

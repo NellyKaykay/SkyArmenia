@@ -2,7 +2,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import type { SearchRequest, ProviderBatchResult, AggregatedSearchResponse, TripType, Cabin } from '$lib/providers/types';
 import flyone from '$lib/providers/flyone';
-import aerocrs from '$lib/providers/aerocrs';
+import aerocrs from '$lib/server/providers/aerocrs';
 
 function asTripType(v: string | null): TripType {
   return v === 'oneway' ? 'oneway' : 'round';

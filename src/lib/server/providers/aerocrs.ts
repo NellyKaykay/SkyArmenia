@@ -509,7 +509,7 @@ function buildFinalOffer(
 			segments: out.segments,
 			durationMin: out.durationMin
 		},
-		deepLink: 'https://booking.aerocrs.com/'
+		deepLink: ''
 	};
 
 	if (ret) {

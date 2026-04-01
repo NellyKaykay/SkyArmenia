@@ -24,6 +24,7 @@ export interface BookingPassenger {
 	firstName: string;
 	lastName: string;
 	birthDate: string; // YYYY-MM-DD
+	gender?: 'M' | 'F';
 	title?: string;
 	nationality?: string;
 	docType?: string;
@@ -127,17 +128,12 @@ function parseOfferId(offerId: string): {
 
 	const fltnum = parts[1];
 	const classCode = parts[2];
-	const idx = parts[parts.length - 1];
 	const date = parts.slice(-4, -1).join('-'); // YYYY-MM-DD
 	const fareType = parts.slice(3, -4).join('-'); // between classCode and date
 
 	if (!fltnum || !classCode || !date || !isIsoDate(date)) {
 		throw new Error(`Cannot parse offerId: ${offerId}`);
 	}
-
-	console.log(
-		`[AeroCRS Booking] parsed offerId → fltnum=${fltnum} class=${classCode} fare=${fareType || 'std'} date=${date} idx=${idx}`
-	);
 
 	return { fltnum, classCode, fareType: fareType || 'std', date };
 }
@@ -177,20 +173,17 @@ async function resolveFlightAndFare(
 	});
 
 	const url = `${baseUrl}/getDeepLink?${qs}`;
-	console.log('[AeroCRS Booking] [resolve] getDeepLink GET →', url);
-
 	const res = await fetch(url, { method: 'GET', headers: authHeaders });
 
 	if (!res.ok) {
 		const body = await res.text();
-		console.error(`[AeroCRS Booking] [resolve] getDeepLink FAILED [${res.status}]:`, body);
+		console.error(`[Booking] resolveFlightAndFare failed [${res.status}]`);
 		throw new Error(`Failed to resolve flight IDs (HTTP ${res.status})`);
 	}
 
 	const data = await res.json();
 
 	if (!data?.aerocrs?.success) {
-		console.error('[AeroCRS Booking] [resolve] getDeepLink success=false', JSON.stringify(data));
 		throw new Error('AeroCRS getDeepLink returned success=false');
 	}
 
@@ -201,8 +194,6 @@ async function resolveFlightAndFare(
 		throw new Error(`No flights found for ${origin}→${destination} on ${date}`);
 	}
 
-	console.log(`[AeroCRS Booking] [resolve] ${flights.length} flight(s) returned from getDeepLink`);
-
 	// Find matching flight by fltnum
 	const matchedFlight = flights.find((f: any) => f.fltnum === fltnum);
 	if (!matchedFlight) {
@@ -212,8 +203,6 @@ async function resolveFlightAndFare(
 
 	const classes: Record<string, any> = matchedFlight.classes || {};
 	const classKeys = Object.keys(classes);
-
-	console.log(`[AeroCRS Booking] [resolve] flight ${fltnum} has classes: ${classKeys.join(', ')}`);
 
 	// Build the class key to look up.
 	// getDeepLink uses "classCode/fareType" for branded fares, "classCode" for non-branded.
@@ -238,20 +227,11 @@ async function resolveFlightAndFare(
 	const fareId = classEntry.fareid;
 
 	if (flightId == null || fareId == null) {
-		console.error(
-			'[AeroCRS Booking] [resolve] class entry missing flightid/fareid. Keys:',
-			Object.keys(classEntry).join(', ')
-		);
 		throw new Error(
 			`Class entry for ${brandedKey || plainKey} missing flightid or fareid. ` +
 			`Available fields: ${Object.keys(classEntry).join(', ')}`
 		);
 	}
-
-	console.log(
-		`[AeroCRS Booking] [resolve] resolved → flightId=${flightId} fareId=${fareId} ` +
-		`(fltnum=${fltnum}, class=${brandedKey || plainKey})`
-	);
 
 	return { flightId: Number(flightId), fareId: Number(fareId) };
 }
@@ -296,9 +276,6 @@ async function createBooking(
 		}
 	};
 
-	console.log('[AeroCRS Booking] [createBooking] POST →', url);
-	console.log('[AeroCRS Booking] [createBooking] payload:', JSON.stringify(body, null, 2));
-
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: authHeaders,
@@ -307,12 +284,11 @@ async function createBooking(
 
 	if (!res.ok) {
 		const text = await res.text();
-		console.error(`[AeroCRS Booking] [createBooking] FAILED [${res.status}]:`, text);
+		console.error(`[Booking] createBooking failed [${res.status}]`);
 		throw new Error(`createBooking failed (HTTP ${res.status}): ${text}`);
 	}
 
 	const data = await res.json();
-	console.log('[AeroCRS Booking] [createBooking] response:', JSON.stringify(data, null, 2));
 
 	if (!data?.aerocrs?.success) {
 		const msg = data?.aerocrs?.error || data?.aerocrs?.message || JSON.stringify(data);
@@ -323,12 +299,6 @@ async function createBooking(
 	if (!booking?.bookingid) {
 		throw new Error('createBooking response missing bookingid');
 	}
-
-	console.log(
-		`[AeroCRS Booking] [createBooking] BOOKING CREATED ` +
-		`→ bookingId=${booking.bookingid} pnrRef=${booking.pnrref} ` +
-		`total=${booking.totalprice} ${booking.currency}`
-	);
 
 	return {
 		bookingId: booking.bookingid,
@@ -351,8 +321,6 @@ async function createBooking(
  * if anything is wrong it throws before we hit the API.
  */
 function addPassengers(passengers: BookingPassenger[]): AeroCrsPassenger[] {
-	console.log(`[AeroCRS Booking] [addPassengers] validating ${passengers.length} passenger(s)…`);
-
 	if (passengers.length === 0) {
 		throw new Error('At least one passenger is required');
 	}
@@ -379,29 +347,23 @@ function addPassengers(passengers: BookingPassenger[]): AeroCrsPassenger[] {
 
 		// --- type-specific validation ---
 		if (p.type === 'ADT') {
-			// Adults should have a title (default Mr. if missing)
 			if (p.docExpiry && !isIsoDate(p.docExpiry)) {
 				throw new Error(`${label}: docExpiry must be YYYY-MM-DD`);
 			}
 		}
 
 		if (p.type === 'INF') {
-			// Infants: verify birth date is reasonably recent (< 3 years from now)
 			const birth = new Date(p.birthDate);
 			const now = new Date();
-			const ageMs = now.getTime() - birth.getTime();
-			const ageYears = ageMs / (365.25 * 24 * 60 * 60 * 1000);
+			const ageYears = (now.getTime() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
 			if (ageYears > 3) {
-				console.warn(
-					`[AeroCRS Booking] [addPassengers] WARNING: ${label} birthDate ${p.birthDate} ` +
-					`makes infant ~${ageYears.toFixed(1)} years old — may be rejected by airline`
-				);
+				console.warn(`[Booking] ${label} age ~${ageYears.toFixed(1)}y — may be rejected as infant`);
 			}
 		}
 
 		// --- map to AeroCRS field names ---
 		const aeroPax: AeroCrsPassenger = {
-			paxtitle: p.title || defaultTitle(p.type),
+			paxtitle: p.title || defaultTitle(p.type, p.gender),
 			firstname: p.firstName.trim(),
 			lastname: p.lastName.trim(),
 			paxage: null,
@@ -415,33 +377,21 @@ function addPassengers(passengers: BookingPassenger[]): AeroCrsPassenger[] {
 			paxemail: p.email || ''
 		};
 
-		console.log(
-			`[AeroCRS Booking] [addPassengers] ✓ ${label}: ` +
-			`${aeroPax.paxtitle} ${aeroPax.firstname} ${aeroPax.lastname} ` +
-			`DOB=${aeroPax.paxbirthdate}`
-		);
-
 		mapped.push(aeroPax);
 	}
 
-	console.log(`[AeroCRS Booking] [addPassengers] PASSENGERS ADDED → ${mapped.length} passenger(s) validated and mapped`);
 	return mapped;
 }
 
 /**
- * Default title based on passenger type.
- * AeroCRS requires a valid title from its database for ALL passengers,
- * including infants and children. Empty or custom titles (e.g. "Inf.") are rejected.
+ * Default title based on passenger type and gender.
+ * AeroCRS requires a valid title from its database for ALL passengers.
  */
-function defaultTitle(type: string): string {
-	switch (type) {
-		case 'INF':
-			return 'Mr.';
-		case 'CHD':
-			return 'Mr.';
-		default:
-			return 'Mr.';
+function defaultTitle(type: string, gender?: 'M' | 'F'): string {
+	if (type === 'INF' || type === 'CHD') {
+		return gender === 'F' ? 'Miss' : 'Mr.';
 	}
+	return gender === 'F' ? 'Mrs.' : 'Mr.';
 }
 
 /* ================================================================
@@ -471,9 +421,6 @@ async function confirmBooking(
 		}
 	};
 
-	console.log('[AeroCRS Booking] [confirmBooking] POST →', url);
-	console.log('[AeroCRS Booking] [confirmBooking] payload:', JSON.stringify(body, null, 2));
-
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: authHeaders,
@@ -482,12 +429,11 @@ async function confirmBooking(
 
 	if (!res.ok) {
 		const text = await res.text();
-		console.error(`[AeroCRS Booking] [confirmBooking] FAILED [${res.status}]:`, text);
+		console.error(`[Booking] confirmBooking failed [${res.status}]`);
 		throw new Error(`confirmBooking failed (HTTP ${res.status}): ${text}`);
 	}
 
 	const data = await res.json();
-	console.log('[AeroCRS Booking] [confirmBooking] response:', JSON.stringify(data, null, 2));
 
 	if (!data?.aerocrs?.success) {
 		const msg = data?.aerocrs?.error || data?.aerocrs?.message || JSON.stringify(data);
@@ -496,7 +442,7 @@ async function confirmBooking(
 
 	const a = data.aerocrs;
 
-	const result: BookingResult = {
+	return {
 		bookingReference: a.pnrref || '',
 		bookingId: a.bookingid,
 		bookingConfirmation: a.bookingconfirmation || '',
@@ -511,14 +457,6 @@ async function confirmBooking(
 		invoiceNumber: null,
 		ticketedPassengers: []
 	};
-
-	console.log(
-		`[AeroCRS Booking] [confirmBooking] BOOKING CONFIRMED ` +
-		`→ PNR=${result.bookingReference} status=${result.status} ` +
-		`toPay=${result.totalPrice} ${result.currency}`
-	);
-
-	return result;
 }
 
 /* ================================================================
@@ -543,18 +481,6 @@ async function ticketBooking(
 		}
 	};
 
-	console.log('');
-	console.log('[AeroCRS Booking] [ticketBooking] ─── TICKET ISSUANCE START ───');
-	console.log('[AeroCRS Booking] [ticketBooking] bookingId:', bookingId);
-	console.log('[AeroCRS Booking] [ticketBooking] POST →', url);
-	console.log('[AeroCRS Booking] [ticketBooking] request headers:', JSON.stringify({
-		accept: authHeaders.accept,
-		'content-type': authHeaders['content-type'],
-		auth_id: authHeaders.auth_id ? `${authHeaders.auth_id.substring(0, 4)}****` : '(missing)',
-		auth_password: authHeaders.auth_password ? '********' : '(missing)'
-	}));
-	console.log('[AeroCRS Booking] [ticketBooking] request payload:', JSON.stringify(body, null, 2));
-
 	let res: Response;
 	try {
 		res = await fetch(url, {
@@ -564,63 +490,35 @@ async function ticketBooking(
 		});
 	} catch (networkErr) {
 		const netMsg = (networkErr as Error)?.message || 'Unknown network error';
-		console.error('[AeroCRS Booking] [ticketBooking] NETWORK ERROR — fetch() threw:', netMsg);
 		throw new Error(`ticketBooking network error: ${netMsg}`);
 	}
 
-	console.log('[AeroCRS Booking] [ticketBooking] HTTP status:', res.status, res.statusText);
-	console.log('[AeroCRS Booking] [ticketBooking] response headers:', JSON.stringify(Object.fromEntries(res.headers.entries())));
-
 	const rawBody = await res.text();
-	console.log('[AeroCRS Booking] [ticketBooking] raw response body:', rawBody);
 
 	if (!res.ok) {
-		console.error(`[AeroCRS Booking] [ticketBooking] HTTP ERROR [${res.status}] — AeroCRS rejected the request`);
-		console.error('[AeroCRS Booking] [ticketBooking] full error body:', rawBody);
+		console.error(`[Booking] ticketBooking failed [${res.status}]`);
 		throw new Error(`ticketBooking failed (HTTP ${res.status}): ${rawBody}`);
 	}
 
 	let data: any;
 	try {
 		data = JSON.parse(rawBody);
-	} catch (parseErr) {
-		console.error('[AeroCRS Booking] [ticketBooking] JSON PARSE ERROR — response is not valid JSON');
-		console.error('[AeroCRS Booking] [ticketBooking] raw body was:', rawBody);
-		throw new Error(`ticketBooking response is not valid JSON: ${rawBody.substring(0, 500)}`);
+	} catch {
+		throw new Error(`ticketBooking response is not valid JSON: ${rawBody.substring(0, 200)}`);
 	}
 
-	console.log('[AeroCRS Booking] [ticketBooking] parsed response:', JSON.stringify(data, null, 2));
-
-	// Check success flag
-	const success = data?.aerocrs?.success;
-	console.log('[AeroCRS Booking] [ticketBooking] aerocrs.success =', success, `(type: ${typeof success})`);
-
-	if (!success) {
-		const errMsg = data?.aerocrs?.error || '';
-		const apiMsg = data?.aerocrs?.message || '';
-		const apiStatus = data?.aerocrs?.status || '';
-		console.error('[AeroCRS Booking] [ticketBooking] ─── TICKETING FAILED ───');
-		console.error('[AeroCRS Booking] [ticketBooking] aerocrs.success:', success);
-		console.error('[AeroCRS Booking] [ticketBooking] aerocrs.error:', errMsg);
-		console.error('[AeroCRS Booking] [ticketBooking] aerocrs.message:', apiMsg);
-		console.error('[AeroCRS Booking] [ticketBooking] aerocrs.status:', apiStatus);
-		console.error('[AeroCRS Booking] [ticketBooking] full aerocrs object:', JSON.stringify(data?.aerocrs, null, 2));
-		const combined = errMsg || apiMsg || JSON.stringify(data);
-		throw new Error(`ticketBooking returned success=false: ${combined}`);
+	if (!data?.aerocrs?.success) {
+		const errMsg = data?.aerocrs?.error || data?.aerocrs?.message || JSON.stringify(data);
+		throw new Error(`ticketBooking returned success=false: ${errMsg}`);
 	}
 
 	const a = data.aerocrs;
 
-	// Log all top-level keys from the aerocrs object for discovery
-	console.log('[AeroCRS Booking] [ticketBooking] aerocrs response keys:', Object.keys(a).join(', '));
-
 	const passengers: TicketedPassenger[] = [];
 	const rawPassengers = a.passengers;
-	console.log('[AeroCRS Booking] [ticketBooking] aerocrs.passengers type:', typeof rawPassengers, Array.isArray(rawPassengers) ? `(array, length=${rawPassengers.length})` : '');
 
 	if (Array.isArray(rawPassengers)) {
 		for (const p of rawPassengers) {
-			console.log('[AeroCRS Booking] [ticketBooking] passenger entry:', JSON.stringify(p));
 			passengers.push({
 				title: p.title || '',
 				firstName: p.firstname || '',
@@ -628,21 +526,7 @@ async function ticketBooking(
 				eTicket: p['e-ticket'] || ''
 			});
 		}
-	} else if (rawPassengers) {
-		console.warn('[AeroCRS Booking] [ticketBooking] WARNING: passengers is not an array:', JSON.stringify(rawPassengers));
-	} else {
-		console.warn('[AeroCRS Booking] [ticketBooking] WARNING: no passengers field in response');
 	}
-
-	console.log('[AeroCRS Booking] [ticketBooking] ─── TICKET ISSUANCE RESULT ───');
-	console.log('[AeroCRS Booking] [ticketBooking] ticketnumber:', a.ticketnumber ?? '(not present)');
-	console.log('[AeroCRS Booking] [ticketBooking] invoicenumber:', a.invoicenumber ?? '(not present)');
-	console.log('[AeroCRS Booking] [ticketBooking] ticketed passengers:', passengers.length);
-	for (const tp of passengers) {
-		console.log(`[AeroCRS Booking] [ticketBooking]   → ${tp.title} ${tp.firstName} ${tp.lastName} | e-ticket: ${tp.eTicket || '(empty)'}`);
-	}
-	console.log('[AeroCRS Booking] [ticketBooking] ─── TICKET ISSUANCE END ───');
-	console.log('');
 
 	return {
 		ticketNumber: String(a.ticketnumber || ''),
@@ -669,18 +553,10 @@ async function ticketBooking(
  * The API identifies them by birthdate, not by the `infant` parameter.
  */
 export async function bookFlight(request: BookingRequest): Promise<BookingResult> {
-	console.log('');
-	console.log('[AeroCRS Booking] ════════════════════════════════════════════');
-	console.log('[AeroCRS Booking]  START BOOKING FLOW');
-	console.log('[AeroCRS Booking] ════════════════════════════════════════════');
-	console.log('[AeroCRS Booking]  offerId       :', request.offerId);
-	console.log('[AeroCRS Booking]  returnOfferId :', request.returnOfferId || '(none — one-way)');
-	console.log('[AeroCRS Booking]  route         :', request.origin, '→', request.destination);
-	console.log('[AeroCRS Booking]  passengers    :', request.passengers.length);
-	console.log('');
-
 	const isRoundTrip = !!request.returnOfferId;
 	const tripType = isRoundTrip ? 'RT' : 'OW';
+
+	console.log(`[Booking] ${request.origin}→${request.destination} ${tripType} | ${request.passengers.length} pax`);
 
 	// ---- Step 1: parse offer ID(s) ----
 	const outbound = parseOfferId(request.offerId);
@@ -697,11 +573,6 @@ export async function bookFlight(request: BookingRequest): Promise<BookingResult
 
 	// Infants counted as adults for AeroCRS createBooking
 	const apiAdults = adultCount + infantCount;
-
-	console.log(
-		`[AeroCRS Booking] pax counts → ADT=${adultCount} CHD=${childCount} INF=${infantCount} ` +
-		`(API adults=${apiAdults}, children=${childCount}, infant=0)`
-	);
 
 	// ---- Step 2: resolve AeroCRS raw IDs ----
 	const outboundIds = await resolveFlightAndFare(
@@ -735,9 +606,6 @@ export async function bookFlight(request: BookingRequest): Promise<BookingResult
 			inbound.fareType
 		);
 
-		// AeroCRS sandbox: fromcode/tocode must match the flight record,
-		// which may differ from the logical travel direction.
-		// getDeepLink returns the actual from/to the API expects.
 		legs.push({
 			fromcode: request.destination,
 			tocode: request.origin,
@@ -747,25 +615,17 @@ export async function bookFlight(request: BookingRequest): Promise<BookingResult
 	}
 
 	// ---- Step 3: create booking ----
-	const { bookingId } = await createBooking(
-		legs,
-		tripType,
-		apiAdults,
-		childCount
-	);
+	const { bookingId } = await createBooking(legs, tripType, apiAdults, childCount);
 
 	// ---- Step 4: add passengers (validate + map) ----
 	const aeroPaxList = addPassengers(request.passengers);
 
 	// ---- Step 5: confirm booking ----
-	const contactEmail =
-		request.passengers.find((p) => p.email)?.email || '';
+	const contactEmail = request.passengers.find((p) => p.email)?.email || '';
 	const result = await confirmBooking(bookingId, aeroPaxList, contactEmail);
 
 	// ---- Step 6: ticket booking ----
-	// Ticketing is wrapped in try/catch so a ticketing failure does NOT lose
-	// the already-confirmed PNR. The caller gets the PNR with bookingStatus
-	// "pending_ticketing" and can retry or escalate.
+	// Wrapped in try/catch so ticketing failure does NOT lose the confirmed PNR.
 	try {
 		const ticketResult = await ticketBooking(bookingId);
 		result.ticketNumber = ticketResult.ticketNumber;
@@ -774,33 +634,10 @@ export async function bookFlight(request: BookingRequest): Promise<BookingResult
 		result.bookingStatus = 'ticketed';
 	} catch (ticketErr) {
 		const ticketMsg = (ticketErr as Error)?.message || 'Unknown ticketing error';
-		console.error('');
-		console.error('[AeroCRS Booking] [ticketBooking] ════════════════════════════════════════════');
-		console.error('[AeroCRS Booking] [ticketBooking] TICKETING FAILED — PNR was created but NOT ticketed');
-		console.error('[AeroCRS Booking] [ticketBooking] ════════════════════════════════════════════');
-		console.error('[AeroCRS Booking] [ticketBooking] bookingId:', bookingId);
-		console.error('[AeroCRS Booking] [ticketBooking] PNR:', result.bookingReference);
-		console.error('[AeroCRS Booking] [ticketBooking] Error message:', ticketMsg);
-		console.error('[AeroCRS Booking] [ticketBooking] Error stack:', (ticketErr as Error)?.stack || '(no stack)');
-		console.error('');
-		// bookingStatus remains 'pending_ticketing' (set in confirmBooking)
+		console.error(`[Booking] ticketing failed for bookingId=${bookingId} PNR=${result.bookingReference}: ${ticketMsg}`);
 	}
 
-	console.log('');
-	console.log('[AeroCRS Booking] ════════════════════════════════════════════');
-	console.log('[AeroCRS Booking]  BOOKING COMPLETE');
-	console.log('[AeroCRS Booking] ════════════════════════════════════════════');
-	console.log('[AeroCRS Booking]  PNR          :', result.bookingReference);
-	console.log('[AeroCRS Booking]  Booking ID   :', result.bookingId);
-	console.log('[AeroCRS Booking]  Confirmation :', result.bookingConfirmation);
-	console.log('[AeroCRS Booking]  Status       :', result.status);
-	console.log('[AeroCRS Booking]  Booking Status:', result.bookingStatus);
-	console.log('[AeroCRS Booking]  To pay       :', result.totalPrice, result.currency);
-	console.log('[AeroCRS Booking]  Ticket #     :', result.ticketNumber || '(none)');
-	console.log('[AeroCRS Booking]  Invoice #    :', result.invoiceNumber ?? '(none)');
-	console.log('[AeroCRS Booking]  E-tickets    :', result.ticketedPassengers.length > 0 ? result.ticketedPassengers.map(p => `${p.firstName} ${p.lastName}: ${p.eTicket}`).join(', ') : '(none)');
-	console.log('[AeroCRS Booking]  Link         :', result.linkToBooking);
-	console.log('');
+	console.log(`[Booking] complete PNR=${result.bookingReference} status=${result.bookingStatus}`);
 
 	return result;
 }

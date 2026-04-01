@@ -1,14 +1,25 @@
 services:
   - type: web
     name: skyarmenia
-    env: node
+    runtime: node
     plan: free
-    buildCommand: npm install && npm run build
+    nodeVersion: "22"
+    buildCommand: npm ci && npm run build
     startCommand: node build
     autoDeploy: true
     healthCheckPath: /api/ping
     envVars:
+      - key: NODE_VERSION
+        value: "22"
       - key: PUBLIC_SUPABASE_URL
         sync: false
       - key: PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: AEROCRS_AUTH_ID
+        sync: false
+      - key: AEROCRS_AUTH_PASSWORD
+        sync: false
+      - key: AEROCRS_BASE_URL
+        sync: false
+      - key: AEROCRS_ENV
         sync: false

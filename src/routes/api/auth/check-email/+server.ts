@@ -2,7 +2,7 @@
 import type { RequestHandler } from './$types';
 import { json } from '@sveltejs/kit';
 import { createServerClient } from '@supabase/ssr';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 export const GET: RequestHandler = async ({ url, cookies, fetch }) => {
   const email = String(url.searchParams.get('email') ?? '').trim().toLowerCase();
@@ -11,7 +11,7 @@ export const GET: RequestHandler = async ({ url, cookies, fetch }) => {
     return json({ ok: false, error: 'invalid_email', exists: false }, { status: 400 });
   }
 
-  const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+  const supabase = createServerClient(env.PUBLIC_SUPABASE_URL!, env.PUBLIC_SUPABASE_ANON_KEY!, {
     cookies: {
       get: (key) => cookies.get(key),
       set: (key, value, options) => cookies.set(key, value, { ...options, path: '/' }),

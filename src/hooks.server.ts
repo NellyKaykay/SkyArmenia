@@ -1,11 +1,11 @@
 // src/hooks.server.ts
 import type { Handle } from '@sveltejs/kit';
 import { createServerClient } from '@supabase/ssr';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 export const handle: Handle = async ({ event, resolve }) => {
-  const url = PUBLIC_SUPABASE_URL;
-  const key = PUBLIC_SUPABASE_ANON_KEY;
+  const url = env.PUBLIC_SUPABASE_URL;
+  const key = env.PUBLIC_SUPABASE_ANON_KEY;
 
   // En local => cookies no "secure"
   const secure = event.url.hostname !== 'localhost' && event.url.hostname !== '127.0.0.1';

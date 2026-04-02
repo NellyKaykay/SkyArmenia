@@ -448,7 +448,7 @@ const aerocrs: Provider = {
 			// One-way or no return flights found
 			for (const out of outOffers) {
 				if (offers.length >= MAX_OFFERS) break;
-				offers.push(buildFinalOffer(out, undefined, req.depart, idx++) as any);
+				offers.push(buildFinalOffer(out, undefined, req.depart, idx++, req) as any);
 			}
 		} else {
 			// Round trip: pair by same (classCode, fareType) to avoid cartesian explosion
@@ -468,11 +468,11 @@ const aerocrs: Provider = {
 				if (matchingRets.length === 0) {
 					// No matching return — try same cabin at least
 					const sameCabinRet = retOffers.find(r => r.cabin === out.cabin);
-					offers.push(buildFinalOffer(out, sameCabinRet, req.depart, idx++) as any);
+					offers.push(buildFinalOffer(out, sameCabinRet, req.depart, idx++, req) as any);
 				} else {
 					for (const ret of matchingRets) {
 						if (offers.length >= MAX_OFFERS) break;
-						offers.push(buildFinalOffer(out, ret, req.depart, idx++) as any);
+						offers.push(buildFinalOffer(out, ret, req.depart, idx++, req) as any);
 					}
 				}
 			}
@@ -483,12 +483,26 @@ const aerocrs: Provider = {
 	}
 };
 
+/** Build the AeroCRS deep-link URL that pre-fills the Blackstone booking engine. */
+function buildDeepLinkUrl(req: SearchRequest, currency: string): string {
+	const origin = req.origin;
+	const dest = req.destination;
+	const depart = req.depart;            // 'YYYY-MM-DD'
+	const ret = req.return ?? 'NA';       // 'NA' for one-way
+	const adults = req.passengers.adults;
+	const children = req.passengers.children ?? 0;
+	const infants = req.passengers.infants ?? 0;
+
+	return `https://bookings.blackstone.am/en/flight-results/${origin}-${dest}/${depart}/${ret}/${adults}/${children}/${infants}/${currency}`;
+}
+
 /** Build the final UI-shaped offer from outbound (+ optional return) direction offers. */
 function buildFinalOffer(
 	out: DirectionOffer,
 	ret: DirectionOffer | undefined,
 	departDate: string,
-	idx: number
+	idx: number,
+	req: SearchRequest
 ): Record<string, any> {
 	const combinedPrice = ret
 		? {
@@ -509,7 +523,7 @@ function buildFinalOffer(
 			segments: out.segments,
 			durationMin: out.durationMin
 		},
-		deepLink: 'https://bookings.blackstone.am/en'
+		deepLink: buildDeepLinkUrl(req, out.price.currency)
 	};
 
 	if (ret) {

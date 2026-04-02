@@ -28,7 +28,7 @@
   function providerName(p?: string) {
     if (p === 'flyone') return 'FlyOne';
     if (p === 'blackstone') return 'Blackstone';
-    if (p === 'aerocrs') return 'AeroCRS';
+    if (p === 'aerocrs') return 'Blackstone';
     return p || '—';
   }
   function fmtMoney(m: any) {

@@ -63,10 +63,6 @@
 
 {#if data}
   <div class="results" style="margin-top:12px;">
-    <div style="color:#666; margin-bottom:8px;">
-      {data.totalOffers} {t('results.offers','offers')} · {t('results.took','took')} {data.tookMs} ms
-    </div>
-
     {#if flatOffers.length === 0}
       <p>{t('results.empty','No offers for your search.')}</p>
     {:else}
@@ -139,7 +135,7 @@
 
                 {#if of.deepLink}
                   <a class="deeplink" href={of.deepLink} target="_blank" rel="noopener">
-                    {t('cta.buy','Buy')} → {providerName(of._provider ?? of.provider)}
+                    {t('cta.buy','Buy')}
                   </a>
                 {/if}
               </div>

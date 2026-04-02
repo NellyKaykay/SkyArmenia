@@ -175,6 +175,9 @@ const dict: Record<Lang, Dict> = {
     'passengers.infants': 'Infants',
     'passengers.infants.hint': 'under 2 years old',
     
+    /* CTA */
+    'cta.buy': 'Buy',
+
     /* Common */
     'common.ok': 'OK',
     'common.close': 'Close'
@@ -288,6 +291,9 @@ const dict: Record<Lang, Dict> = {
     'passengers.infants': 'Bebés',
     'passengers.infants.hint': 'menores de 2 años',
     
+    /* CTA */
+    'cta.buy': 'Comprar',
+
     /* Common */
     'common.ok': 'OK',
     'common.close': 'Cerrar'
@@ -400,6 +406,9 @@ const dict: Record<Lang, Dict> = {
     'passengers.infants': 'Младенцы',
     'passengers.infants.hint': 'до 2 лет',
     
+    /* CTA */
+    'cta.buy': 'Купить',
+
     /* Common */
     'common.ok': 'ОК',
     'common.close': 'Закрыть'
@@ -511,6 +520,9 @@ const dict: Record<Lang, Dict> = {
     'passengers.infants': 'Նորածիններ',
     'passengers.infants.hint': 'մինչև 2 տարեկան',
     
+    /* CTA */
+    'cta.buy': 'Գնել',
+
     /* Common */
     'common.ok': 'Մուտք',
     'common.close': 'Փակել'

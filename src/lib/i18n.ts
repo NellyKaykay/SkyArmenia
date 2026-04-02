@@ -80,6 +80,7 @@ const dict: Record<Lang, Dict> = {
     'hero.title': 'Find the best flights',
     'opts.round': 'Round trip',
     'opts.oneway': 'One-way',
+    'opts.bags': 'Bags',
 
     'form.passengers': 'Passengers',
     'form.origin': 'Origin',
@@ -326,6 +327,7 @@ const dict: Record<Lang, Dict> = {
     'offers.title': 'Прямые рейсы',
     'offers.yerevan': 'Ереван',
     'offers.barcelona': 'Барселона',
+    'offers.alicante': 'Аликанте',
 
     'status.soon': 'Скоро...',
     'status.searching': 'Поиск…',
@@ -441,7 +443,9 @@ const dict: Record<Lang, Dict> = {
     'offers.title': 'Ուղիղ չվերթներ',
     'offers.yerevan': 'Երևան',
     'offers.barcelona': 'Բարսելոնա',
+    'offers.alicante': 'Alicante',
 
+    'status.soon': 'Շուտով...',
     'status.searching': 'Որոնում…',
     'status.results': 'Արդյունքները բեռնվեցին',
     'status.no_results': 'Արդյունքներ չկան',

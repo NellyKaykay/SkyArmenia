@@ -72,12 +72,6 @@ body{
   color:var(--accent); font-weight:700; text-decoration:none;
 }
 .link:hover{ text-decoration:underline; }
-.link{
-  color:var(--accent);
-  font-weight:600;
-  text-decoration:none;
-}
-.link:hover{ text-decoration:underline; }
 
 /* ──────────────────────────────── */
 /* 🔹 Anti-bandera Leaflet / OSM   */

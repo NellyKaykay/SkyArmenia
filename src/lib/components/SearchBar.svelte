@@ -44,8 +44,7 @@
       const qs = buildQuery();
       // Navigate to the same page with search params — triggers +page.server.ts load()
       await goto(`/?${qs}`, { invalidateAll: true });
-    } catch (e: any) {
-      console.error('[SearchBar] navigation error:', e?.message);
+    } catch { /* navigation error */
     } finally { submitting = false; }
   }
   function onSubmit(e: Event) { e.preventDefault(); doSearch(); }
@@ -125,7 +124,6 @@
     };
     
     const selectedLocale = langMap[currentLang] || 'es';
-    console.log('Idioma actual:', currentLang, 'Locale calendario:', selectedLocale);
     return locales[selectedLocale];
   }
 
@@ -133,8 +131,7 @@
     fpDepart?.destroy?.(); fpRet?.destroy?.();
     
     const currentLocale = getCurrentLocale();
-    console.log('Inicializando calendario con locale:', currentLocale);
-    
+
     const baseOpts: flatpickr.Options.Options = {
       dateFormat: 'Y-m-d',
       altInput: true,
@@ -176,11 +173,15 @@
       onChange: (sel: Date[]) => { if (sel[0]) ret = ymdLocal(sel[0]); }
     });
   }
-  onMount(initPickers);
+  let pickersReady = false;
+  onMount(() => {
+    initPickers();
+    pickersReady = true;
+  });
   $: if (fpRet) { fpRet.set('clickOpens', trip !== 'oneway'); fpRet.set('minDate', depart || 'today'); }
-  
-  // Reactividad: reinicializar calendarios cuando cambie el idioma
-  $: if ($lang && fpDepart && fpRet) {
+
+  // Reinitialize calendars when language changes (skip first run — onMount handles it)
+  $: if (pickersReady && $lang && fpDepart && fpRet) {
     initPickers();
   }
 

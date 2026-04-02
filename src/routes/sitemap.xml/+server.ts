@@ -1,14 +1,11 @@
-import { json } from '@sveltejs/kit';
-
 const BASE_URL = 'https://skyarmenia.com';
 
 const pages = [
   '/',
-  '/search',
   '/login',
-  '/about',
-  '/contact'
-  // Agrega aquí más rutas importantes si existen
+  '/signup',
+  '/privacy',
+  '/terms'
 ];
 
 export const GET = async () => {

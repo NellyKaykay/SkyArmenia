@@ -5,8 +5,14 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { bookFlight, type BookingPassenger } from '$lib/server/aerocrs/booking';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, locals }) => {
 	try {
+		// --- Auth check ---
+		const session = locals.session;
+		if (!session?.user) {
+			return json({ ok: false, error: 'Authentication required' }, { status: 401 });
+		}
+
 		const body = await request.json();
 
 		// --- Validate required fields ---

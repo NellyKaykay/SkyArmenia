@@ -71,7 +71,7 @@
     </form>
 
     <div class="links">
-      <a href="/auth/login">¿Ya tienes cuenta? Inicia sesión</a>
+      <a href="/login">¿Ya tienes cuenta? Inicia sesión</a>
     </div>
   </div>
 </div>

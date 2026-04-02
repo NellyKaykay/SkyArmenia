@@ -59,6 +59,7 @@
     <!-- Botón de usuario con avatar -->
     <button
       bind:this={buttonEl}
+      id="user-menu-button"
       class="user-btn"
       on:click={toggleMenu}
       aria-haspopup="menu"

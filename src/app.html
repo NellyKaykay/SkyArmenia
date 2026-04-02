@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -11,29 +11,6 @@
 		<meta name="author" content="SkyArmenia" />
 		<meta name="generator" content="SvelteKit" />
 		<meta name="format-detection" content="telephone=yes" />
-
-		<!-- Open Graph Meta Tags -->
-		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="SkyArmenia" />
-		<meta property="og:title" content="SkyArmenia - Vuelos entre España y Armenia" />
-		<meta property="og:description" content="Encuentra las mejores ofertas de vuelos entre España y Armenia. Compara precios y reserva tu viaje." />
-		<meta property="og:url" content="https://skyarmenia.com" />
-		<meta property="og:image" content="https://skyarmenia.com/og-image.png" />
-		<meta property="og:image:type" content="image/png" />
-		<meta property="og:image:width" content="1200" />
-		<meta property="og:image:height" content="630" />
-		<meta property="og:image:alt" content="SkyArmenia - Vuelos entre España y Armenia" />
-		<meta property="og:logo" content="https://skyarmenia.com/logo-skyarmenia.png" />
-		<meta property="og:locale" content="es_ES" />
-
-		<!-- Twitter Card Meta Tags -->
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:site" content="@skyarmenia" />
-		<meta name="twitter:creator" content="@skyarmenia" />
-		<meta name="twitter:title" content="SkyArmenia - Vuelos entre España y Armenia" />
-		<meta name="twitter:description" content="Encuentra las mejores ofertas de vuelos entre España y Armenia. Compara precios y reserva tu viaje." />
-		<meta name="twitter:image" content="https://skyarmenia.com/og-image.png" />
-		<meta name="twitter:image:alt" content="SkyArmenia - Vuelos entre España y Armenia" />
 
 		<!-- Favicon optimizado -->
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -54,8 +31,6 @@
 		<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
 		<!-- Performance hints -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-		<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
 		<link rel="dns-prefetch" href="https://unpkg.com">
 
 		<!-- Structured Data Schema.org -->
@@ -118,16 +93,7 @@
 						}
 					}
 				]
-			},
-			"potentialAction": {
-				"@type": "SearchAction",
-				"target": {
-					"@type": "EntryPoint",
-					"urlTemplate": "https://skyarmenia.com/flights?q={search_term_string}"
-				},
-				"query-input": "required name=search_term_string"
 			}
-		}
 		</script>
 
 		%sveltekit.head%
@@ -168,13 +134,12 @@
 					setTimeout(function() { l.remove(); }, 300);
 				}
 			}
-			// Espera a que SvelteKit termine la navegación inicial
-			window.addEventListener('sveltekit:navigation-end', function handler(e) {
+			// Remove loader once the page has fully loaded
+			if (document.readyState === 'complete') {
 				removeLoader();
-				window.removeEventListener('sveltekit:navigation-end', handler);
-			});
-			// Fallback por si SvelteKit no emite el evento (por ejemplo, error de carga)
-			setTimeout(removeLoader, 4000);
+			} else {
+				window.addEventListener('load', removeLoader);
+			}
 		</script>
 	</body>
 </html>

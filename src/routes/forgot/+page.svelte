@@ -9,15 +9,24 @@
 
   async function handleSubmit(event: Event) {
     event.preventDefault();
-    // Aquí deberías llamar a tu API para enviar el email de recuperación
-    // Simulación:
     if (!email.includes('@')) {
       error = 'Introduce un email válido.';
       sent = false;
       return;
     }
-    error = null;
-    sent = true;
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      // Always show success to avoid email enumeration
+      error = null;
+      sent = true;
+    } catch {
+      error = null;
+      sent = true;
+    }
   }
 </script>
 

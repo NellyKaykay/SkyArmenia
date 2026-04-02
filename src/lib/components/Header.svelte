@@ -9,9 +9,9 @@
 
   // Preparar datos del usuario para UserMenu
   $: user = session ? {
-    email: session.user?.email,
+    email: session.email,
     user_metadata: {
-      name: userName || session.user?.user_metadata?.name
+      name: userName || session.user_metadata?.name
     }
   } : null;
 

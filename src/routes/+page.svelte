@@ -2,7 +2,7 @@
 <script lang="ts">
   import { dev } from '$app/environment';
   import { page, navigating } from '$app/stores';
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { i18n } from '$lib/i18n';
   import BgCarousel from '$lib/components/BgCarousel.svelte';
   import SearchBar from '$lib/components/SearchBar.svelte';
@@ -57,11 +57,17 @@
   }
 
   // Resetear el searchbar si se hace click en el logo
-  if (typeof window !== 'undefined') {
-    window.addEventListener('reset-searchbar', () => {
-      searchParams = getDefaultSearchParams();
-    });
+  function handleResetSearchbar() {
+    searchParams = getDefaultSearchParams();
   }
+  onMount(() => {
+    window.addEventListener('reset-searchbar', handleResetSearchbar);
+  });
+  onDestroy(() => {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('reset-searchbar', handleResetSearchbar);
+    }
+  });
 
   // Search state derived from page data + navigation
   $: isLoading = !!$navigating;
@@ -118,6 +124,7 @@
   <!-- Alternate languages -->
   <link rel="alternate" hreflang="es" href="https://skyarmenia.com/?lang=es" />
   <link rel="alternate" hreflang="en" href="https://skyarmenia.com/?lang=en" />
+  <link rel="alternate" hreflang="ru" href="https://skyarmenia.com/?lang=ru" />
   <link rel="alternate" hreflang="hy" href="https://skyarmenia.com/?lang=hy" />
   <link rel="alternate" hreflang="x-default" href="https://skyarmenia.com/" />
   

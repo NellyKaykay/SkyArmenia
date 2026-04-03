@@ -1,13 +1,13 @@
 // src/lib/providers/types.ts
 /**
- * Contratos comunes para los conectores de aerolíneas (FlyOne, Blackstone).
+ * Contratos comunes para los conectores de aerolíneas (Blackstone / AeroCRS).
  * 👉 Sin dependencias. Solo tipos/Interfaces.
  * 👉 Fechas:
  *    - SearchRequest.depart / return: 'YYYY-MM-DD'
  *    - Segment.departure / arrival: ISO 8601 completo (ej. '2025-09-10T12:30:00Z')
  */
 
-export type ProviderId = 'flyone' | 'blackstone' | 'aerocrs';
+export type ProviderId = 'blackstone' | 'aerocrs';
 export type TripType = 'oneway' | 'round';
 export type Cabin = 'economy' | 'premium_economy' | 'business';
 

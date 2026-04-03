@@ -178,6 +178,7 @@ const dict: Record<Lang, Dict> = {
     
     /* CTA */
     'cta.buy': 'Buy',
+    'cta.view_flight': 'See flight',
 
     /* Common */
     'common.ok': 'OK',
@@ -294,6 +295,7 @@ const dict: Record<Lang, Dict> = {
     
     /* CTA */
     'cta.buy': 'Comprar',
+    'cta.view_flight': 'Ver vuelo',
 
     /* Common */
     'common.ok': 'OK',
@@ -410,6 +412,7 @@ const dict: Record<Lang, Dict> = {
     
     /* CTA */
     'cta.buy': 'Купить',
+    'cta.view_flight': 'Смотреть рейс',
 
     /* Common */
     'common.ok': 'ОК',
@@ -443,7 +446,7 @@ const dict: Record<Lang, Dict> = {
     'offers.title': 'Ուղիղ չվերթներ',
     'offers.yerevan': 'Երևան',
     'offers.barcelona': 'Բարսելոնա',
-    'offers.alicante': 'Alicante',
+    'offers.alicante': 'Ալիկանտե',
 
     'status.soon': 'Շուտով...',
     'status.searching': 'Որոնում…',
@@ -526,6 +529,7 @@ const dict: Record<Lang, Dict> = {
     
     /* CTA */
     'cta.buy': 'Գնել',
+    'cta.view_flight': 'Տեսնել չվերթը',
 
     /* Common */
     'common.ok': 'Մուտք',

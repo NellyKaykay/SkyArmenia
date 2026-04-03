@@ -1,7 +1,6 @@
 // src/routes/api/search/+server.ts
 import { json, type RequestHandler } from '@sveltejs/kit';
 import type { SearchRequest, ProviderBatchResult, AggregatedSearchResponse, TripType, Cabin } from '$lib/providers/types';
-import flyone from '$lib/providers/flyone';
 import aerocrs from '$lib/server/providers/aerocrs';
 
 function asTripType(v: string | null): TripType {
@@ -48,7 +47,7 @@ export const GET: RequestHandler = async ({ url }) => {
     bags
   };
 
-  const providers = [flyone, aerocrs];
+  const providers = [aerocrs];
   const started = Date.now();
 
   const promises = providers.map(async (p): Promise<ProviderBatchResult> => {

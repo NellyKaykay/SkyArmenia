@@ -2,7 +2,7 @@
 // AeroCRS provider adapter — implements the Provider interface.
 // Calls the AeroCRS API v5 (getAvailability + getFares) via GET + query params
 // and maps the response to the same offer shape used by
-// flyone/blackstone & ResultsList.svelte.
+// blackstone & ResultsList.svelte.
 //
 // API notes:
 //   - Method: GET with query string parameters
@@ -231,7 +231,15 @@ async function fetchFares(
 	if (!faresWrapper || !data.aerocrs.success) return [];
 
 	const fares = faresWrapper.fare;
-	return Array.isArray(fares) ? fares : fares ? [fares] : [];
+	const result = Array.isArray(fares) ? fares : fares ? [fares] : [];
+
+	// Debug: dump full fare objects to see all available fields (agent vs public pricing)
+	if (result.length > 0) {
+		console.log('[AeroCRS] getFares — sample fare keys:', Object.keys(result[0]).join(', '));
+		console.log('[AeroCRS] getFares — first fare full dump:', JSON.stringify(result[0], null, 2));
+	}
+
+	return result;
 }
 
 /* ---------- fare helpers ---------- */
@@ -248,19 +256,29 @@ function indexFares(fares: any[]): Map<string, any[]> {
 	return map;
 }
 
-/** Calculate total price in cents for a fare given passenger counts. */
+/**
+ * Calculate total price in cents for a fare given passenger counts.
+ * When `useRT` is true and the fare contains round-trip fields (adultFareRT,
+ * tax1RT…), those values are used instead of the one-way (OW) fields.
+ * This avoids the mismatch with Blackstone, which uses RT pricing.
+ */
 function calcPriceCents(
 	fare: any,
-	pax: { adults: number; children: number; infants: number }
+	pax: { adults: number; children: number; infants: number },
+	useRT = false
 ): { amountCents: number; currency: string } {
-	const adultBase = parseFloat(fare.adultFareOW || '0');
-	const childBase = parseFloat(fare.childFareOW || '0');
-	const infantBase = parseFloat(fare.infantFareOW || '0');
+	// Prefer RT fields when requested and available; fall back to OW
+	const hasRT = useRT && (fare.adultFareRT != null || fare.tax1RT != null);
+	const suffix = hasRT ? 'RT' : 'OW';
+
+	const adultBase = parseFloat(fare[`adultFare${suffix}`] || fare.adultFareOW || '0');
+	const childBase = parseFloat(fare[`childFare${suffix}`] || fare.childFareOW || '0');
+	const infantBase = parseFloat(fare[`infantFare${suffix}`] || fare.infantFareOW || '0');
 	const taxes =
-		parseFloat(fare.tax1OW || '0') +
-		parseFloat(fare.tax2OW || '0') +
-		parseFloat(fare.tax3OW || '0') +
-		parseFloat(fare.tax4OW || '0');
+		parseFloat(fare[`tax1${suffix}`] || fare.tax1OW || '0') +
+		parseFloat(fare[`tax2${suffix}`] || fare.tax2OW || '0') +
+		parseFloat(fare[`tax3${suffix}`] || fare.tax3OW || '0') +
+		parseFloat(fare[`tax4${suffix}`] || fare.tax4OW || '0');
 
 	const perAdult = adultBase + taxes;
 	const perChild = childBase + taxes;
@@ -270,6 +288,8 @@ function calcPriceCents(
 		perAdult * pax.adults +
 		perChild * pax.children +
 		perInfant * pax.infants;
+
+	console.log(`[AeroCRS] calcPriceCents (${suffix}): adult=${adultBase} taxes=${taxes} total=${total} pax=${JSON.stringify(pax)}`);
 
 	return {
 		amountCents: Math.round(Math.max(0, total) * 100),
@@ -294,6 +314,7 @@ interface DirectionOffer {
 /**
  * Build direction-level offers (outbound or return) from raw flights + fares.
  * Returns an array of intermediate offers, one per flight/class/fareType combo.
+ * When `useRT` is true, fare calculation uses round-trip pricing fields.
  */
 function buildDirectionOffers(
 	allRawFlights: any[],
@@ -301,14 +322,15 @@ function buildDirectionOffers(
 	destination: string,
 	fareIndex: Map<string, any[]>,
 	pax: { adults: number; children: number; infants: number },
-	requestedCabin?: string
-): DirectionOffer[] {
+	requestedCabin?: string,
+	useRT = false
+): { offers: DirectionOffer[]; usedRT: boolean } {
 	// Filter flights matching user's origin/destination
 	const matchingFlights = allRawFlights.filter(
 		(f: any) => f.fromcode === origin && f.tocode === destination
 	);
 
-	if (matchingFlights.length === 0) return [];
+	if (matchingFlights.length === 0) return { offers: [], usedRT: false };
 
 	// Group ALL raw flights by fltnum (needed for multi-stop segment reconstruction)
 	const flightsByFltnum = new Map<string, any[]>();
@@ -359,7 +381,7 @@ function buildDirectionOffers(
 			} else {
 				// One offer per fare type (branded fares)
 				for (const fare of matchingFares) {
-					const price = calcPriceCents(fare, pax);
+					const price = calcPriceCents(fare, pax, useRT);
 					const bagsIncluded = extractBagsIncluded(fare.notification);
 					offers.push({
 						fltnum,
@@ -377,7 +399,22 @@ function buildDirectionOffers(
 		}
 	}
 
-	return offers;
+	// Deduplicate: same physical flight + same fare type → keep cheapest
+	const dedupMap = new Map<string, DirectionOffer>();
+	for (const offer of offers) {
+		const key = `${offer.fltnum}|${offer.fareType}`;
+		const existing = dedupMap.get(key);
+		if (!existing || offer.price.amountCents < existing.price.amountCents) {
+			dedupMap.set(key, offer);
+		}
+	}
+
+	// Detect whether RT fares were actually used
+	const usedRT = useRT && [...fareIndex.values()].flat().some(
+		(f: any) => f.adultFareRT != null || f.tax1RT != null
+	);
+
+	return { offers: [...dedupMap.values()], usedRT };
 }
 
 /** Extract number of included bags from fare notification text. */
@@ -419,9 +456,10 @@ const aerocrs: Provider = {
 			fetchFares(baseUrl, authHeaders, req.origin, req.destination, req.depart)
 		]);
 
+		const isRound = req.trip === 'round' && !!req.return;
 		const outFareIndex = indexFares(outFares);
-		const outOffers = buildDirectionOffers(
-			outRawFlights, req.origin, req.destination, outFareIndex, pax, requestedCabin
+		const { offers: outOffers, usedRT: outUsedRT } = buildDirectionOffers(
+			outRawFlights, req.origin, req.destination, outFareIndex, pax, requestedCabin, isRound
 		);
 
 		if (outOffers.length === 0) return [];
@@ -435,9 +473,11 @@ const aerocrs: Provider = {
 			]);
 
 			const retFareIndex = indexFares(retFares);
-			retOffers = buildDirectionOffers(
-				retRawFlights, req.destination, req.origin, retFareIndex, pax, requestedCabin
+			// Return direction: use OW fares (RT price already covered by outbound when available)
+			const retResult = buildDirectionOffers(
+				retRawFlights, req.destination, req.origin, retFareIndex, pax, requestedCabin, false
 			);
+			retOffers = retResult.offers;
 		}
 
 		// --- Build final offers in ResultsList.svelte UI shape ---
@@ -448,13 +488,13 @@ const aerocrs: Provider = {
 			// One-way or no return flights found
 			for (const out of outOffers) {
 				if (offers.length >= MAX_OFFERS) break;
-				offers.push(buildFinalOffer(out, undefined, req.depart, idx++, req) as any);
+				offers.push(buildFinalOffer(out, undefined, req.depart, idx++, req, false) as any);
 			}
 		} else {
-			// Round trip: pair by same (classCode, fareType) to avoid cartesian explosion
+			// Round trip: pair by fareType (classCode already deduped in buildDirectionOffers)
 			const retByKey = new Map<string, DirectionOffer[]>();
 			for (const ret of retOffers) {
-				const key = `${ret.classCode}|${ret.fareType}`;
+				const key = ret.fareType;
 				const arr = retByKey.get(key) || [];
 				arr.push(ret);
 				retByKey.set(key, arr);
@@ -462,17 +502,17 @@ const aerocrs: Provider = {
 
 			for (const out of outOffers) {
 				if (offers.length >= MAX_OFFERS) break;
-				const key = `${out.classCode}|${out.fareType}`;
+				const key = out.fareType;
 				const matchingRets = retByKey.get(key) || [];
 
 				if (matchingRets.length === 0) {
 					// No matching return — try same cabin at least
 					const sameCabinRet = retOffers.find(r => r.cabin === out.cabin);
-					offers.push(buildFinalOffer(out, sameCabinRet, req.depart, idx++, req) as any);
+					offers.push(buildFinalOffer(out, sameCabinRet, req.depart, idx++, req, outUsedRT) as any);
 				} else {
 					for (const ret of matchingRets) {
 						if (offers.length >= MAX_OFFERS) break;
-						offers.push(buildFinalOffer(out, ret, req.depart, idx++, req) as any);
+						offers.push(buildFinalOffer(out, ret, req.depart, idx++, req, outUsedRT) as any);
 					}
 				}
 			}
@@ -496,20 +536,33 @@ function buildDeepLinkUrl(req: SearchRequest, currency: string): string {
 	return `https://bookings.blackstone.am/en/flight-results/${origin}-${dest}/${depart}/${ret}/${adults}/${children}/${infants}/${currency}`;
 }
 
-/** Build the final UI-shaped offer from outbound (+ optional return) direction offers. */
+/**
+ * Build the final UI-shaped offer from outbound (+ optional return) direction offers.
+ * If the outbound was priced with RT fares, it already includes the round-trip total,
+ * so we use it directly instead of summing both directions.
+ */
 function buildFinalOffer(
 	out: DirectionOffer,
 	ret: DirectionOffer | undefined,
 	departDate: string,
 	idx: number,
-	req: SearchRequest
+	req: SearchRequest,
+	outUsedRT = false
 ): Record<string, any> {
-	const combinedPrice = ret
-		? {
-				amountCents: out.price.amountCents + ret.price.amountCents,
-				currency: out.price.currency
-			}
-		: out.price;
+	let combinedPrice: { amountCents: number; currency: string };
+	if (outUsedRT) {
+		// RT fare already covers both directions — don't add return price
+		combinedPrice = out.price;
+	} else if (ret) {
+		combinedPrice = {
+			amountCents: out.price.amountCents + ret.price.amountCents,
+			currency: out.price.currency
+		};
+	} else {
+		combinedPrice = out.price;
+	}
+
+	console.log(`[AeroCRS] offer ${out.fltnum} ${out.fareType}: outPrice=${out.price.amountCents} retPrice=${ret?.price.amountCents ?? 0} usedRT=${outUsedRT} final=${combinedPrice.amountCents}`);
 
 	const offer: Record<string, any> = {
 		id: `aerocrs-${out.fltnum}-${out.classCode}-${out.fareType || 'std'}-${departDate}-${idx}`,

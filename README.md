@@ -150,3 +150,51 @@ All rights reserved. &copy; 2026 SkyArmenia.
 ## Author
 
 **Nelli Karapetyan** &mdash; [GitHub](https://github.com/NellyKaykay)
+<script lang="ts">
+  import { onMount } from 'svelte';
+  let loading = true;
+
+  onMount(() => {
+    const timer = setTimeout(() => {
+      loading = false;
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  });
+</script>
+
+{#if loading}
+  <div class="loader-container">
+    <div class="spinner"></div>
+  </div>
+{:else}
+  <slot />
+{/if}
+
+<style>
+.loader-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 64px;
+  height: 64px;
+  border: 8px solid #e0e0e0;
+  border-top: 8px solid #007BFF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  box-sizing: border-box;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>

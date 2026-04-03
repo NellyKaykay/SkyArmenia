@@ -10,11 +10,10 @@
     return v === k ? (fallback ?? k) : v;
   };
 
-  // Aplana ofertas de todos los proveedores (excluyendo FlyOne)
+  // Aplana ofertas de todos los proveedores
   $: flatOffers =
     (data?.results && Array.isArray(data.results))
       ? data.results
-          .filter((r: any) => r.provider !== 'flyone')
           .flatMap((r: any) =>
             (r?.offers || []).map((of: any) => ({ ...of, _provider: r.provider }))
           )
@@ -26,7 +25,6 @@
 
   // Helpers visuales
   function providerName(p?: string) {
-    if (p === 'flyone') return 'FlyOne';
     if (p === 'blackstone') return 'Blackstone';
     if (p === 'aerocrs') return 'Blackstone';
     return p || '—';
@@ -86,7 +84,9 @@
                   {/if}
                 </span>
               </div>
-              <div class="row-price">{fmtMoney(of.price)}</div>
+              <a class="row-cta" href={of.deepLink || '#'} target="_blank" rel="noopener">
+                {t('cta.view_flight','See flight')}
+              </a>
             </button>
 
             <!-- Detalle -->
@@ -131,11 +131,9 @@
                   </div>
                 {/if}
 
-                <div class="total">{fmtMoney(of.price)}</div>
-
                 {#if of.deepLink}
                   <a class="deeplink" href={of.deepLink} target="_blank" rel="noopener">
-                    {t('cta.buy','Buy')}
+                    {t('cta.view_flight','See flight')}
                   </a>
                 {/if}
               </div>
@@ -173,7 +171,16 @@
   .row-main { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .provider { font-weight: 700; color: #111; }
   .route { color: #333; }
-  .row-price { font-weight: 800; font-size: 1.05rem; }
+  .row-cta {
+    font-weight: 700; font-size: 0.95rem;
+    color: #06b6d4; text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid #38bdf8;
+    border-radius: 10px;
+    white-space: nowrap;
+    transition: background .15s, color .15s;
+  }
+  .row-cta:hover { background: #06b6d4; color: #fff; }
 
   .offer-detail {
     border-top: 1px dashed var(--border, #e5e7eb);
@@ -187,7 +194,6 @@
   .seg { color: #222; }
   .fn { color: #888; margin-left: 4px; }
   .dur { color: #666; }
-  .total { font-weight: 800; margin-top: 4px; }
   .deeplink {
     display: inline-block;
     margin-top: 4px;

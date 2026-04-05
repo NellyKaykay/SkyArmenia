@@ -127,7 +127,7 @@
 
   /* Logo y marca */
   .logo { 
-    height: 65px; 
+    height: 105px; 
     width: auto; 
     display: block;
     /* Mejoras de calidad para el logo */
@@ -264,7 +264,7 @@
   /* Responsive design */
   @media (max-width: 900px) {
     .logo { 
-      height: 70px;  /* Aumentado de 55px a 70px */
+      height: 85px;
       /* Mantener calidad en pantallas medianas */
       filter: contrast(1.08) saturate(1.03);
     }
@@ -273,7 +273,7 @@
 
   @media (max-width: 600px) {
     .logo { 
-      height: 60px;  /* Aumentado de 40px a 60px */
+      height: 75px;
       /* Optimización extra para móviles */
       filter: contrast(1.12) saturate(1.08) brightness(1.02);
       -webkit-transform: translateZ(0) scale(1);
@@ -324,7 +324,7 @@
 
   @media (max-width: 400px) {
     .logo { 
-      height: 50px;  /* Aumentado de 35px a 50px */
+      height: 65px;
       /* Máxima optimización para pantallas muy pequeñas */
       filter: contrast(1.15) saturate(1.1) brightness(1.04);
       -webkit-transform: translateZ(0) scale(1.02);
@@ -346,9 +346,9 @@
     }
   }
 
-  /* Mejoras adicionales para SVG */
-  .logo[src$=".png"] {
-    /* Optimización específica para SVG */
+  /* Mejoras adicionales para JPEG */
+  .logo[src$=".jpeg"] {
+    /* Optimización específica para JPEG */
     shape-rendering: geometricPrecision;    
   }
 </style>
@@ -357,7 +357,7 @@
 <div class="header" class:is-scrolled={scrolled}>
   <div class="container header-inner">
     <a href={homeHref} class="brand" aria-label="SkyArmenia Home" on:click|preventDefault={() => { window.dispatchEvent(new CustomEvent('reset-searchbar')); window.location.href = homeHref; }}>
-      <img src="/logo-skyarmenia.png" alt="SkyArmenia" class="logo" />
+      <img src="/logo-skyarmenia.jpeg" alt="SkyArmenia" class="logo" />
     </a>
 
     <div class="ctrls">

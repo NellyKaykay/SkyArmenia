@@ -17,6 +17,8 @@ function asInt(v: string | null, d = 0) {
 }
 
 export const GET: RequestHandler = async ({ url }) => {
+  console.log(`[AeroCRS:DEBUG] [${new Date().toISOString()}] /api/search REQUEST → ${url.search}`);
+
   const origin = (url.searchParams.get('origin') || '').toUpperCase().trim();
   const destination = (url.searchParams.get('destination') || '').toUpperCase().trim();
   const depart = (url.searchParams.get('depart') || '').trim();
@@ -78,6 +80,8 @@ export const GET: RequestHandler = async ({ url }) => {
     totalOffers,
     tookMs: Date.now() - started
   };
+
+  console.log(`[AeroCRS:DEBUG] [${new Date().toISOString()}] /api/search RESPONSE → ${totalOffers} offers, ${resp.tookMs}ms`);
 
   return json(resp);
 };

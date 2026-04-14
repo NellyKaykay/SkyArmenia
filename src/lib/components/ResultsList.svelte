@@ -84,6 +84,7 @@
                   {/if}
                 </span>
               </div>
+              <span class="price">{fmtMoney(of.price)}</span>
               <a class="row-cta" href={of.deepLink || '#'} target="_blank" rel="noopener">
                 {t('cta.view_flight','See flight')}
               </a>
@@ -162,10 +163,15 @@
   }
   .offer-row {
     width: 100%;
-    display: grid; grid-template-columns: 1fr auto;
+    display: grid; grid-template-columns: 1fr auto auto;
     gap: 8px; align-items: center;
     padding: 10px 12px;
     background: #fff; border: none; cursor: pointer; text-align: left;
+  }
+  .price {
+    font-weight: 700; font-size: 1.1rem;
+    color: #059669;
+    white-space: nowrap;
   }
   .offer-row:hover { background: #fafafa; }
   .row-main { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }

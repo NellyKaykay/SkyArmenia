@@ -34,6 +34,44 @@ function getConfig() {
 			accept: config.authHeaders.accept,
 			auth_id: config.authHeaders.auth_id,
 			auth_password: config.authHeaders.auth_password
+		},
+		environment: config.environment
+	};
+}
+
+/* ---------- debug logging helpers ---------- */
+
+function maskSecret(value: string): string {
+	if (!value) return '(empty)';
+	if (value.length <= 4) return '***';
+	return value.slice(0, 4) + '***';
+}
+
+function ts(): string {
+	return new Date().toISOString();
+}
+
+/** Collects structured log entries for a single search request. */
+interface DebugLogEntry {
+	time: string;
+	label: string;
+	data: Record<string, any>;
+}
+
+function createDebugLog() {
+	const entries: DebugLogEntry[] = [];
+	return {
+		add(label: string, data: Record<string, any>) {
+			const entry = { time: ts(), label, data };
+			entries.push(entry);
+			console.log(`[AeroCRS:DEBUG] [${entry.time}] ${label}`, JSON.stringify(data, null, 2));
+		},
+		dump() {
+			console.log(
+				'\n========== [AeroCRS:DEBUG] FULL SEARCH LOG ==========\n' +
+				JSON.stringify(entries, null, 2) +
+				'\n========== [AeroCRS:DEBUG] END ==========\n'
+			);
 		}
 	};
 }
@@ -169,7 +207,8 @@ async function fetchFlights(
 	destination: string,
 	date: string,
 	passengers: { adults: number; children: number; infants: number },
-	cabin: string
+	cabin: string,
+	log?: ReturnType<typeof createDebugLog>
 ): Promise<any[]> {
 	const qs = new URLSearchParams({
 		start: toAeroCrsDate(date),
@@ -183,17 +222,51 @@ async function fetchFlights(
 	});
 
 	const url = `${baseUrl}/getAvailability?${qs.toString()}`;
-	console.log('[AeroCRS] getAvailability GET →', url);
+
+	console.log('[AeroCRS:DEBUG] REQUEST URL:', url);
+	log?.add('getAvailability REQUEST', {
+		method: 'GET',
+		url,
+		auth_id: maskSecret(authHeaders.auth_id || ''),
+		params: { origin, destination, date, passengers, cabin }
+	});
 
 	const res = await fetch(url, { method: 'GET', headers: authHeaders });
+	const rawBody = await res.text();
+	console.log('[AeroCRS:DEBUG] RESPONSE:', rawBody);
+
+	const responseHeaders: Record<string, string> = {};
+	res.headers.forEach((v, k) => { responseHeaders[k] = v; });
 
 	if (!res.ok) {
-		const body = await res.text();
-		console.error(`[AeroCRS] getAvailability failed [${res.status}]:`, body);
+		log?.add('getAvailability RESPONSE ERROR', {
+			status: res.status,
+			statusText: res.statusText,
+			headers: responseHeaders,
+			body: rawBody
+		});
+		console.error(`[AeroCRS] getAvailability failed [${res.status}]:`, rawBody);
 		return [];
 	}
 
-	const data = await res.json();
+	let data: any;
+	try {
+		data = JSON.parse(rawBody);
+	} catch {
+		log?.add('getAvailability PARSE ERROR', { rawBody });
+		return [];
+	}
+
+	log?.add('getAvailability RESPONSE OK', {
+		status: res.status,
+		headers: responseHeaders,
+		success: data?.aerocrs?.success,
+		flightCount: Array.isArray(data?.aerocrs?.flights?.flight)
+			? data.aerocrs.flights.flight.length
+			: data?.aerocrs?.flights?.flight ? 1 : 0,
+		fullResponseBody: data
+	});
+
 	const flightsWrapper = data?.aerocrs?.flights;
 	if (!flightsWrapper || !data.aerocrs.success) return [];
 
@@ -207,7 +280,8 @@ async function fetchFares(
 	authHeaders: Record<string, string>,
 	origin: string,
 	destination: string,
-	date: string
+	date: string,
+	log?: ReturnType<typeof createDebugLog>
 ): Promise<any[]> {
 	const qs = new URLSearchParams({
 		start: toAeroCrsDate(date),
@@ -217,26 +291,97 @@ async function fetchFares(
 	});
 
 	const url = `${baseUrl}/getFares?${qs.toString()}`;
-	console.log('[AeroCRS] getFares GET →', url);
+
+	console.log('[AeroCRS:DEBUG] REQUEST URL:', url);
+	log?.add('getFares REQUEST', {
+		method: 'GET',
+		url,
+		auth_id: maskSecret(authHeaders.auth_id || ''),
+		params: { origin, destination, date }
+	});
 
 	const res = await fetch(url, { method: 'GET', headers: authHeaders });
+	const rawBody = await res.text();
+	console.log('[AeroCRS:DEBUG] RESPONSE:', rawBody);
+
+	const responseHeaders: Record<string, string> = {};
+	res.headers.forEach((v, k) => { responseHeaders[k] = v; });
 
 	if (!res.ok) {
+		log?.add('getFares RESPONSE ERROR', {
+			status: res.status,
+			statusText: res.statusText,
+			headers: responseHeaders,
+			body: rawBody
+		});
 		console.error(`[AeroCRS] getFares failed [${res.status}]`);
 		return [];
 	}
 
-	const data = await res.json();
+	let data: any;
+	try {
+		data = JSON.parse(rawBody);
+	} catch {
+		log?.add('getFares PARSE ERROR', { rawBody });
+		return [];
+	}
+
 	const faresWrapper = data?.aerocrs?.fares;
-	if (!faresWrapper || !data.aerocrs.success) return [];
+	if (!faresWrapper || !data.aerocrs.success) {
+		log?.add('getFares RESPONSE — no fares or success=false', {
+			status: res.status,
+			headers: responseHeaders,
+			success: data?.aerocrs?.success,
+			fullResponseBody: data
+		});
+		return [];
+	}
 
 	const fares = faresWrapper.fare;
 	const result = Array.isArray(fares) ? fares : fares ? [fares] : [];
 
-	// Debug: dump full fare objects to see all available fields (agent vs public pricing)
+	// --- Fare field analysis (public vs agent pricing) ---
 	if (result.length > 0) {
-		console.log('[AeroCRS] getFares — sample fare keys:', Object.keys(result[0]).join(', '));
-		console.log('[AeroCRS] getFares — first fare full dump:', JSON.stringify(result[0], null, 2));
+		const allKeys = new Set<string>();
+		for (const f of result) {
+			for (const k of Object.keys(f)) allKeys.add(k);
+		}
+
+		// Flag fields that may indicate agent vs public pricing
+		const pricingIndicators = [...allKeys].filter(k =>
+			/agent|public|net|markup|commission|wholesale|retail|private|discount/i.test(k)
+		);
+
+		const fareSummary = result.map((f: any) => ({
+			class: f.class,
+			type: f.type,
+			currency: f.currency,
+			adultFareOW: f.adultFareOW,
+			childFareOW: f.childFareOW,
+			infantFareOW: f.infantFareOW,
+			adultFareRT: f.adultFareRT,
+			childFareRT: f.childFareRT,
+			infantFareRT: f.infantFareRT,
+			tax1OW: f.tax1OW, tax2OW: f.tax2OW, tax3OW: f.tax3OW, tax4OW: f.tax4OW,
+			tax1RT: f.tax1RT, tax2RT: f.tax2RT, tax3RT: f.tax3RT, tax4RT: f.tax4RT,
+			notification: f.notification
+		}));
+
+		log?.add('getFares RESPONSE OK — FARE ANALYSIS', {
+			status: res.status,
+			headers: responseHeaders,
+			totalFares: result.length,
+			allFareFieldNames: [...allKeys].sort(),
+			pricingIndicatorFields: pricingIndicators.length > 0 ? pricingIndicators : '(none found)',
+			fareSummary,
+			fullResponseBody: data
+		});
+	} else {
+		log?.add('getFares RESPONSE OK — 0 fares', {
+			status: res.status,
+			headers: responseHeaders,
+			fullResponseBody: data
+		});
 	}
 
 	return result;
@@ -442,7 +587,37 @@ const aerocrs: Provider = {
 			return [];
 		}
 
-		const { baseUrl, authHeaders } = config;
+		const { baseUrl, authHeaders, environment } = config;
+		const log = createDebugLog();
+
+		console.log('[AeroCRS:DEBUG] SEARCH PARAMS:', JSON.stringify({
+			origin: req.origin,
+			destination: req.destination,
+			depart: req.depart,
+			return: req.return,
+			trip: req.trip,
+			cabin: req.cabin,
+			passengers: req.passengers,
+			bags: req.bags
+		}));
+
+		log.add('SEARCH START', {
+			environment,
+			baseUrl,
+			auth_id: maskSecret(authHeaders.auth_id || ''),
+			auth_password: maskSecret(authHeaders.auth_password || ''),
+			request: {
+				origin: req.origin,
+				destination: req.destination,
+				depart: req.depart,
+				return: req.return,
+				trip: req.trip,
+				cabin: req.cabin,
+				passengers: req.passengers,
+				bags: req.bags
+			}
+		});
+
 		const pax = {
 			adults: req.passengers.adults,
 			children: req.passengers.children ?? 0,
@@ -452,8 +627,8 @@ const aerocrs: Provider = {
 
 		// --- Fetch outbound flights + fares in parallel ---
 		const [outRawFlights, outFares] = await Promise.all([
-			fetchFlights(baseUrl, authHeaders, req.origin, req.destination, req.depart, pax, 'Economy'),
-			fetchFares(baseUrl, authHeaders, req.origin, req.destination, req.depart)
+			fetchFlights(baseUrl, authHeaders, req.origin, req.destination, req.depart, pax, 'Economy', log),
+			fetchFares(baseUrl, authHeaders, req.origin, req.destination, req.depart, log)
 		]);
 
 		const isRound = req.trip === 'round' && !!req.return;
@@ -462,14 +637,18 @@ const aerocrs: Provider = {
 			outRawFlights, req.origin, req.destination, outFareIndex, pax, requestedCabin, isRound
 		);
 
-		if (outOffers.length === 0) return [];
+		if (outOffers.length === 0) {
+			log.add('SEARCH END — no outbound offers', { offerCount: 0 });
+			log.dump();
+			return [];
+		}
 
 		// --- Return direction (round-trip only) ---
 		let retOffers: DirectionOffer[] = [];
 		if (req.trip === 'round' && req.return) {
 			const [retRawFlights, retFares] = await Promise.all([
-				fetchFlights(baseUrl, authHeaders, req.destination, req.origin, req.return, pax, 'Economy'),
-				fetchFares(baseUrl, authHeaders, req.destination, req.origin, req.return)
+				fetchFlights(baseUrl, authHeaders, req.destination, req.origin, req.return, pax, 'Economy', log),
+				fetchFares(baseUrl, authHeaders, req.destination, req.origin, req.return, log)
 			]);
 
 			const retFareIndex = indexFares(retFares);
@@ -517,6 +696,18 @@ const aerocrs: Provider = {
 				}
 			}
 		}
+
+		log.add('SEARCH END', {
+			offerCount: offers.length,
+			offerSummary: offers.map((o: any) => ({
+				id: o.id,
+				cabin: o.cabin,
+				fareType: o.fareType,
+				priceCents: o.price?.amountCents,
+				currency: o.price?.currency
+			}))
+		});
+		log.dump();
 
 		console.log(`[AeroCRS] returning ${offers.length} offer(s)`);
 		return offers;

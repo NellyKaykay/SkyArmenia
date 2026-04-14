@@ -66,9 +66,25 @@
     const dd = String(d.getDate()).padStart(2, '0');
     return `${y}-${m}-${dd}`;
   }
-  function isMonOrFri(d: Date) {
-    const wd = d.getDay();
-    return wd === 1 || wd === 5;
+  // Route schedule: maps "ORIGIN-DEST" to { days: number[], start: string, end: string }
+  // days: 0=Sun, 1=Mon, ..., 6=Sat
+  const ROUTE_SCHEDULE: Record<string, { days: number[]; start: string; end: string }> = {
+    'ALC-EVN': { days: [0, 4], start: '2026-06-18', end: '2026-09-27' },  // Sun=0, Thu=4
+    'EVN-ALC': { days: [0, 4], start: '2026-06-18', end: '2026-09-27' },
+  };
+  const DEFAULT_FLIGHT_DAYS = [1, 5]; // Mon=1, Fri=5
+
+  function isFlightDay(d: Date, orig: string, dest: string): boolean {
+    const key = `${orig}-${dest}`;
+    const sched = ROUTE_SCHEDULE[key];
+    if (sched) {
+      const iso = ymdLocal(d);
+      if (iso >= sched.start && iso <= sched.end) {
+        return sched.days.includes(d.getDay());
+      }
+      return false;
+    }
+    return DEFAULT_FLIGHT_DAYS.includes(d.getDay());
   }
 
   // Configuraciones de idioma
@@ -142,10 +158,10 @@
       minDate: 'today',
       position: 'auto center',
       appendTo: document.body,
-      onDayCreate(_dObj, _dStr, _fp, dayElem: any) {
+      onDayCreate(_dObj: any, _dStr: string, _fp: any, dayElem: any) {
         dayElem.classList.add('pos-rel');
         const d = dayElem.dateObj as Date;
-        if (isMonOrFri(d)) dayElem.classList.add('monfri');
+        if (isFlightDay(d, origin, destination)) dayElem.classList.add('monfri');
       }
     };
 
@@ -180,8 +196,8 @@
   });
   $: if (fpRet) { fpRet.set('clickOpens', trip !== 'oneway'); fpRet.set('minDate', depart || 'today'); }
 
-  // Reinitialize calendars when language changes (skip first run — onMount handles it)
-  $: if (pickersReady && $lang && fpDepart && fpRet) {
+  // Reinitialize calendars when language, origin, or destination changes
+  $: if (pickersReady && $lang && origin && destination && fpDepart && fpRet) {
     initPickers();
   }
 

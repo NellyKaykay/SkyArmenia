@@ -71,6 +71,8 @@
   const ROUTE_SCHEDULE: Record<string, { days: number[]; start: string; end: string }> = {
     'ALC-EVN': { days: [0, 4], start: '2026-06-18', end: '2026-09-27' },  // Sun=0, Thu=4
     'EVN-ALC': { days: [0, 4], start: '2026-06-18', end: '2026-09-27' },
+    'BCN-EVN': { days: [1, 3, 5], start: '2026-05-27', end: '2026-09-16' },  // Mon=1, Wed=3, Fri=5 (lunes, miércoles, viernes)
+    'EVN-BCN': { days: [1, 3, 5], start: '2026-05-27', end: '2026-09-16' },  // Mon=1, Wed=3, Fri=5 (lunes, miércoles, viernes)
   };
   const DEFAULT_FLIGHT_DAYS = [1, 5]; // Mon=1, Fri=5
 

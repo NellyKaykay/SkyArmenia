@@ -1,6 +1,6 @@
 // src/routes/api/admin/orders/+server.ts
 import { json, type RequestHandler } from '@sveltejs/kit';
-import { ADMIN_TOKEN } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { supabaseAdmin } from '$lib/server/supabase';
 
 export const GET: RequestHandler = async ({ request }) => {
@@ -8,7 +8,7 @@ export const GET: RequestHandler = async ({ request }) => {
   const authHeader = request.headers.get('Authorization');
   const token = authHeader?.replace('Bearer ', '');
 
-  if (!token || token !== ADMIN_TOKEN) {
+  if (!token || token !== env.ADMIN_TOKEN) {
     return json(
       { error: 'Unauthorized' },
       { status: 401 }
